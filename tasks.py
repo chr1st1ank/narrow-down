@@ -177,7 +177,9 @@ def docs(c, serve=False, open_browser=False):
     help={
         "part": "Part of the version to be bumped.",
         "dry_run": "Don't write any files, just pretend. (default: False)",
-        "allow_dirty": "Normally, bumpversion will abort if the working directory is dirty to protect yourself from releasing unversioned files and/or overwriting unsaved changes. Use this option to override this check.",
+        "allow_dirty": "Normally, bumpversion will abort if the working directory is "
+        "dirty to protect yourself from releasing unversioned files and/or "
+        "overwriting unsaved changes. Use this option to override this check.",
     }
 )
 def version(c, part, dry_run=False, allow_dirty=False):
