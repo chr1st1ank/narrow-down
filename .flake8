@@ -1,0 +1,30 @@
+[flake8]
+max-line-length = 100
+max-complexity = 18
+ignore =
+    E203,  # whitespace before ‘:’, conflict with black
+    E266,  # Comments with multiple ##
+    F403,  # ‘from module import *’ used; unable to detect undefined names
+    F405,  # name may be undefined, or defined from star imports: module
+    W504,  # Don't forbid line breaks after binary operators. They are preferred according to  PEP8
+    W291   # Trailing whitespace. Often appears in multiline strings in tests
+select = B,C,E,F,W,T4,B9
+docstring-convention = google
+# F401: module imported but unused
+per-file-ignores =
+    __init__.py:F401
+exclude =
+    .git,
+    __pycache__,
+    setup.py,
+    build,
+    dist,
+    releases,
+    .venv,
+    .tox,
+    .mypy_cache,
+    .pytest_cache,
+    .vscode,
+    .github,
+    tests,
+    local
