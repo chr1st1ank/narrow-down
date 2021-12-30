@@ -68,6 +68,7 @@ def clean_docs(c):
     # type: (Context) -> None
     """Clean up files from documentation builds."""
     _run(c, f"rm -fr {DOCS_BUILD_DIR}")
+    _run(c, f"rm -f {DOCS_DIR}/modules.rst {DOCS_DIR}/narrow_down.rst")
 
 
 @task(pre=[clean_build, clean_python, clean_tests, clean_docs])
