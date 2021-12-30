@@ -174,6 +174,12 @@ def docs(c, serve=False, open_browser=False):
         _run(c, f"poetry run watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
 
 
+@task(pre=[clean, hooks, mypy, docs, safety, tests, coverage])
+def check(c):
+    # type: (Context) -> None
+    """Run all checks together."""
+
+
 @task(
     help={
         "part": "Part of the version to be bumped.",

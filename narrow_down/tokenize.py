@@ -1,9 +1,9 @@
 """Set operations for string analysis."""
 import collections
-from typing import Dict, Set, Union
+from typing import Dict, Set
 
 
-def char_ngrams(s: Union[bytes, str], n: int, pad_char: Union[bytes, str] = "$") -> Set[str]:
+def char_ngrams(s: str, n: int, pad_char: str = "$") -> Set[str]:
     """Get all character n-grams contained in the string s.
 
     Args:
@@ -22,9 +22,7 @@ def char_ngrams(s: Union[bytes, str], n: int, pad_char: Union[bytes, str] = "$")
     return set(padded[i : i + n] for i in range(len(padded) - n + 1))
 
 
-def count_char_ngrams(
-    s: Union[bytes, str], n: int, pad_char: Union[bytes, str] = "$"
-) -> Dict[str, int]:
+def count_char_ngrams(s: str, n: int, pad_char: str = "$") -> Dict[str, int]:
     """Count all character n-grams in s.
 
     Args:
