@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "narrow-down"
-version = "0.1.0"
+version = "0.1.1"
 description = "Fast fuzzy text search"
 authors = ["Christian Krudewig <chr1st1ank@krudewig-online.de>"]
 

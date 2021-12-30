@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2021-12-30
+
 ## [0.1.0] - 2021-12-30
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0
