@@ -54,6 +54,8 @@ dev = [
 "isort~=5.9",
 "black~=21.9b0",
 "safety~=1.10",
+    "nox",
+    "murmurhash",
 "mypy",
 "sphinx~=4.2",
 "bump2version~=1.0",
@@ -112,13 +114,18 @@ pycodestyle = [
     "-W504",  # Line breaks after binary operators. These are preferred according to  PEP8
 ]
 
-[tool.flakehell.exceptions."tests/test_*.py"]
-flake8-annotations = [  # Allow more sloppy styling in tests
-    "-ANN001",  # Missing type annotation for function argument
-    "-ANN201",  # Missing return type annotation for public function
+[tool.flakehell.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
+flake8 = [
     "-W291"     # Trailing whitespace. Often appears in multiline strings in tests
 ]
+flake8-annotations = [
+    "-ANN001",  # Missing type annotation for function argument
+    "-ANN201",  # Missing return type annotation for public function
+]
 flake8-bandit = ["-S101"]
+flake8-docstrings = [
+    "-D103",    # Missing docstring in public function"
+]
 
 [tool.isort]
 multi_line_output = 3
@@ -144,7 +151,7 @@ exclude = '''
   | buck-out
   | build
   | dist
-)/
+)/mypy
 '''
 
 [tool.pylint.master]
@@ -166,3 +173,23 @@ disable = [
 [tool.pylint.design]
 max-args = 10  # Maximum number of arguments for functions
 max-attributes = 15  # Maximum number of attributes for a class
+
+[[tool.mypy.overrides]]
+module = [
+    "pytest",
+    "invoke.*",
+    "murmurhash.*",
+    "nox.*"
+]
+allow_redefinition = false
+check_untyped_defs = true
+ignore_errors = false
+ignore_missing_imports = true
+implicit_reexport = false
+local_partial_types = true
+strict_optional = true
+strict_equality = true
+no_implicit_optional = true
+warn_unused_ignores = true
+warn_unreachable = true
+warn_no_return = true

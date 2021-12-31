@@ -25,16 +25,8 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         args: Command-line arguments for pip.
         kwargs: Additional keyword arguments for Session.install.
     """
-    with tempfile.NamedTemporaryFile(delete=False) as requirements:
-        session.run(
-            "poetry",
-            "export",
-            "--dev",
-            "--without-hashes",
-            "--format=requirements.txt",
-            f"--output={requirements.name}",
-            external=True,
-        )
+    with tempfile.NamedTemporaryFile(delete=False, encoding="utf-8", mode="w") as requirements:
+        requirements.write("-e .")
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
 
 
