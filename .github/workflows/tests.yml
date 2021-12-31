@@ -44,8 +44,7 @@ jobs:
         shell: bash
         run: |
           pip install nox
-          pip install poetry
-          poetry config virtualenvs.in-project true
+          pip install maturin
 
       - name: Run mypy with nox
         shell: bash
@@ -81,7 +80,7 @@ jobs:
         shell: bash
         run: |
           pip install nox
-          pip install poetry
+          pip install maturin
           poetry config virtualenvs.in-project true
 
       - name: Download coverage data
