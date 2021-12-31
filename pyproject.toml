@@ -28,7 +28,8 @@ classifiers=[
 ]
 
 dependencies = [
-    "numpy~=1.21"
+    "numpy~=1.21",
+    "typing_extensions"
 ]
 
 [project.urls]
@@ -101,13 +102,14 @@ extended_default_ignore = []
 
 [tool.flakehell.plugins]
 pyflakes = ["+*"]
-pycodestyle = ["+*"]
 mccabe = ["+*"]
-"flake8-*" = ["+*"]
+"flake8-*" = [
+    "+*",
+    "-ANN101"  # Missing type annotation for self in method
+]
 darglint = ["+*"]
-
-[tool.flakehell.exceptions."*"]
 pycodestyle = [
+    "+*",
     "-E203",  # whitespace before ‘:’, conflict with black
     "-E266",  # Comments with multiple ##
     "-W504",  # Line breaks after binary operators. These are preferred according to  PEP8

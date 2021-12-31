@@ -1,6 +1,15 @@
 use fasthash::{murmur3, xx};
+use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
+
+const MERSENNE_PRIME: u32 = 4294967295u32; // mersenne prime (1 << 32) - 1
+
+enum HashAlgorithm {
+    Murmur3_32bit,
+    Xxhash32bit,
+    Xxhash64bit,
+}
 
 #[pyfunction]
 fn murmur3_32bit(s: &str) -> u32 {
@@ -17,14 +26,42 @@ fn xxhash_64bit(s: &str) -> u64 {
     xx::hash64(s)
 }
 
+#[pyfunction]
+fn minhash<'py>(
+    _py: Python<'py>,
+    shingle_list: Vec<&str>,
+    a: PyReadonlyArray1<'_, u32>,
+    b: PyReadonlyArray1<'_, u32>,
+) -> PyResult<Vec<u32>> {
+    assert_eq!(a.ndim(), 1);
+    assert_eq!(b.ndim(), 1);
+    assert_eq!(a.shape()[0], b.shape()[0]);
+
+    let murmur_hashes: Vec<u32> = shingle_list.iter().map(|s| murmur3::hash32(s)).collect();
+    let mut minhashes: Vec<u32> = Vec::new();
+    let a_slice = a.as_slice()?;
+    let b_slice = b.as_slice()?;
+    for (a_i, b_i) in a_slice.iter().zip(b_slice) {
+        let minhash: u32 = murmur_hashes
+            .iter()
+            .map(|h| (a_i * h + b_i) % MERSENNE_PRIME)
+            .min()
+            .unwrap_or(MERSENNE_PRIME);
+        minhashes.push(minhash);
+    }
+    Ok(minhashes)
+}
+
 #[pymodule]
 fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(murmur3_32bit, m)?)?;
     m.add_function(wrap_pyfunction!(xxhash_32bit, m)?)?;
     m.add_function(wrap_pyfunction!(xxhash_64bit, m)?)?;
+    m.add_function(wrap_pyfunction!(minhash, m)?)?;
     Ok(())
 }
+
 
 #[cfg(test)]
 mod tests {

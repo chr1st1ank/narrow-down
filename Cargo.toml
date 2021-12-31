@@ -13,4 +13,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 fasthash = "0.4.0"
+numpy = "0.15.0"
 pyo3 = { version = "0.15.1", features = ["extension-module", "abi3-py37"] }
