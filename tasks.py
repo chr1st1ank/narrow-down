@@ -34,6 +34,21 @@ def _run(c: Context, command: str) -> Result:
 
 
 @task()
+def develop(c):
+    # type: (Context) -> None
+    """Rebuild the Rust library and install all missing dependencies."""
+    _run(c, "maturin develop --release --extras dev")
+
+
+@task()
+def clean_rust(c):
+    # type: (Context) -> None
+    """Clean up files from Rust built."""
+    _run(c, "cargo clean")
+    _run(c, "cargo clean --release")
+
+
+@task()
 def clean_build(c):
     # type: (Context) -> None
     """Clean up files from package building."""
@@ -71,7 +86,7 @@ def clean_docs(c):
     _run(c, f"rm -f {DOCS_DIR}/modules.rst {DOCS_DIR}/narrow_down.rst")
 
 
-@task(pre=[clean_build, clean_python, clean_tests, clean_docs])
+@task(pre=[clean_rust, clean_build, clean_python, clean_tests, clean_docs])
 def clean(c):
     # type: (Context) -> None
     """Run all clean sub-tasks."""
@@ -81,14 +96,14 @@ def clean(c):
 def install_hooks(c):
     # type: (Context) -> None
     """Install pre-commit hooks."""
-    _run(c, "poetry run pre-commit install")
+    _run(c, "pre-commit install")
 
 
 @task()
 def hooks(c):
     # type: (Context) -> None
     """Run pre-commit hooks."""
-    _run(c, "poetry run pre-commit run --all-files")
+    _run(c, "pre-commit run --all-files")
 
 
 @task(name="format", help={"check": "Checks if source is formatted without applying changes"})
@@ -96,16 +111,16 @@ def format_(c, check=False):
     # type: (Context, bool) -> None
     """Format code."""
     isort_options = ["--check-only", "--diff"] if check else []
-    _run(c, f"poetry run isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
+    _run(c, f"isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
     black_options = ["--diff", "--check"] if check else ["--quiet"]
-    _run(c, f"poetry run black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
+    _run(c, f"black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
 
 
 @task()
 def flake8(c):
     # type: (Context) -> None
     """Run flake8."""
-    _run(c, f"poetry run flakehell lint {PYTHON_TARGETS_STR}")
+    _run(c, f"flakehell lint {PYTHON_TARGETS_STR}")
 
 
 @task()
@@ -115,7 +130,7 @@ def safety(c):
     _run(
         c,
         "poetry export --dev --format=requirements.txt --without-hashes | "
-        "poetry run safety check --stdin --full-report",
+        "safety check --stdin --full-report",
     )
 
 
@@ -129,7 +144,7 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"poetry run mypy {PYTHON_TARGETS_STR}")
+    _run(c, f"mypy {PYTHON_TARGETS_STR}")
 
 
 @task()
@@ -137,7 +152,7 @@ def tests(c):
     # type: (Context) -> None
     """Run tests."""
     pytest_options = ["--xdoctest", "--cov", "--cov-report=", "--cov-fail-under=0"]
-    _run(c, f"poetry run pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
+    _run(c, f"pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
 
 
 @task(
@@ -150,8 +165,8 @@ def coverage(c, fmt="report", open_browser=False):
     # type: (Context, str, bool) -> None
     """Create coverage report."""
     if any(Path().glob(".coverage.*")):
-        _run(c, "poetry run coverage combine")
-    _run(c, f"poetry run coverage {fmt} -i")
+        _run(c, "coverage combine")
+    _run(c, f"coverage {fmt} -i")
     if fmt == "html" and open_browser:
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
@@ -171,7 +186,7 @@ def docs(c, serve=False, open_browser=False):
     if open_browser:
         webbrowser.open(DOCS_INDEX.absolute().as_uri())
     if serve:
-        _run(c, f"poetry run watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
+        _run(c, f"watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
 
 
 @task(pre=[clean, hooks, mypy, docs, safety, tests, coverage])
@@ -197,4 +212,4 @@ def version(c, part, dry_run=False, allow_dirty=False):
         bump_options.append("--dry-run")
     if allow_dirty:
         bump_options.append("--allow-dirty")
-    _run(c, f"poetry run bump2version {' '.join(bump_options)} {part}")
+    _run(c, f"bump2version {' '.join(bump_options)} {part}")

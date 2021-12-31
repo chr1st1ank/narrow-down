@@ -13,24 +13,23 @@ We take our open source community seriously and hold ourselves and other contrib
 
 ### Requirements
 
-We use `poetry` to manage and install dependencies. [Poetry](https://python-poetry.org/) provides a custom installer that will install `poetry` isolated from the rest of your system.
+We use [maturin](https://maturin.rs/) to build the package and install it with dependencies. For development an additional environment manager (e.g. miniconda, virtualenv, pipenv, ...) is sensible to keep the project environment in a dedicated virtual environment. 
 
+Assuming you have [installed miniconda](https://docs.conda.io/en/latest/miniconda.html#installing) you can install the development environment as follows:
 ```
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
-```
-
-We'll also need `nox` for automated testing in multiple Python environments so [install that too](https://nox.thea.codes/en/stable/).
-
-To install the local development requirements inside a virtual environment run:
-
-```
-$ poetry install
-$ poetry run inv install-hooks
+$ conda create -n narrow-down python==3.9 maturin
+$ conda activate narrow-down
+(narrow-down) $ cd <project root>
+(narrow-down) $ maturin develop --release --extras dev
 ```
 
-> For more information about `poetry` check the [docs](https://python-poetry.org/docs/).
+We'll also need [nox](https://nox.thea.codes/en/stable/) for automated testing in multiple Python environments so and
+ [invoke](http://www.pyinvoke.org/) to wrap up some useful tasks like formatting, linting, testing and more.
 
-We use [invoke](http://www.pyinvoke.org/) to wrap up some useful tasks like formatting, linting, testing and more.
+To install the pre-commit hooks:
+```
+$ inv install-hooks
+```
 
 Execute `inv[oke] --list` to see the list of available commands.
 
@@ -78,6 +77,6 @@ On branch "main":
 
 - Adjust CHANGELOG.md as described on [https://keepachangelog.com](https://keepachangelog.com).
 - Adjust the version number in dframeio/__init__.py.
-- Then run `poetry run invoke version [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
+- Then run `invoke version [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
 - Push the commit to github: `git push --tags`
 - A github action will automatically create a github release and publish to pypi

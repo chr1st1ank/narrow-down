@@ -29,7 +29,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [Ubuntu, MacOS, Windows]
+        os: [Ubuntu, MacOS]  #, Windows]
         python-version: ['3.7', '3.8', '3.9', '3.10']
       fail-fast: true
     steps:
@@ -44,8 +44,7 @@ jobs:
         shell: bash
         run: |
           pip install nox
-          pip install poetry
-          poetry config virtualenvs.in-project true
+          pip install maturin
 
       - name: Run mypy with nox
         shell: bash
@@ -81,8 +80,7 @@ jobs:
         shell: bash
         run: |
           pip install nox
-          pip install poetry
-          poetry config virtualenvs.in-project true
+          pip install maturin
 
       - name: Download coverage data
         uses: actions/download-artifact@v2.1.0

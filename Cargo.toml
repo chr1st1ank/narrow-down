@@ -1,0 +1,16 @@
+[package]
+name = "narrow_down"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.maturin]
+name = "narrow_down._rust"
+
+[lib]
+name = "narrow_down"
+path = "rust/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+fasthash = "0.4.0"
+pyo3 = { version = "0.15.1", features = ["extension-module", "abi3-py37"] }
