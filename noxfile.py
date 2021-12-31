@@ -25,6 +25,7 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         args: Command-line arguments for pip.
         kwargs: Additional keyword arguments for Session.install.
     """
+    session.run("maturin", "develop", "--release")
     with tempfile.NamedTemporaryFile(delete=False, encoding="utf-8", mode="w") as requirements:
         requirements.write("-e .")
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
