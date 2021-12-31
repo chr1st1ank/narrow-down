@@ -34,6 +34,21 @@ def _run(c: Context, command: str) -> Result:
 
 
 @task()
+def develop(c):
+    # type: (Context) -> None
+    """Rebuild the Rust library and install all missing dependencies."""
+    _run(c, "maturin develop --release --extras dev")
+
+
+@task()
+def clean_rust(c):
+    # type: (Context) -> None
+    """Clean up files from Rust built."""
+    _run(c, "cargo clean")
+    _run(c, "cargo clean --release")
+
+
+@task()
 def clean_build(c):
     # type: (Context) -> None
     """Clean up files from package building."""
@@ -71,7 +86,7 @@ def clean_docs(c):
     _run(c, f"rm -f {DOCS_DIR}/modules.rst {DOCS_DIR}/narrow_down.rst")
 
 
-@task(pre=[clean_build, clean_python, clean_tests, clean_docs])
+@task(pre=[clean_rust, clean_build, clean_python, clean_tests, clean_docs])
 def clean(c):
     # type: (Context) -> None
     """Run all clean sub-tasks."""
