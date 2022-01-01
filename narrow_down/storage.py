@@ -1,26 +1,31 @@
 """Base classes and interfaces for storage."""
-from dataclasses import dataclass
-from typing import Optional
-
-import numpy as np
-import numpy.typing as npt
+from abc import ABC
+from enum import Enum
 
 
-@dataclass
-class StoredDocument:
-    """Data object combining all possible fields of a document stored."""
+class StorageMethod(Enum):  # TODO: Review name
+    """Detail level of document persistence."""
 
-    id_: str
-    """Identifier used to distinguish the document from an identical one."""
+    Minimal = 1
+    Fingerprint = 2
+    Document = 3
+    Full = 4
 
-    document: Optional[str] = None
-    """The actual content to use for fuzzy matching, e.g. a full unprocessed sentence."""
 
-    exact_part: Optional[str] = None
-    """A string which should be matched exactly."""
+class StorageBackend(ABC):
+    """Storage backend for a SimilarityStore."""
 
-    fingerprint: Optional[npt.NDArray[np.uint32]] = None
-    """A fuzzy fingerprint of the document, e.g. a Minhash."""
+    # Init: storage_method: str = "lean", "document", "fingerprint"
+    pass
 
-    data: Optional[str] = None
-    """Payload to persist together with the document in the internal data structures."""
+    async def initialize(self) -> None:
+        """Initialize the database."""
+        pass
+
+
+class InMemoryStore(StorageBackend):
+    """In-Memory storage backend for a SimilarityStore."""
+
+    def __init__(self) -> None:
+        """Create a new empty store."""
+        pass

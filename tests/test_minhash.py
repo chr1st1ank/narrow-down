@@ -6,8 +6,8 @@ from narrow_down import hash, minhash
 
 def test_minhash():
     """Check minhashing of a document with hand-checked result."""
-    mh = minhash.MinHash(hash.HashAlgorithm.Murmur3_32bit, 2, 42)
-    minhashes = mh.hash_str(["abc", "def", "g"])
+    mh = minhash.MinHasher(hash.HashAlgorithm.Murmur3_32bit, 2, 42)
+    minhashes = mh.minhash(["abc", "def", "g"])
 
     assert minhashes.shape == (2,)
     assert minhashes.dtype == np.uint32
