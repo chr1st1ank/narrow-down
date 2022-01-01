@@ -1,8 +1,8 @@
 """High-level API for indexing and retrieval of documents."""
 from typing import Callable, List, Set
 
-from narrow_down import hash, minhash
-from narrow_down.data_types import StoredDocument
+from narrow_down import _minhash, hash
+from narrow_down.data_types import _StoredDocument
 from narrow_down.storage import StorageBackend
 
 
@@ -25,12 +25,12 @@ class SimilarityStore:
         self._tokenize = tokenize
         # if lsh_algorithm != "minhash":
         #     raise ValueError(f"Unknown algorithm {lsh_algorithm} in parameter lsh_algorithm!")
-        self._minhash = minhash.MinHasher(hash_algorithm)
+        self._minhash = _minhash.MinHasher(hash_algorithm)
         # TODO: What about a setup with an existing database?
-        lsh_config = minhash.LSH.find_optimal_config(
+        lsh_config = _minhash.LSH.find_optimal_config(
             max_false_negative_proba, max_false_positive_proba, similarity_threshold
         )
-        self._lsh = minhash.LSH(**lsh_config)
+        self._lsh = _minhash.LSH(**lsh_config)
 
     async def initialize(self):
         """Initialize the internal storage.
@@ -50,7 +50,7 @@ class SimilarityStore:
             fingerprint=fingerprint, document_id=document_id, exact_part=exact_part, data=data
         )
 
-    async def query(self, document: str, *, exact_part=None) -> Set[StoredDocument]:
+    async def query(self, document: str, *, exact_part=None) -> Set[_StoredDocument]:
         """Query all similar documents."""
         tokens = self._tokenize(document)
         fingerprint = self._minhash.minhash(tokens)

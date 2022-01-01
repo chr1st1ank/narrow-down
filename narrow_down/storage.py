@@ -1,15 +1,15 @@
 """Base classes and interfaces for storage."""
+import enum
 from abc import ABC
-from enum import Enum
 
 
-class StorageMethod(Enum):  # TODO: Review name
+class StorageMethod(enum.Flag):  # TODO: Review name
     """Detail level of document persistence."""
 
-    Minimal = 1
-    Fingerprint = 2
-    Document = 3
-    Full = 4
+    Minimal = enum.auto()
+    Fingerprint = enum.auto()
+    Document = enum.auto()
+    Full = Minimal | Fingerprint | Document
 
 
 class StorageBackend(ABC):

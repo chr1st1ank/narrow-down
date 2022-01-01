@@ -1,17 +1,15 @@
 """Hash algorithms."""
-from collections.abc import Callable
-from enum import Enum
+import enum
 
 from ._rust import murmur3_32bit, xxhash_32bit, xxhash_64bit
 
 
-class HashAlgorithm(Enum):
+class HashAlgorithm(enum.Flag):
     """Enum of available hash algorithms."""
 
-    Murmur3_32bit = 1
-    # Not yet implemented:
-    Xxhash_32bit = 2
-    Xxhash_64bit = 3
+    Murmur3_32bit = enum.auto()
+    Xxhash_32bit = enum.auto()
+    Xxhash_64bit = enum.auto()
 
 
 _ENUM_TO_FUNCTION = {
@@ -20,10 +18,10 @@ _ENUM_TO_FUNCTION = {
     HashAlgorithm.Xxhash_64bit: xxhash_64bit,
 }
 
-
-def get_function_by_name(algorithm: HashAlgorithm) -> Callable:
-    """Get a hash function corresponding to an enum value."""
-    return _ENUM_TO_FUNCTION[algorithm]
-
-
-# __all__ = ["HashAlgorithm", "murmur3_32bit", "xxhash_32bit", "xxhash_64bit"]
+# __all__ makes Sphinx document the imported rust functions as part of the public API
+__all__ = [
+    "HashAlgorithm",
+    "murmur3_32bit",
+    "xxhash_32bit",
+    "xxhash_64bit",
+]

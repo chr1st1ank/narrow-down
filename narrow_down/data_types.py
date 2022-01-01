@@ -10,7 +10,7 @@ Fingerprint = NewType("Fingerprint", npt.NDArray[np.uint32])
 
 
 @dataclass
-class StoredDocument:
+class _StoredDocument:
     """Data object combining all possible fields of a document stored."""
 
     id_: str

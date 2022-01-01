@@ -10,7 +10,7 @@ import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
 from . import _rust, hash
-from .data_types import Fingerprint, StoredDocument
+from .data_types import Fingerprint, _StoredDocument
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
 
@@ -73,7 +73,7 @@ class LSH:
         self.rows_per_band = n_hashes // n_bands
         self.bands: List[Dict[int, int]] = [{} for _ in range(self.n_bands)]
         self.values: List[int] = []
-        self._hashfunc = hash.get_function_by_name(hash_algorithm)
+        self._hashfunc = hash._ENUM_TO_FUNCTION[hash_algorithm]
 
     async def insert(
         self,
@@ -96,7 +96,7 @@ class LSH:
 
     async def query(
         self, fingerprint: Fingerprint, *, exact_part: str = None
-    ) -> Set[StoredDocument]:
+    ) -> Set[_StoredDocument]:
         """Find all similar documents."""
         pass
 
