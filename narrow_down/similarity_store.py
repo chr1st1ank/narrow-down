@@ -1,8 +1,8 @@
 """High-level API for indexing and retrieval of documents."""
-from typing import Callable, List, Set
+from typing import Callable, Iterable, List
 
 from narrow_down import _minhash, hash
-from narrow_down.data_types import _StoredDocument
+from narrow_down.data_types import StoredDocument
 from narrow_down.storage import StorageBackend
 
 
@@ -11,6 +11,7 @@ class SimilarityStore:
 
     def __init__(
         self,
+        /,
         storage: StorageBackend,
         tokenize: Callable[[str], List[str]],
         hash_algorithm: hash.HashAlgorithm,
@@ -50,7 +51,7 @@ class SimilarityStore:
             fingerprint=fingerprint, document_id=document_id, exact_part=exact_part, data=data
         )
 
-    async def query(self, document: str, *, exact_part=None) -> Set[_StoredDocument]:
+    async def query(self, document: str, *, exact_part=None) -> Iterable[StoredDocument]:
         """Query all similar documents."""
         tokens = self._tokenize(document)
         fingerprint = self._minhash.minhash(tokens)

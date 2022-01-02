@@ -1,16 +1,16 @@
 """Implementation of the minhash algorithm.
 
-Source: Leskovec, Rajaraman, and Ullman, “Mining of Massive Datasets.”, Chapter 3.
+Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapter 3.
 """
 import warnings
-from typing import Dict, List, Optional, Set
+from typing import Iterable, List, Optional, Set
 
 import numpy as np
 import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
-from . import _rust, hash
-from .data_types import Fingerprint, _StoredDocument
+from . import _rust, hash, storage
+from .data_types import Fingerprint, StoredDocument
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
 
@@ -66,47 +66,61 @@ class MinHasher:
 class LSH:
     """Locality sensitive hash structure to store minhashes efficiently."""
 
-    def __init__(self, n_hashes: int, n_bands: int, hash_algorithm: hash.HashAlgorithm):
+    def __init__(
+        self,
+        n_hashes: int,
+        n_bands: int,
+        hash_algorithm: hash.HashAlgorithm,
+        storage: storage.StorageBackend,
+    ):
         """Create a new LSH object."""
+        self._storage = storage
         self.n_hashes = n_hashes
         self.n_bands = n_bands
         self.rows_per_band = n_hashes // n_bands
-        self.bands: List[Dict[int, int]] = [{} for _ in range(self.n_bands)]
-        self.values: List[int] = []
+        # self.bands: List[Dict[int, int]] = [{} for _ in range(self.n_bands)]
+        # self.values: List[int] = []
         self._hashfunc = hash._ENUM_TO_FUNCTION[hash_algorithm]
+
+    def _hash(self, arr: npt.NDArray, exact_part: str = None, /) -> int:
+        """Merge multiple hashes together to one hash."""
+        if exact_part:
+            return self._hashfunc(bytes(arr.data) + exact_part.encode("utf-8"))
+        return self._hashfunc(bytes(arr.data))
 
     async def insert(
         self,
         fingerprint: Fingerprint,
         *,
-        document_id: str = None,
+        document_id: str = None,  # TODO: Really?
         exact_part: str = None,
         data: str = None,
     ):
         """Index a new document."""
-        pass
-
-        # def insert(self, minhashes: np.array, value):
-        #     value_index = len(self.values)
-        #     self.values.append(value)
-        #     for band_number in range(self.n_bands):
-        #         start_index = band_number * self.rows_per_band
-        #         h = self._hash(minhashes[start_index : start_index + self.rows_per_band])
-        #         self.bands[band_number].setdefault(h, set()).update([value_index])
+        doc = StoredDocument(exact_part=exact_part, fingerprint=fingerprint, data=data)
+        doc_index = await self._storage.insert_document(bytes(doc))
+        for band_number in range(self.n_bands):
+            start_index = band_number * self.rows_per_band
+            h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
+            await self._storage.add_document_to_bucket(
+                bucket_id=band_number, document_hash=h, document_id=doc_index
+            )
 
     async def query(
         self, fingerprint: Fingerprint, *, exact_part: str = None
-    ) -> Set[_StoredDocument]:
+    ) -> Iterable[StoredDocument]:
         """Find all similar documents."""
-        pass
-
-        # def query(self, minhashes: np.array):
-        #     candidates = set()
-        #     for band_number in range(self.n_bands):
-        #         start_index = band_number * self.rows_per_band
-        #         h = self._hash(minhashes[start_index : start_index + self.rows_per_band])
-        #         candidates.update(self.bands[band_number].get(h, set()))
-        #     return set(self.values[c] for c in candidates)
+        candidates: Set[int] = set()
+        for band_number in range(self.n_bands):  # TODO: parallelize
+            start_index = band_number * self.rows_per_band
+            h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
+            candidates.update(
+                await self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
+            )
+        documents = []
+        for c in candidates:  # TODO: Deserialize and make all queries async
+            documents.append(StoredDocument.from_bytes(await self._storage.query_document(c)))
+        return documents
 
     @classmethod
     def find_optimal_config(
@@ -165,11 +179,11 @@ class LSH:
         return 1, num_perm
 
     @classmethod
-    def _false_positive_probability(cls, threshold: float, b: int, r: int):
-        a = integrate(lambda s: 1 - (1 - s ** float(r)) ** float(b), 0.0, threshold)
+    def _false_positive_probability(cls, threshold: float, b: int, r: int) -> float:
+        err, a = integrate(lambda s: 1 - (1 - s ** float(r)) ** float(b), 0.0, threshold)
         return a
 
     @classmethod
-    def _false_negative_probability(cls, threshold: float, b: int, r: int):
-        a = integrate(lambda s: 1 - (1 - (1 - s ** float(r)) ** float(b)), threshold, 1.0)
+    def _false_negative_probability(cls, threshold: float, b: int, r: int) -> float:
+        err, a = integrate(lambda s: 1 - (1 - (1 - s ** float(r)) ** float(b)), threshold, 1.0)
         return a

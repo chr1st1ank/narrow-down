@@ -1,4 +1,5 @@
 """Type definitions of pure data classes and abstract types."""
+import pickle  # noqa
 from dataclasses import dataclass
 from typing import NewType, Optional
 
@@ -9,11 +10,11 @@ Fingerprint = NewType("Fingerprint", npt.NDArray[np.uint32])
 """Type representing the result of a minhashing operation"""
 
 
-@dataclass
-class _StoredDocument:
+@dataclass(frozen=True)
+class StoredDocument:
     """Data object combining all possible fields of a document stored."""
 
-    id_: str
+    id_: Optional[int] = None
     """Identifier used to distinguish the document from an identical one."""
 
     document: Optional[str] = None
@@ -27,3 +28,12 @@ class _StoredDocument:
 
     data: Optional[str] = None
     """Payload to persist together with the document in the internal data structures."""
+
+    def __bytes__(self) -> bytes:
+        """Serialize a document to bytes."""
+        return pickle.dumps(self)  # noqa # TODO: Pickle is far from optimal here
+
+    @staticmethod
+    def from_bytes(doc: bytes) -> "StoredDocument":
+        """Deerialize a document from bytes."""
+        return pickle.loads(doc)  # noqa # TODO: Pickle is far from optimal here

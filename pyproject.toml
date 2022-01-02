@@ -61,6 +61,7 @@ dev = [
 "sphinx~=4.2",
 "bump2version~=1.0",
 "pytest~=6.2",
+"pytest-asyncio",
 "xdoctest~=0.15",
 "coverage[toml]~=6.0",
 "pytest-cov~=3.0",
@@ -109,9 +110,13 @@ mccabe = ["+*"]
 ]
 flake8-annotations = [
     "-ANN101",  # Missing type annotation for self in method
-    "-ANN102"   # Missing type annotation for cls in classmethod
+    "-ANN102",   # Missing type annotation for cls in classmethod
+    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
 ]
-darglint = ["+*"]
+flake8-darglint = [
+    "+*",
+    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
+]
 pycodestyle = [
     "+*",
     "-E203",  # whitespace before ‘:’, conflict with black

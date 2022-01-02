@@ -11,24 +11,24 @@ enum HashAlgorithm {
     Xxhash64bit,
 }
 
-/// murmur3_32bit(s: str) -> int
+/// murmur3_32bit(s: bytes) -> int
 /// Calculate the 32 bit murmur3 hash of the input string.
 #[pyfunction]
-fn murmur3_32bit(s: &str) -> u32 {
+fn murmur3_32bit(s: &[u8]) -> u32 {
     murmur3::hash32(s)
 }
 
-/// xxhash_32bit(s: str) -> int
+/// xxhash_32bit(s: bytes) -> int
 /// Calculate the 32 bit xxhash of the input string.
 #[pyfunction]
-fn xxhash_32bit(s: &str) -> u32 {
+fn xxhash_32bit(s: &[u8]) -> u32 {
     xx::hash32(s)
 }
 
-/// xxhash_64bit(s: str) -> int
+/// xxhash_64bit(s: bytes) -> int
 /// Calculate the 64 bit xxhash of the input string.
 #[pyfunction]
-fn xxhash_64bit(s: &str) -> u64 {
+fn xxhash_64bit(s: &[u8]) -> u64 {
     xx::hash64(s)
 }
 
