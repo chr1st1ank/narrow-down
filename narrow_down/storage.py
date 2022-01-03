@@ -4,6 +4,8 @@ from abc import ABC
 from collections import defaultdict
 from typing import Dict, Iterable, Set
 
+from . import hash
+
 
 class StorageMethod(enum.Flag):  # TODO: Review name
     """Detail level of document persistence."""
@@ -25,19 +27,19 @@ class StorageBackend(ABC):
         """
         return self
 
-    async def insert_document(self, document: bytes) -> int:
+    async def insert_document(self, document: bytes, document_id: str = None) -> str:
         """Add the data of a document to the storage and return its ID."""
         raise NotImplementedError()
 
-    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
+    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: str):
         """Link a document to a bucket."""
         raise NotImplementedError()
 
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
+    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[str]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         raise NotImplementedError
 
-    async def query_document(self, document_id) -> bytes:
+    async def query_document(self, document_id: str) -> bytes:
         """Get the data belonging to a document."""
         raise NotImplementedError
 
@@ -47,24 +49,27 @@ class InMemoryStore(StorageBackend):
 
     def __init__(self) -> None:
         """Create a new empty in memory database."""
-        self._documents: Dict[int, bytes] = {}  # TODO: List or dict? Whatever is faster or smaller
-        self._buckets: Dict[int, Dict[int, Set[int]]] = defaultdict(lambda: defaultdict(set))
+        self._documents: Dict[str, bytes] = {}
+        self._buckets: Dict[int, Dict[int, Set[str]]] = defaultdict(lambda: defaultdict(set))
 
-    async def insert_document(self, document: bytes) -> int:
+    async def insert_document(self, document: bytes, document_id: str = None) -> str:
         """Add the data of a document to the storage and return its ID."""
-        index = len(self._documents)
+        if document_id:
+            index = document_id
+        else:
+            index = self._find_next_document_id(document)
         self._documents[index] = document
         return index
 
-    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
+    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: str):
         """Link a document to a bucket."""
         self._buckets[bucket_id][document_hash].add(document_id)
 
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
+    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[str]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         return self._buckets[bucket_id][document_hash]
 
-    async def query_document(self, document_id) -> bytes:
+    async def query_document(self, document_id: str) -> bytes:
         """Get the data belonging to a document.
 
         Args:
@@ -78,3 +83,10 @@ class InMemoryStore(StorageBackend):
             KeyError: If the document is not stored.
         """
         return self._documents[document_id]
+
+    def _find_next_document_id(self, document: bytes) -> str:
+        """Find an unused document ID."""
+        x: int = hash.xxhash_32bit(document)
+        while str(x) in self._documents:
+            x += 1
+        return str(x)

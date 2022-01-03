@@ -121,7 +121,8 @@ pycodestyle = [
     "+*",
     "-E203",  # whitespace before ‘:’, conflict with black
     "-E266",  # Comments with multiple ##
-    "-W504",  # Line breaks after binary operators. These are preferred according to  PEP8
+    "-W503",  # Line breaks before binary operators. Sometimes clashes with black
+    "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
 ]
 
 [tool.flakehell.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
