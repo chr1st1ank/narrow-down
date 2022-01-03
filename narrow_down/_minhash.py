@@ -136,19 +136,16 @@ def find_optimal_config(
     max_false_positive_proba: float,
 ) -> MinhashLshConfig:
     """Find the optimal configuration given the provided target parameters."""
-    num_perm = 8
+    num_perm = 2
     b, r = _params_given_false_negative_proba(jaccard_threshold, num_perm, max_false_negative_proba)
-    fp = _false_positive_probability(jaccard_threshold, b, r)
-    while fp > max_false_positive_proba:
-        num_perm *= 2
-        print(num_perm)
-        b, r = _params_given_false_negative_proba(
-            jaccard_threshold, num_perm, max_false_negative_proba
-        )
-        fp = _false_positive_probability(jaccard_threshold, b, r)
+    while _false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
         if num_perm >= 16384:
             warnings.warn("Unable to reach error thresholds. Taking the best value.")
             break
+        num_perm *= 2
+        b, r = _params_given_false_negative_proba(
+            jaccard_threshold, num_perm, max_false_negative_proba
+        )
 
     return MinhashLshConfig(n_hashes=num_perm, n_bands=b, rows_per_band=r)
 

@@ -46,4 +46,4 @@ async def test_in_memory_store__add_documents_to_bucket_and_query():
     await ims.add_document_to_bucket(bucket_id=1, document_hash=20, document_id="20")
     await ims.add_document_to_bucket(bucket_id=1, document_hash=20, document_id="21")
     assert list(await ims.query_ids_from_bucket(bucket_id=1, document_hash=10)) == ["10"]
-    assert list(await ims.query_ids_from_bucket(bucket_id=1, document_hash=20)) == ["20", "21"]
+    assert sorted(await ims.query_ids_from_bucket(bucket_id=1, document_hash=20)) == ["20", "21"]

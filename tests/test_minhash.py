@@ -60,12 +60,34 @@ async def test_lsh__basic_lookup_with_exact_part():
 
 @pytest.mark.parametrize(
     "j, fn, fp, expected",
-    [(0.5, 0.05, 0.05, _minhash.MinhashLshConfig(n_hashes=128, n_bands=22, rows_per_band=5))],
+    [
+        (0.5, 0.05, 0.05, _minhash.MinhashLshConfig(n_hashes=128, n_bands=22, rows_per_band=5)),
+        (0.5, 1, 0.1, _minhash.MinhashLshConfig(n_hashes=2, n_bands=1, rows_per_band=2)),
+        (0.5, 0.1, 1, _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1)),
+        (
+            0.5,
+            -1,
+            0.2,
+            _minhash.MinhashLshConfig(n_hashes=16384, n_bands=16384, rows_per_band=1),
+        ),
+        (
+            0.5,
+            1,
+            -1,
+            _minhash.MinhashLshConfig(n_hashes=16384, n_bands=1, rows_per_band=16384),
+        ),
+    ],
 )
 def test_find_optimal_config(j, fn, fp, expected):
-    assert (
-        _minhash.find_optimal_config(
-            jaccard_threshold=j, max_false_negative_proba=fn, max_false_positive_proba=fp
-        )
-        == expected
+    cfg = _minhash.find_optimal_config(
+        jaccard_threshold=j, max_false_negative_proba=fn, max_false_positive_proba=fp
     )
+    print(
+        "False negative proba:",
+        _minhash._false_negative_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
+    )
+    print(
+        "False positive proba:",
+        _minhash._false_positive_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
+    )
+    assert cfg == expected
