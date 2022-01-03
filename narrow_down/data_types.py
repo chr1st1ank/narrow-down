@@ -29,11 +29,13 @@ class StoredDocument:
     data: Optional[str] = None
     """Payload to persist together with the document in the internal data structures."""
 
+    # TODO: Pickle is far from optimal here.
+    #   Maybe https://github.com/ultrajson/ultrajson is an alternative?
     def __bytes__(self) -> bytes:
         """Serialize a document to bytes."""
-        return pickle.dumps(self)  # noqa # TODO: Pickle is far from optimal here
+        return pickle.dumps(self)  # noqa
 
     @staticmethod
     def from_bytes(doc: bytes) -> "StoredDocument":
         """Deerialize a document from bytes."""
-        return pickle.loads(doc)  # noqa # TODO: Pickle is far from optimal here
+        return pickle.loads(doc)  # noqa
