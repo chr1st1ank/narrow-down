@@ -78,7 +78,20 @@ async def test_lsh__basic_lookup_with_exact_part():
         ),
     ],
 )
-def test_find_optimal_config(j, fn, fp, expected):
+def test_find_optimal_config(j, fn, fp, expected) -> None:
+    """Test the parameter optimization.
+
+    Expectations: As long as the proba thresholds can't be reached the number of hashes should be
+    increased. If the false negative threshold isn't reachable, the number of bands should be
+    increased because that increases the matching chances. If the false positive threshold can't
+    be reached the rows_per_band should be increased instead to reduce the matching chances.
+
+    Args:
+        j: Jaccard similarity threshold
+        fn: Max false negative probability
+        fp: Max false positive probabiblity
+        expected: Expected output parameters
+    """
     cfg = _minhash.find_optimal_config(
         jaccard_threshold=j, max_false_negative_proba=fn, max_false_positive_proba=fp
     )

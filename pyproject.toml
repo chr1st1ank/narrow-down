@@ -149,7 +149,7 @@ known_third_party = ["invoke", "nox"]
 
 [tool.black]
 line-length = 100
-target-version = ["py39"]
+target-version = ["py37"]
 include = '\.pyi?$'
 exclude = '''
 /(

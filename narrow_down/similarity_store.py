@@ -11,7 +11,7 @@ class SimilarityStore:
 
     def __init__(
         self,
-        /,
+        *,
         storage: StorageBackend,
         tokenize: Callable[[str], List[str]],
         max_false_negative_proba: float,
