@@ -1,5 +1,4 @@
 """Base classes and interfaces for storage."""
-import enum
 from abc import ABC
 from collections import defaultdict
 from typing import Dict, Iterable, Set
@@ -7,39 +6,32 @@ from typing import Dict, Iterable, Set
 from . import hash
 
 
-class StorageMethod(enum.Flag):  # TODO: Review name
-    """Detail level of document persistence."""
-
-    Minimal = enum.auto()
-    Fingerprint = enum.auto()
-    Document = enum.auto()
-    Full = Minimal | Fingerprint | Document
-
-
 class StorageBackend(ABC):
     """Storage backend for a SimilarityStore."""
 
-    async def initialize(self) -> "StorageBackend":
-        """Initialize the database.
+    async def initialize(
+        self,
+    ) -> "StorageBackend":
+        """Initialize the database, discarding existing content.
 
         Returns:
             self
         """
         return self
 
-    async def insert_document(self, document: bytes, document_id: str = None) -> str:
+    async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
         raise NotImplementedError()
 
-    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: str):
+    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
         raise NotImplementedError()
 
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[str]:
+    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         raise NotImplementedError
 
-    async def query_document(self, document_id: str) -> bytes:
+    async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document."""
         raise NotImplementedError
 
@@ -49,10 +41,10 @@ class InMemoryStore(StorageBackend):
 
     def __init__(self) -> None:
         """Create a new empty in memory database."""
-        self._documents: Dict[str, bytes] = {}
-        self._buckets: Dict[int, Dict[int, Set[str]]] = defaultdict(lambda: defaultdict(set))
+        self._documents: Dict[int, bytes] = {}
+        self._buckets: Dict[int, Dict[int, Set[int]]] = defaultdict(lambda: defaultdict(set))
 
-    async def insert_document(self, document: bytes, document_id: str = None) -> str:
+    async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
         if document_id:
             index = document_id
@@ -61,15 +53,15 @@ class InMemoryStore(StorageBackend):
         self._documents[index] = document
         return index
 
-    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: str):
+    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
         self._buckets[bucket_id][document_hash].add(document_id)
 
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[str]:
+    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         return self._buckets[bucket_id][document_hash]
 
-    async def query_document(self, document_id: str) -> bytes:
+    async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
 
         Args:
@@ -84,9 +76,9 @@ class InMemoryStore(StorageBackend):
         """
         return self._documents[document_id]
 
-    def _find_next_document_id(self, document: bytes) -> str:
+    def _find_next_document_id(self, document: bytes) -> int:
         """Find an unused document ID."""
         x: int = hash.xxhash_32bit(document)
-        while str(x) in self._documents:
+        while x in self._documents:
             x += 1
-        return str(x)
+        return x

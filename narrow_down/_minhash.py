@@ -4,14 +4,14 @@ Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapt
 """
 import warnings
 from dataclasses import dataclass
-from typing import Iterable, List, Optional, Set
+from typing import Collection, Optional, Set
 
 import numpy as np
 import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
 from . import _rust, hash
-from .data_types import Fingerprint, StoredDocument
+from .data_types import Fingerprint, StorageLevel, StoredDocument
 from .storage import StorageBackend
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
@@ -57,7 +57,7 @@ class MinHasher:
             0, _MERSENNE_PRIME, size=n_hashes, dtype="uint32"
         )
 
-    def minhash(self, shingles: List[str]) -> Fingerprint:
+    def minhash(self, shingles: Collection[str]) -> Fingerprint:
         """Calculate the array of minhashes for a list of strings.
 
         Args:
@@ -69,7 +69,7 @@ class MinHasher:
         """
         return Fingerprint(
             np.array(  # TODO: Create array directly in Rust
-                _rust.minhash(shingle_list=shingles, a=self.a, b=self.b), np.uint32
+                _rust.minhash(shingle_list=list(shingles), a=self.a, b=self.b), np.uint32
             )
         )
 
@@ -92,32 +92,34 @@ class LSH:
     def _hash(self, arr: npt.NDArray, exact_part: str = None) -> int:
         """Merge multiple hashes together to one hash."""
         if exact_part:
-            return self._hashfunc(bytes(arr.data) + exact_part.encode("utf-8"))
+            return self._hashfunc(bytes(arr.data) + b"-" + exact_part.encode("utf-8"))
         return self._hashfunc(bytes(arr.data))
 
     async def insert(
-        self,
-        fingerprint: Fingerprint,
-        *,
-        document_id: str = None,
-        exact_part: str = None,
-        data: str = None,
-    ):
+        self, document: StoredDocument, storage_level: StorageLevel = StorageLevel.Full
+    ) -> int:
         """Index a new document."""
-        doc = StoredDocument(exact_part=exact_part, fingerprint=fingerprint, data=data)
-        doc_index = await self._storage.insert_document(bytes(doc), document_id=document_id)
+        if document.fingerprint is None:
+            raise ValueError("Cannot index document without fingerprint!")
+        doc_index = await self._storage.insert_document(
+            document.serialize(storage_level), document_id=document.id_
+        )
         for band_number in range(self.n_bands):
             start_index = band_number * self.rows_per_band
-            h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
+            h = self._hash(
+                document.fingerprint[start_index : start_index + self.rows_per_band],
+                document.exact_part,
+            )
             await self._storage.add_document_to_bucket(
                 bucket_id=band_number, document_hash=h, document_id=doc_index
             )
+        return doc_index
 
     async def query(
         self, fingerprint: Fingerprint, *, exact_part: str = None
-    ) -> Iterable[StoredDocument]:
+    ) -> Collection[StoredDocument]:
         """Find all similar documents."""
-        candidates: Set[str] = set()
+        candidates: Set[int] = set()
         for band_number in range(self.n_bands):  # TODO: parallelize
             start_index = band_number * self.rows_per_band
             h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
@@ -126,7 +128,7 @@ class LSH:
             )
         documents = []
         for c in candidates:  # TODO: Deserialize and make all queries async
-            documents.append(StoredDocument.from_bytes(await self._storage.query_document(c)))
+            documents.append(StoredDocument.deserialize(await self._storage.query_document(c), c))
         return documents
 
 

@@ -28,9 +28,7 @@ async def test_lsh__basic_lookup_without_exact_part():
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
         storage=await storage.InMemoryStore().initialize(),
     )
-    await lsh.insert(
-        test_doc.fingerprint,
-    )
+    await lsh.insert(test_doc.without("exact_part"))
     result = await lsh.query(test_doc.fingerprint)
     print(result)
     assert len(result) == 1
@@ -50,7 +48,7 @@ async def test_lsh__basic_lookup_with_exact_part():
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
         storage=await storage.InMemoryStore().initialize(),
     )
-    await lsh.insert(test_doc.fingerprint, exact_part=test_doc.exact_part)
+    await lsh.insert(test_doc)
     result = await lsh.query(test_doc.fingerprint, exact_part=test_doc.exact_part)
     print(result)
     assert len(result) == 1
