@@ -56,6 +56,14 @@ async def test_lsh__basic_lookup_with_exact_part():
     assert list(result)[0].exact_part == test_doc.exact_part
 
 
+@pytest.mark.asyncio
+async def test_lsh__insert_invalid_document():
+    """Test error handling of insert()."""
+    lsh = _minhash.LSH(_minhash.MinhashLshConfig(1, 1, 1), None)
+    with pytest.raises(ValueError):
+        await lsh.insert(data_types.StoredDocument())
+
+
 @pytest.mark.parametrize(
     "j, fn, fp, expected",
     [
