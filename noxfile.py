@@ -26,10 +26,11 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         kwargs: Additional keyword arguments for Session.install.
     """
     session.install("maturin", *args, **kwargs)
-    session.run("maturin", "develop", "--release")
+    session.run("maturin", "build", "--release")
+    args2 = list(args) + ["--find-links", "target/wheels/"]
     with tempfile.NamedTemporaryFile(delete=False, encoding="utf-8", mode="w") as requirements:
-        requirements.write("-e .")
-        session.install(f"--constraint={requirements.name}", *args, **kwargs)
+        requirements.write("narrow_down")
+        session.install(f"--constraint={requirements.name}", *args2, **kwargs)
 
 
 @nox.session(python=python_versions)
