@@ -29,10 +29,10 @@ jobs:
     # Tests are run on all platform/python combinations for which numpy wheels exist.
     needs: linting
     name: ${{ matrix.os }} / ${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["MacOS"]  #[Ubuntu, MacOS, Windows]
+        os: ["macos-11"]  #[ubuntu-latest, macos-latest, windows-latest]
 #        python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.7", "3.10"]
         exclude:
@@ -54,9 +54,7 @@ jobs:
 
       - name: Install system deps
         shell: bash
-        run: |
-          pip install nox
-          pip install maturin
+        run: pip install nox maturin
 
       - name: Run mypy with nox
         shell: bash
