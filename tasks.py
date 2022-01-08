@@ -166,7 +166,9 @@ def coverage(c, fmt="report", open_browser=False):
     """Create coverage report."""
     if any(Path().glob(".coverage.*")):
         _run(c, "coverage combine")
-    _run(c, f"coverage {fmt} -i")
+    _run(c, "coverage report -i")
+    if fmt != "report":
+        _run(c, f"coverage {fmt} -i")
     if fmt == "html" and open_browser:
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
