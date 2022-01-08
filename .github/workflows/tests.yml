@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: ["macos-10.15"]  #[Ubuntu, MacOS, Windows]
+        os: ["macos-11"]  #[Ubuntu, MacOS, Windows]
 #        python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.7", "3.10"]
         exclude:
