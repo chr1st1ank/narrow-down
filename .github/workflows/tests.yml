@@ -61,6 +61,7 @@ jobs:
         run: nox --force-color -s safety
 
       - name: Upload coverage data
+        if: matrix.python-version != '3.7'
         uses: actions/upload-artifact@v2.3.1
         with:
           name: coverage-data
