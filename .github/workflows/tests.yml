@@ -68,17 +68,13 @@ jobs:
         shell: bash
         run: pip install nox maturin
 
-      - name: Build package
-        shell: bash
-        run: pip install nox maturin
-
       - name: Run mypy with nox
         shell: bash
-        run: nox --force-color -s mypy-${{ matrix.python-version }}
+        run: nox --verbose --force-color -s mypy-${{ matrix.python-version }}
 
       - name: Run tests with nox
         shell: bash
-        run: nox --force-color -s tests-${{ matrix.python-version }}
+        run: nox --verbose --force-color -s tests-${{ matrix.python-version }}
 
       - name: Run safety check
         if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'

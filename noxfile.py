@@ -28,7 +28,7 @@ def install_with_constraints(session: Session, *args: str) -> None:  # noqa
     if "darwin" in sys.platform.lower():
         maturin_cmd.append("--universal2")
     session.run(*maturin_cmd)
-    session.install("--find-links", "dist/", "narrow_down", *args)
+    session.install("--find-links", "dist", "narrow_down", *args)
 
 
 @nox.session(python=python_versions)
