@@ -5,6 +5,26 @@ import pytest
 from narrow_down import _tokenize
 
 
+@pytest.mark.parametrize(
+    "s, n, expected",
+    [
+        ("", 1, set()),
+        ("two words", 1, {"two", "words"}),
+        (" two  words ", 1, {"two", "words"}),
+        ("\ttwo\nwords", 1, {"two", "words"}),
+        ("two\twords", 1, {"two", "words"}),
+        ("two words", 2, {"two words"}),
+        (" two  words ", 2, {"two words"}),
+        ("\ttwo\nwords", 2, {"two words"}),
+        ("two\twords", 2, {"two words"}),
+        ("two words", 3, {"two words"}),
+        ("three words long", 2, {"three words", "words long"}),
+    ],
+)
+def test_word_ngrams(s, n, expected):
+    assert _tokenize.word_ngrams(s, n) == expected
+
+
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, ""), (2, "")])
 def test_char_ngrams__str_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""

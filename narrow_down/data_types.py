@@ -65,7 +65,7 @@ class StoredDocument:
         """Create a copy with the specified attributes left out.
 
         Args:
-            *attributes: The names of the attributes to leave empty
+            attributes: The names of the attributes to leave empty
 
         Returns:
             A copy of the StoredDocument with all the attributes specified in *attributes left out.
