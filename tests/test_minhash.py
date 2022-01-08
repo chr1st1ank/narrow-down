@@ -8,11 +8,26 @@ from narrow_down import _minhash, data_types, storage
 def test_minhash():
     """Check minhashing of a document with hand-checked result."""
     mh = _minhash.MinHasher(2, 42)
+    print(mh.a)
+    print(mh.b)
     minhashes = mh.minhash(["abc", "def", "g"])
 
     assert minhashes.shape == (2,)
     assert minhashes.dtype == np.uint32
     assert (minhashes == np.array([530362422, 32829942], dtype=np.uint32)).all()
+
+
+def test_minhash_benchmark(benchmark, sample_byte_strings):
+    sample_strings = [s.decode("utf-8") for s in sample_byte_strings]
+
+    def f():
+        mh = _minhash.MinHasher(64, 42)
+        return list(map(mh.minhash, sample_strings))[-1]
+
+    minhashes = benchmark(f)
+
+    assert minhashes.dtype == np.uint32
+    assert minhashes.shape == (64,)
 
 
 @pytest.mark.asyncio

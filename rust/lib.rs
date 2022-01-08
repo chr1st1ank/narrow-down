@@ -43,7 +43,7 @@ fn minhash<'py>(
     assert_eq!(b.ndim(), 1);
     assert_eq!(a.shape()[0], b.shape()[0]);
 
-    let murmur_hashes: Vec<u32> = shingle_list.iter().map(|s| murmur3::hash32(s)).collect();
+    let murmur_hashes: Vec<u32> = shingle_list.iter().map(|s| murmur3_32bit(s.as_bytes())).collect();
     let mut minhashes: Vec<u32> = Vec::new();
     let a_slice = a.as_slice()?;
     let b_slice = b.as_slice()?;
@@ -72,23 +72,36 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use numpy::IntoPyArray;
 
     // Test hashes from https://asecuritysite.com/hash/smh
     #[test]
     fn test_murmur3_32bit() {
-        assert_eq!(murmur3_32bit("test"), 3127628307u32);
-        assert_eq!(murmur3_32bit(""), 0u32);
+        assert_eq!(murmur3_32bit(b"test"), 3127628307u32);
+        assert_eq!(murmur3_32bit(b""), 0u32);
     }
 
     #[test]
     fn test_xxhash_32bit() {
-        assert_eq!(xxhash_32bit("test"), 1042293711u32);
-        assert_eq!(xxhash_32bit(""), 46947589u32);
+        assert_eq!(xxhash_32bit(b"test"), 1042293711u32);
+        assert_eq!(xxhash_32bit(b""), 46947589u32);
     }
 
     #[test]
     fn test_xxhash_64bit() {
-        assert_eq!(xxhash_64bit("test"), 5754696928334414137u64);
-        assert_eq!(xxhash_64bit(""), 17241709254077376921u64);
+        assert_eq!(xxhash_64bit(b"test"), 5754696928334414137u64);
+        assert_eq!(xxhash_64bit(b""), 17241709254077376921u64);
     }
+
+    // // This needs linking to libpython and doesn't work with cargo test:
+    // #[test]
+    // fn test_minhash() {
+    //     Python::with_gil(|py|{
+    //         let shingles = vec!["abc", "def"];
+    //         let a = vec![1608637543u32, 3421126068u32].into_pyarray(py);
+    //         let b = vec![4083286876u32,  787846414u32].into_pyarray(py);
+    //         let mh = minhash(py, shingles, a.readonly(), b.readonly());
+    //         assert_eq!(mh.unwrap(), vec![530362422u32, 32829942u32]);
+    //     });
+    // }
 }
