@@ -62,6 +62,7 @@ dev = [
 "bump2version~=1.0",
 "pytest~=6.2",
 "pytest-asyncio",
+"pytest-benchmark",
 "xdoctest~=0.15",
 "coverage[toml]~=6.0",
 "pytest-cov~=3.0",
