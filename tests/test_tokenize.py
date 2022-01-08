@@ -1,22 +1,22 @@
-"""Tests for `narrow_down.tokenize`."""
+"""Tests for `narrow_down._tokenize`."""
 
 import pytest
 
-from narrow_down import tokenize
+from narrow_down import _tokenize
 
 
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, ""), (2, "")])
 def test_char_ngrams__str_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.char_ngrams("", **kwargs) == set()
+    assert _tokenize.char_ngrams("", **kwargs) == set()
 
 
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, b""), (2, b"")])
 def test_char_ngrams__bytes_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.char_ngrams("", **kwargs) == set()
+    assert _tokenize.char_ngrams("", **kwargs) == set()
 
 
 @pytest.mark.parametrize(
@@ -36,7 +36,7 @@ def test_char_ngrams__bytes_empty_string(n, pad_char):
 def test_char_ngrams__str(s, n, pad_char, expected):
     """Check the results for normal use."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.char_ngrams(s, **kwargs) == expected
+    assert _tokenize.char_ngrams(s, **kwargs) == expected
 
 
 @pytest.mark.parametrize(
@@ -53,21 +53,21 @@ def test_char_ngrams__str(s, n, pad_char, expected):
 def test_char_ngrams__bytes(s, n, pad_char, expected):
     """Check the results for normal use."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.char_ngrams(s, **kwargs) == expected
+    assert _tokenize.char_ngrams(s, **kwargs) == expected
 
 
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, ""), (2, "")])
 def test_count_char_ngrams__str_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.count_char_ngrams("", **kwargs) == {}
+    assert _tokenize.count_char_ngrams("", **kwargs) == {}
 
 
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, b""), (2, b"")])
 def test_count_char_ngrams__bytes_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.count_char_ngrams("", **kwargs) == {}
+    assert _tokenize.count_char_ngrams("", **kwargs) == {}
 
 
 @pytest.mark.parametrize(
@@ -87,7 +87,7 @@ def test_count_char_ngrams__bytes_empty_string(n, pad_char):
 def test_count_char_ngrams__str(s, n, pad_char, expected):
     """Check the results for normal use."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.count_char_ngrams(s, **kwargs) == expected
+    assert _tokenize.count_char_ngrams(s, **kwargs) == expected
 
 
 @pytest.mark.parametrize(
@@ -104,4 +104,4 @@ def test_count_char_ngrams__str(s, n, pad_char, expected):
 def test_count_char_ngrams__bytes(s, n, pad_char, expected):
     """Check the results for normal use."""
     kwargs = {k: v for k, v in dict(n=n, pad_char=pad_char).items() if v is not None}
-    assert tokenize.count_char_ngrams(s, **kwargs) == expected
+    assert _tokenize.count_char_ngrams(s, **kwargs) == expected

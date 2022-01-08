@@ -189,14 +189,14 @@ def docs(c, serve=False, open_browser=False):
         _run(c, f"watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
 
 
-@task(pre=[clean, hooks, mypy, docs, safety, tests, coverage])
+@task(pre=[hooks, mypy, docs, safety, tests, coverage])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""
 
 
 @task(
-    help={
+    help={  # noqa
         "part": "Part of the version to be bumped.",
         "dry_run": "Don't write any files, just pretend. (default: False)",
         "allow_dirty": "Normally, bumpversion will abort if the working directory is "

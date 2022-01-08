@@ -28,7 +28,9 @@ classifiers=[
 ]
 
 dependencies = [
-    "numpy~=1.21"
+    "numpy~=1.18",
+    "scipy",
+    "typing_extensions"
 ]
 
 [project.urls]
@@ -41,7 +43,7 @@ documentation = "https://narrow-down.readthedocs.io"
 dev = [
 "pre-commit~=2.15",
 "invoke~=1.6",
-"flake8~=4.0",
+"flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
 "flakehell~=0.9",
 "flake8-builtins~=1.5",
 "flake8-blind-except~=0.2",
@@ -59,6 +61,7 @@ dev = [
 "sphinx~=4.2",
 "bump2version~=1.0",
 "pytest~=6.2",
+"pytest-asyncio",
 "xdoctest~=0.15",
 "coverage[toml]~=6.0",
 "pytest-cov~=3.0",
@@ -101,16 +104,25 @@ extended_default_ignore = []
 
 [tool.flakehell.plugins]
 pyflakes = ["+*"]
-pycodestyle = ["+*"]
 mccabe = ["+*"]
-"flake8-*" = ["+*"]
-darglint = ["+*"]
-
-[tool.flakehell.exceptions."*"]
+"flake8-*" = [
+    "+*",
+]
+flake8-annotations = [
+    "-ANN101",  # Missing type annotation for self in method
+    "-ANN102",   # Missing type annotation for cls in classmethod
+    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
+]
+flake8-darglint = [
+    "+*",
+    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
+]
 pycodestyle = [
+    "+*",
     "-E203",  # whitespace before ‘:’, conflict with black
     "-E266",  # Comments with multiple ##
-    "-W504",  # Line breaks after binary operators. These are preferred according to  PEP8
+    "-W503",  # Line breaks before binary operators. Sometimes clashes with black
+    "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
 ]
 
 [tool.flakehell.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
@@ -120,6 +132,7 @@ flake8 = [
 flake8-annotations = [
     "-ANN001",  # Missing type annotation for function argument
     "-ANN201",  # Missing return type annotation for public function
+    "-ANN102"   # Missing type annotation for cls in classmethod
 ]
 flake8-bandit = ["-S101"]
 flake8-docstrings = [
@@ -136,7 +149,7 @@ known_third_party = ["invoke", "nox"]
 
 [tool.black]
 line-length = 100
-target-version = ["py39"]
+target-version = ["py37"]
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -178,7 +191,8 @@ module = [
     "pytest",
     "invoke.*",
     "murmurhash.*",
-    "nox.*"
+    "nox.*",
+    "scipy.*"
 ]
 allow_redefinition = false
 check_untyped_defs = true
