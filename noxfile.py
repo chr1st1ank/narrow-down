@@ -1,6 +1,5 @@
 """Nox sessions."""
 import platform
-import sys
 
 import nox
 from nox.sessions import Session
@@ -25,8 +24,6 @@ def install_with_constraints(session: Session, *args: str) -> None:  # noqa
     """
     session.install("maturin")
     maturin_cmd = ["maturin", "develop", "--release"]
-    if "darwin" in sys.platform.lower():
-        maturin_cmd.append("--universal2")
     session.run(*maturin_cmd)
     session.install(".", *args)
 
