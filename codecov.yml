@@ -7,4 +7,6 @@ coverage:
       default:
         target: "95"
 comment:
-  require_changes: true
+  layout: "files"
+  behavior: default
+  require_changes: no
