@@ -9,6 +9,7 @@ on:
 
 jobs:
   linting:
+    # Static code analysis. Running on lowest supported Python version to catch use of new syntax.
     name: Linting
     runs-on: ubuntu-latest
     steps:
@@ -25,13 +26,19 @@ jobs:
           pre-commit run --all-files
 
   tests:
+    # Tests are run on all platform/python combinations for which numpy wheels exist.
     needs: linting
     name: ${{ matrix.os }} / ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [MacOS]  #[Ubuntu, MacOS, Windows]
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        os: ["macos-10.15"]  #[Ubuntu, MacOS, Windows]
+#        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.10"]
+        exclude:
+          - os: Windows
+            python-version: "3.10"
+            # No numpy wheels yet
         include:
           - python-version: "3.9"
             os: Ubuntu
