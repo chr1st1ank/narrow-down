@@ -28,6 +28,7 @@ jobs:
     - name: Install built wheel
       if: matrix.target == 'x86_64'
       run: |
+        rm -rf narrow_down
         pip install narrow_down --find-links dist --force-reinstall
         python -c "import narrow_down"
     - name: Upload wheels
@@ -90,6 +91,7 @@ jobs:
         args: --release --universal2 --out dist --no-sdist
     - name: Install built wheel - universal2
       run: |
+        rm -rf narrow_down
         pip install narrow_down --find-links dist --force-reinstall
         python -c "import narrow_down"
     - name: Upload wheels
