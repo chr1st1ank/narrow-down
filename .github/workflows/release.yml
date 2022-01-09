@@ -56,6 +56,11 @@ jobs:
       with:
         target: x64
         args: --release --out dist --no-sdist
+    - name: Install built wheel
+      run: |
+        rm -rf narrow_down
+        pip install narrow_down --find-links dist --force-reinstall
+        python -c "import narrow_down"
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -83,6 +88,7 @@ jobs:
         args: --release --out dist
     - name: Install built wheel - x86_64
       run: |
+        rm -rf narrow_down
         pip install narrow_down --find-links dist --force-reinstall
         python -c "import narrow_down"
     - name: Build wheels - universal2
