@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- A rust extension was added and therefore moving the build system to Maturin.
+- A Minhash-LSH data structure was implemented.
+- Different tokenizers for character- and word-n-grams were implemented.
 
 ## [0.1.1] - 2021-12-30
 
