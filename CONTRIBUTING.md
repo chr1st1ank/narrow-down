@@ -76,7 +76,6 @@ A reminder for the maintainers on how to deploy.
 On branch "main":
 
 - Adjust CHANGELOG.md as described on [https://keepachangelog.com](https://keepachangelog.com).
-- Adjust the version number in dframeio/__init__.py.
 - Then run `invoke version [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
 - Push the commit to github: `git push --tags`
 - A github action will automatically create a github release and publish to pypi

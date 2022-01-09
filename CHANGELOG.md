@@ -7,12 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2022-01-09
+### Added
+- A rust extension was added and therefore moving the build system to Maturin.
+- A Minhash-LSH data structure was implemented.
+- Different tokenizers for character- and word-n-grams were implemented.
+
 ## [0.1.1] - 2021-12-30
 
 ## [0.1.0] - 2021-12-30
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0
