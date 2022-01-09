@@ -8,8 +8,6 @@ from narrow_down import _minhash, data_types, storage
 def test_minhash():
     """Check minhashing of a document with hand-checked result."""
     mh = _minhash.MinHasher(2, 42)
-    print(mh.a)
-    print(mh.b)
     minhashes = mh.minhash(["abc", "def", "g"])
 
     assert minhashes.shape == (2,)
