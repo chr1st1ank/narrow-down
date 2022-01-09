@@ -8,7 +8,7 @@ compatibility = "linux"
 
 [project]
 name = "narrow-down"
-version = "0.2.0"
+version = "0.2.1"
 description = "Fast fuzzy text search"
 #authors = ["Christian Krudewig <chr1st1ank@krudewig-online.de>"]
 readme = "README.md"
