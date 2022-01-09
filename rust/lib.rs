@@ -1,35 +1,41 @@
-use fasthash::{murmur3, xx};
 use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
+use std::hash::Hasher;
+use twox_hash::XxHash32;
+use twox_hash::XxHash64;
 
 const MERSENNE_PRIME: u32 = 4294967295u32; // mersenne prime (1 << 32) - 1
 
-enum HashAlgorithm {
-    Murmur3_32bit,
-    Xxhash32bit,
-    Xxhash64bit,
-}
+// enum HashAlgorithm {
+//     Murmur3_32bit,
+//     Xxhash32bit,
+//     Xxhash64bit,
+// }
 
 /// murmur3_32bit(s: bytes) -> int
 /// Calculate the 32 bit murmur3 hash of the input string.
 #[pyfunction]
 fn murmur3_32bit(s: &[u8]) -> u32 {
-    murmur3::hash32(s)
+    mur3::murmurhash3_x86_32(s, 0)
 }
 
 /// xxhash_32bit(s: bytes) -> int
 /// Calculate the 32 bit xxhash of the input string.
 #[pyfunction]
 fn xxhash_32bit(s: &[u8]) -> u32 {
-    xx::hash32(s)
+    let mut h = XxHash32::with_seed(0);
+    h.write(s);
+    h.finish().try_into().unwrap()
 }
 
 /// xxhash_64bit(s: bytes) -> int
 /// Calculate the 64 bit xxhash of the input string.
 #[pyfunction]
 fn xxhash_64bit(s: &[u8]) -> u64 {
-    xx::hash64(s)
+    let mut h = XxHash64::with_seed(0);
+    h.write(s);
+    h.finish()
 }
 
 #[pyfunction]
@@ -43,7 +49,10 @@ fn minhash<'py>(
     assert_eq!(b.ndim(), 1);
     assert_eq!(a.shape()[0], b.shape()[0]);
 
-    let murmur_hashes: Vec<u32> = shingle_list.iter().map(|s| murmur3_32bit(s.as_bytes())).collect();
+    let murmur_hashes: Vec<u32> = shingle_list
+        .iter()
+        .map(|s| murmur3_32bit(s.as_bytes()))
+        .collect();
     let mut minhashes: Vec<u32> = Vec::new();
     let a_slice = a.as_slice()?;
     let b_slice = b.as_slice()?;
@@ -68,11 +77,9 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use numpy::IntoPyArray;
 
     // Test hashes from https://asecuritysite.com/hash/smh
     #[test]
@@ -94,6 +101,7 @@ mod tests {
     }
 
     // // This needs linking to libpython and doesn't work with cargo test:
+    // use numpy::IntoPyArray;
     // #[test]
     // fn test_minhash() {
     //     Python::with_gil(|py|{
