@@ -24,12 +24,6 @@ jobs:
         manylinux: 2014
         command: build
         args: --release -o dist --no-sdist
-    - name: Install built wheel
-      if: matrix.target == 'x86_64'
-      run: |
-        rm -rf narrow_down
-        pip install narrow_down --find-links dist --force-reinstall
-        python -c "import narrow_down"
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -55,12 +49,6 @@ jobs:
       with:
         target: x64
         args: --release --out dist --no-sdist
-    - name: Install built wheel
-      shell: bash
-      run: |
-        rm -rf narrow_down
-        pip install narrow_down --find-links dist --force-reinstall
-        python -c "import narrow_down"
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -86,15 +74,10 @@ jobs:
       with:
         target: x86_64
         args: --release --out dist
-    - name: Install built wheel - x86_64
-      run: |
-        rm -rf narrow_down
-        pip install narrow_down --find-links dist --force-reinstall
-        python -c "import narrow_down"
     - name: Build wheels - universal2
       uses: messense/maturin-action@v1
       with:
-        args: --release --universal2 --out dist --no-sdist
+        args: --release --universal2 --out dist
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -103,7 +86,7 @@ jobs:
 
   test-install:
     needs: [ build-macos, build-windows, build-linux ]
-    name: ${{ matrix.os }} / ${{ matrix.python-version }}
+    name: test-install-${{ matrix.os }}-python-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -128,7 +111,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install wheel
         run: |
-          pip install narrow_down --find-links ./ --force-reinstall
+          pip install --only-binary narrow_down --find-links ./ --force-reinstall narrow_down
           python -c "import narrow_down"
 
   test-release:
