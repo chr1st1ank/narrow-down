@@ -101,6 +101,33 @@ jobs:
         name: wheels
         path: dist
 
+  test-install:
+    needs: [ build-macos, build-windows, build-linux ]
+    name: ${{ matrix.os }} / ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+#        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.10"]
+        exclude:
+          - os: Windows
+            python-version: "3.10"
+            # No numpy wheels yet
+        include:
+          - python-version: "3.9"
+            os: ubuntu-latest
+            publish-results: true
+      fail-fast: false
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheels
+      - name: Install wheel - x86_64
+        run: |
+          pip install narrow_down --find-links dist --force-reinstall
+          python -c "import narrow_down"
+
   test-release:
     runs-on: ubuntu-latest
     needs: [ build-macos, build-windows, build-linux ]
