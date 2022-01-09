@@ -1,7 +1,5 @@
 """Nox sessions."""
 import platform
-import tempfile
-from typing import Any
 
 import nox
 from nox.sessions import Session
@@ -10,7 +8,7 @@ nox.options.sessions = ["tests", "mypy"]
 python_versions = ["3.7", "3.8", "3.9", "3.10"]
 
 
-def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:  # noqa
+def install_with_constraints(session: Session, *args: str) -> None:  # noqa
     """Install packages constrained by Poetry's lock file.
 
     This function is a wrapper for nox.sessions.Session.install. It
@@ -23,21 +21,18 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
     Arguments:
         session: The Session object.
         args: Command-line arguments for pip.
-        kwargs: Additional keyword arguments for Session.install.
     """
-    session.install("maturin", *args, **kwargs)
-    session.run("maturin", "develop", "--release")
-    with tempfile.NamedTemporaryFile(delete=False, encoding="utf-8", mode="w") as requirements:
-        requirements.write("-e .")
-        session.install(f"--constraint={requirements.name}", *args, **kwargs)
+    session.install("maturin")
+    maturin_cmd = ["maturin", "develop", "--release"]
+    session.run(*maturin_cmd)
+    session.install(".", *args)
 
 
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
-    session.install(".")
     install_with_constraints(
-        session, "invoke", "pytest", "xdoctest", "coverage[toml]", "pytest-cov"
+        session, "invoke", "pytest", "xdoctest", "coverage[toml]", "pytest-asyncio", "pytest-cov"
     )
     try:
         session.run(
@@ -63,7 +58,6 @@ def coverage(session: Session) -> None:
 @nox.session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
-    session.install(".")
     install_with_constraints(session, "invoke", "mypy")
     session.run("inv", "mypy")
 
