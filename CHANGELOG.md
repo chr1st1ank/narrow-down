@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Fixed
+- CI only: Wrong URL of test-pypi
 
 ## [0.2.0] - 2022-01-09
 ### Added
