@@ -2,6 +2,6 @@
 
 __author__ = """Christian Krudewig"""
 __email__ = "chr1st1ank@krudewig-online.de"
-__version__ = "0.1.1"
+__version__ = "0.2.0-alpha1"
 
 from . import data_types, hash, similarity_store, storage  # noqa
