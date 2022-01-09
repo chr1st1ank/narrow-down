@@ -32,7 +32,14 @@ def install_with_constraints(session: Session, *args: str) -> None:  # noqa
 def tests(session: Session) -> None:
     """Run the test suite."""
     install_with_constraints(
-        session, "invoke", "pytest", "xdoctest", "coverage[toml]", "pytest-asyncio", "pytest-cov"
+        session,
+        "invoke",
+        "pytest",
+        "xdoctest",
+        "coverage[toml]",
+        "pytest-asyncio",
+        "pytest-benchmark",
+        "pytest-cov",
     )
     try:
         session.run(
