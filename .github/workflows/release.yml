@@ -21,7 +21,7 @@ jobs:
         architecture: x64
     - uses: messense/maturin-action@v1
       with:
-        manylinux: auto
+        manylinux: 2014
         command: build
         args: --release -o dist --no-sdist
     - name: Install built wheel
