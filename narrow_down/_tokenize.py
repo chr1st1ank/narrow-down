@@ -3,6 +3,26 @@ import collections
 from typing import Dict, Set
 
 
+def word_ngrams(s: str, n: int) -> Set[str]:
+    """Get all word n-grams contained in the string s.
+
+    Args:
+        s: String to analyze
+        n: The desired length of the n-grams. E.g. `2` to get 2-grams like
+            `"in the"`, `"the house"`
+
+    Returns:
+        All different n-grams as a set of strings. Note that if `len(s) <= n` the string itself
+        as-is is returned as the only element in the result set.
+    """
+    if not s:
+        return set()
+    words = s.split()
+    if len(words) <= n:
+        return {" ".join(words)}
+    return set(" ".join(words[i : i + n]) for i in range(len(words) - n + 1))
+
+
 def char_ngrams(s: str, n: int, pad_char: str = "$") -> Set[str]:
     """Get all character n-grams contained in the string s.
 

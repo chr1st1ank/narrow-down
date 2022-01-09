@@ -5,6 +5,51 @@ import pytest
 from narrow_down import _tokenize
 
 
+@pytest.mark.parametrize(
+    "s, n, expected",
+    [
+        ("", 1, set()),
+        ("two words", 1, {"two", "words"}),
+        (" two  words ", 1, {"two", "words"}),
+        ("\ttwo\nwords", 1, {"two", "words"}),
+        ("two\twords", 1, {"two", "words"}),
+        ("two words", 2, {"two words"}),
+        (" two  words ", 2, {"two words"}),
+        ("\ttwo\nwords", 2, {"two words"}),
+        ("two\twords", 2, {"two words"}),
+        ("two words", 3, {"two words"}),
+        ("three words long", 2, {"three words", "words long"}),
+    ],
+)
+def test_word_ngrams(s, n, expected):
+    assert _tokenize.word_ngrams(s, n) == expected
+
+
+@pytest.mark.parametrize("n", [1, 3, 5])
+def test_word_ngrams__benchmark(benchmark, sample_sentences_french, n):
+    def f():
+        for s in sample_sentences_french:
+            _tokenize.word_ngrams(s, n)
+        return _tokenize.word_ngrams(
+            "De 1990 à 2000, ce fut Théodore Mel Eg avec deux mandats également.", n
+        )
+
+    tokens = benchmark(f)
+    # fmt: off
+    if n == 1:
+        assert tokens == {
+            "De", "1990", "à", "2000,", "ce", "fut", "Théodore",
+            "Mel", "Eg", "avec", "deux", "mandats", "également.",
+        }
+    elif n == 3:
+        assert tokens == {
+            "De 1990 à", "1990 à 2000,", "à 2000, ce", "2000, ce fut",
+            "ce fut Théodore", "fut Théodore Mel", "Théodore Mel Eg",
+            "Mel Eg avec", "Eg avec deux", "avec deux mandats", "deux mandats également.",
+        }
+    # fmt: on
+
+
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, ""), (2, "")])
 def test_char_ngrams__str_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
