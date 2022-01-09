@@ -69,11 +69,6 @@ jobs:
         toolchain: stable
         profile: minimal
         default: true
-    - name: Build wheels - x86_64
-      uses: messense/maturin-action@v1
-      with:
-        target: x86_64
-        args: --release --out dist
     - name: Build wheels - universal2
       uses: messense/maturin-action@v1
       with:
