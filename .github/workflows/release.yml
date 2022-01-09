@@ -21,7 +21,6 @@ jobs:
         architecture: x64
     - uses: messense/maturin-action@v1
       with:
-        target: ${{ matrix.target }}
         manylinux: auto
         command: build
         args: --release -o dist --no-sdist
