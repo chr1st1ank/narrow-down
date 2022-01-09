@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 
 from narrow_down import _minhash, data_types, storage
+from narrow_down.data_types import StorageLevel, TooLowStorageLevel
 
 
 def test_minhash():
@@ -75,6 +76,34 @@ async def test_lsh__insert_invalid_document():
     lsh = _minhash.LSH(_minhash.MinhashLshConfig(1, 1, 1), None)
     with pytest.raises(ValueError):
         await lsh.insert(data_types.StoredDocument())
+
+
+@pytest.mark.asyncio
+async def test_lsh__remove_by_id():
+    """Try to remove a document from the index."""
+    f = data_types.Fingerprint(np.array([2, 4, 6]))
+    test_doc = data_types.StoredDocument(fingerprint=f)
+    lsh = _minhash.LSH(
+        _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
+        storage=await storage.InMemoryStore().initialize(),
+    )
+    index = await lsh.insert(test_doc)
+    await lsh.remove_by_id(index, check_if_exists=True)
+    assert list(await lsh.query(f)) == []
+
+
+@pytest.mark.asyncio
+async def test_lsh__remove_by_id__missing_fingerprint():
+    """Try to remove a document from the index when the storage level is too low."""
+    f = data_types.Fingerprint(np.array([2, 4, 6]))
+    test_doc = data_types.StoredDocument(fingerprint=f)
+    lsh = _minhash.LSH(
+        _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
+        storage=await storage.InMemoryStore().initialize(),
+    )
+    index = await lsh.insert(test_doc, storage_level=StorageLevel.Minimal)
+    with pytest.raises(TooLowStorageLevel):
+        await lsh.remove_by_id(index, check_if_exists=True)
 
 
 @pytest.mark.parametrize(

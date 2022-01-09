@@ -23,16 +23,31 @@ class StorageBackend(ABC):
         """Add the data of a document to the storage and return its ID."""
         raise NotImplementedError()
 
+    async def query_document(self, document_id: int) -> bytes:
+        """Get the data belonging to a document.
+
+        Args:
+            document_id: Key under which the data is stored.
+
+        Raises:
+            KeyError: If no document with the given ID is stored.
+        """  # noqa: DAR401
+        raise NotImplementedError
+
+    async def remove_document(self, document_id: int):
+        """Remove a document given by ID from the list of documents."""
+        raise NotImplementedError()
+
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
         raise NotImplementedError()
 
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
+    async def query_ids_from_bucket(self, bucket_id: int, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         raise NotImplementedError
 
-    async def query_document(self, document_id: int) -> bytes:
-        """Get the data belonging to a document."""
+    async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
+        """Remove a document from a bucket."""
         raise NotImplementedError
 
 
@@ -53,14 +68,6 @@ class InMemoryStore(StorageBackend):
         self._documents[index] = document
         return index
 
-    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
-        """Link a document to a bucket."""
-        self._buckets[bucket_id][document_hash].add(document_id)
-
-    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
-        """Get all document IDs stored in a bucket for a certain hash value."""
-        return self._buckets[bucket_id][document_hash]
-
     async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
 
@@ -75,6 +82,22 @@ class InMemoryStore(StorageBackend):
             KeyError: If the document is not stored.
         """
         return self._documents[document_id]
+
+    async def remove_document(self, document_id: int):
+        """Remove a document given by ID from the list of documents."""
+        del self._documents[document_id]
+
+    async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
+        """Link a document to a bucket."""
+        self._buckets[bucket_id][document_hash].add(document_id)
+
+    async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
+        """Get all document IDs stored in a bucket for a certain hash value."""
+        return self._buckets[bucket_id][document_hash]
+
+    async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
+        """Remove a document from a bucket."""
+        self._buckets[bucket_id][document_hash].remove(document_id)
 
     def _find_next_document_id(self, document: bytes) -> int:
         """Find an unused document ID."""

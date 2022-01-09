@@ -11,7 +11,7 @@ import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
 from . import _rust, hash
-from .data_types import Fingerprint, StorageLevel, StoredDocument
+from .data_types import Fingerprint, StorageLevel, StoredDocument, TooLowStorageLevel
 from .storage import StorageBackend
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
@@ -114,6 +114,38 @@ class LSH:
                 bucket_id=band_number, document_hash=h, document_id=doc_index
             )
         return doc_index
+
+    async def remove_by_id(self, document_id: int, check_if_exists: bool = False) -> None:
+        """Remove the document with the given ID from the internal data structures.
+
+        Args:
+            document_id: ID of the document to remove.
+            check_if_exists: Raise a KeyError if the document does not exist.
+
+        Raises:
+            KeyError: If no document with the given ID is stored.
+            TooLowStorageLevel: If the fingerprints needed to find the document in the
+                LSH structure are not available.
+        """
+        try:
+            doc = StoredDocument.deserialize(
+                await self._storage.query_document(document_id), document_id
+            )
+        except KeyError:
+            if check_if_exists:
+                raise
+            return
+        if doc.fingerprint is None:
+            raise TooLowStorageLevel("Fingerprint needed to remove a document from the LSH!")
+        for band_number in range(self.n_bands):  # TODO: parallelize
+            start_index = band_number * self.rows_per_band
+            h = self._hash(
+                doc.fingerprint[start_index : start_index + self.rows_per_band], doc.exact_part
+            )
+            await self._storage.remove_id_from_bucket(
+                bucket_id=band_number, document_hash=h, document_id=document_id
+            )
+        await self._storage.remove_document(document_id=document_id)
 
     async def query(
         self, fingerprint: Fingerprint, *, exact_part: str = None

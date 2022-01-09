@@ -2,7 +2,7 @@
 from typing import Callable, Collection
 
 from narrow_down import _minhash, _tokenize
-from narrow_down.data_types import StorageLevel, StoredDocument
+from narrow_down.data_types import StorageLevel, StoredDocument, TooLowStorageLevel
 from narrow_down.storage import InMemoryStore, StorageBackend
 
 
@@ -59,7 +59,7 @@ class SimilarityStore:
     async def insert(
         self, document: str, *, document_id: int = None, exact_part: str = None, data: str = None
     ) -> int:
-        """Index a new documents."""
+        """Index a new document."""
         tokens = self._tokenize(document)
         fingerprint = self._minhash.minhash(tokens)
         stored_doc = StoredDocument(
@@ -70,6 +70,26 @@ class SimilarityStore:
             data=data,
         )
         return await self._lsh.insert(document=stored_doc, storage_level=self._storage_level)
+
+    async def remove_by_id(self, document_id: int, check_if_exists: bool = False) -> None:
+        """Remove the document with the given ID from the internal data structures.
+
+        Args:
+            document_id: ID of the document to remove.
+            check_if_exists: Raise a KeyError if the document does not exist.
+
+        Raises:
+            KeyError: If no document with the given ID is stored.
+            TooLowStorageLevel: If the storage level is too low and fingerprints are not available.
+
+        Notes:
+            This method is only usable with StorageLevel 'Fingerprint' or higher.
+        """
+        if self._storage_level ^ StorageLevel.Fingerprint:
+            raise TooLowStorageLevel(
+                "Documents can only be removed with StorageLevel 'Fingerprint' or higher!"
+            )
+        await self._lsh.remove_by_id(document_id, check_if_exists)
 
     async def query(self, document: str, *, exact_part=None) -> Collection[StoredDocument]:
         """Query all similar documents."""
