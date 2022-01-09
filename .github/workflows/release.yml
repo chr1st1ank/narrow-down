@@ -57,6 +57,7 @@ jobs:
         target: x64
         args: --release --out dist --no-sdist
     - name: Install built wheel
+      shell: bash
       run: |
         rm -rf narrow_down
         pip install narrow_down --find-links dist --force-reinstall
@@ -95,11 +96,6 @@ jobs:
       uses: messense/maturin-action@v1
       with:
         args: --release --universal2 --out dist --no-sdist
-    - name: Install built wheel - universal2
-      run: |
-        rm -rf narrow_down
-        pip install narrow_down --find-links dist --force-reinstall
-        python -c "import narrow_down"
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
