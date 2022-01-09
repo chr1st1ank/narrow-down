@@ -77,5 +77,5 @@ On branch "main":
 
 - Adjust CHANGELOG.md as described on [https://keepachangelog.com](https://keepachangelog.com).
 - Then run `invoke version [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
-- Push the commit to github: `git push --tags`
+- Push the commit to github: `git push origin main && git push --tags`
 - A github action will automatically create a github release and publish to pypi

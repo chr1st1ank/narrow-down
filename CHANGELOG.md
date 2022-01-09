@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Documents can now be removed from the index again with SimilarityStore.remove_by_id()
 
 ## [0.2.1] - 2022-01-09
 ### Fixed

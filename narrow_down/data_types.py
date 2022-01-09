@@ -9,6 +9,10 @@ import numpy as np
 from numpy import typing as npt
 
 
+class TooLowStorageLevel(Exception):
+    """Raised if a feature is used for which a higher storage level is needed."""
+
+
 class StorageLevel(enum.Flag):  # TODO: Review name
     """Detail level of document persistence."""
 
@@ -68,7 +72,7 @@ class StoredDocument:
             attributes: The names of the attributes to leave empty
 
         Returns:
-            A copy of the StoredDocument with all the attributes specified in *attributes left out.
+            A copy of the StoredDocument with all the attributes specified in attributes left out.
             So they will have their default value (None).
         """
         return StoredDocument(
