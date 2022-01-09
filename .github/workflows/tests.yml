@@ -43,7 +43,7 @@ jobs:
           - python-version: "3.9"
             os: ubuntu-latest
             publish-results: true
-      fail-fast: false
+      fail-fast: true
     steps:
       - uses: actions/checkout@v2.4.0
 
