@@ -45,7 +45,7 @@ class SimilarityStore:
         lsh_config = _minhash.find_optimal_config(
             jaccard_threshold=similarity_threshold,
             max_false_negative_proba=max_false_negative_proba,
-            max_false_positive_proba=max_false_negative_proba,
+            max_false_positive_proba=max_false_positive_proba,
         )
         self._minhash = _minhash.MinHasher(n_hashes=lsh_config.n_hashes)
         self._lsh = _minhash.LSH(lsh_config, storage=self._storage)
