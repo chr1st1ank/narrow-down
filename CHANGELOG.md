@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Fixed
+- Wrong order of parameters for Minhash LSH in the SimilarityStore class
 
 ## [0.3.0] - 2022-01-09
 ### Added
