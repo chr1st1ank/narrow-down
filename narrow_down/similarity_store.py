@@ -43,7 +43,9 @@ class SimilarityStore:
         self._tokenize = tokenize or (lambda s: _tokenize.word_ngrams(s, n=3))
         # TODO: What about a setup with an existing database?
         lsh_config = _minhash.find_optimal_config(
-            max_false_negative_proba, max_false_positive_proba, similarity_threshold
+            jaccard_threshold=similarity_threshold,
+            max_false_negative_proba=max_false_negative_proba,
+            max_false_positive_proba=max_false_positive_proba,
         )
         self._minhash = _minhash.MinHasher(n_hashes=lsh_config.n_hashes)
         self._lsh = _minhash.LSH(lsh_config, storage=self._storage)
