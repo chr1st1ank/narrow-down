@@ -40,6 +40,9 @@ documentation = "https://narrow-down.readthedocs.io"
 "Bug Tracker" = "https://github.com/chr1st1ank/narrow-down/issues"
 
 [project.optional-dependencies]
+leveldb = [
+"plyvel~=1.4.0"
+]
 dev = [
 "pre-commit~=2.15",
 "invoke~=1.6",
@@ -68,7 +71,8 @@ dev = [
 "pytest-cov~=3.0",
 "watchdog[watchmedo]~=2.1",
 "myst-parser~=0.16",
-"flake8-pylint~=0.1"
+"flake8-pylint~=0.1",
+"plyvel~=1.4.0"
 ]
 
 [tool.coverage.paths]
