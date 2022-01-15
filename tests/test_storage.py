@@ -5,6 +5,22 @@ import narrow_down.storage
 
 
 @pytest.mark.asyncio
+async def test_in_memory_store__insert_query_setting():
+    ims = narrow_down.storage.InMemoryStore()
+    await ims.insert_setting(key="k", value="155")
+    assert await ims.query_setting("k") == "155"
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__insert_query_document__overwrite():
+    """Adding a duplicate before to see if that's also handled."""
+    ims = narrow_down.storage.InMemoryStore()
+    await ims.insert_setting(key="k", value="155")
+    await ims.insert_setting(key="k", value="268")
+    assert await ims.query_setting("k") == "268"
+
+
+@pytest.mark.asyncio
 async def test_in_memory_store__insert_query_document__no_id():
     ims = narrow_down.storage.InMemoryStore()
     id_out = await ims.insert_document(document=b"abcd efgh")

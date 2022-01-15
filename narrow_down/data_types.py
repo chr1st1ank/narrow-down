@@ -13,6 +13,10 @@ class TooLowStorageLevel(Exception):
     """Raised if a feature is used for which a higher storage level is needed."""
 
 
+class AlreadyInitialized(Exception):
+    """Raised by storage backends if it is tried to re-initialize storage."""
+
+
 class StorageLevel(enum.Flag):  # TODO: Review name
     """Detail level of document persistence."""
 
