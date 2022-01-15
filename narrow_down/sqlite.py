@@ -71,7 +71,10 @@ class SQLiteStore(StorageBackend):
             KeyError: If the document is not stored.
         """
         cursor = self._connection.execute("SELECT doc FROM documents WHERE id=?", (document_id,))
-        return cursor.fetchone()[0]
+        doc = cursor.fetchone()
+        if doc is None:
+            raise KeyError(f"No document with id {document_id}")
+        return doc[0]
 
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""

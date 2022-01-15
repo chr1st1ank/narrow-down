@@ -24,11 +24,19 @@ Fast fuzzy text search
 * GitHub repo: <https://github.com/chr1st1ank/narrow-down.git>
 * Documentation: <https://narrow-down.readthedocs.io>
 * Free software: Apache Software License 2.0
+* Status: Prototype. Solid and fast production quality, but *still subject to API changes until version 1.0 is reached*.
 
 
 ## Features
 
-* TODO
+* Document indexing and search based on the Minhash LSH algorithm
+* High performance thanks to a native extension module in Rust
+* Easy-to-use API with automated parameter tuning
+* Works with many storage backends. Currently implemented:
+  * In-Memory
+  * SQLite
+  * Custom backend by implementing a lean interface
+* Native asyncio interface
 
 ## Quickstart
 

@@ -90,6 +90,7 @@ class AsyncSQLiteStore(StorageBackend):
         """Remove a document given by ID from the list of documents."""
         async with aiosqlite.connect(self.db_filename) as connection:
             await connection.execute("DELETE FROM documents WHERE id=?", (document_id,))
+            await connection.commit()
 
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
@@ -115,3 +116,4 @@ class AsyncSQLiteStore(StorageBackend):
                 "DELETE FROM buckets WHERE bucket=? AND hash=? AND doc_id=?",
                 (bucket_id, document_hash, document_id),
             )
+            await connection.commit()
