@@ -40,7 +40,11 @@ documentation = "https://narrow-down.readthedocs.io"
 "Bug Tracker" = "https://github.com/chr1st1ank/narrow-down/issues"
 
 [project.optional-dependencies]
+sqlite = [
+"aiosqlite~=0.17.0"
+]
 dev = [
+"aiosqlite~=0.17.0",
 "pre-commit~=2.15",
 "invoke~=1.6",
 "flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
