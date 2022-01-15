@@ -1,5 +1,5 @@
 """Storage backend based on SQLite."""
-from collections import Iterable
+from typing import Iterable
 
 import aiosqlite
 
