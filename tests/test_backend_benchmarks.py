@@ -10,7 +10,6 @@ from narrow_down.sqlite import SQLiteStore
 from narrow_down.storage import InMemoryStore
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "storage_backend, storage_level",
     [
@@ -43,7 +42,6 @@ def test_similarity_store__insert_benchmark(
     assert asyncio.run(simstore.query(sample_sentences_french[0]))
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "storage_backend, storage_level",
     [
