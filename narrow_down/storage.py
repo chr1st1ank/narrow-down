@@ -12,10 +12,12 @@ class StorageBackend(ABC):
     async def initialize(
         self,
     ) -> "StorageBackend":
-        """Initialize the database, discarding existing content.
+        """Initialize the database.
 
         Returns:
             self
+
+        Implementations may raise an error if the backend is already initialized.
         """
         return self
 
