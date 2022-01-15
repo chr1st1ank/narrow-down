@@ -1,5 +1,5 @@
 """Truely async storage backend based on SQLite."""
-from typing import Iterable
+from typing import Iterable, Optional
 
 import aiosqlite
 
@@ -28,6 +28,9 @@ class AsyncSQLiteStore(StorageBackend):
         async with aiosqlite.connect(self.db_filename) as connection:
             try:
                 await connection.execute(
+                    "CREATE TABLE settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)"
+                )
+                await connection.execute(
                     "CREATE TABLE documents " "(id INTEGER NOT NULL PRIMARY KEY, doc BLOB)"
                 )
                 await connection.execute(
@@ -42,6 +45,27 @@ class AsyncSQLiteStore(StorageBackend):
                 raise AlreadyInitialized from e
 
         return self
+
+    async def insert_setting(self, key: str, value: str):
+        """Store a setting as key-value pair."""
+        async with aiosqlite.connect(self.db_filename) as connection:
+            await connection.execute(
+                "INSERT INTO settings(key,value) VALUES (:key,:value) "
+                "ON CONFLICT(key) DO UPDATE SET value=:value",
+                dict(key=key, value=value),
+            )
+            await connection.commit()
+
+    async def query_setting(self, key: str) -> Optional[str]:
+        """Query a settings with the given key."""
+        async with aiosqlite.connect(self.db_filename) as connection:
+            async with connection.execute(
+                "SELECT value FROM settings WHERE key=?", (key,)
+            ) as cursor:
+                setting = await cursor.fetchone()
+                if setting is not None:
+                    return setting[0]
+        return None
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""

@@ -1,7 +1,7 @@
 """Base classes and interfaces for storage."""
 from abc import ABC
 from collections import defaultdict
-from typing import Dict, Iterable, Set
+from typing import Dict, Iterable, Optional, Set
 
 from . import hash
 
@@ -20,6 +20,14 @@ class StorageBackend(ABC):
         Implementations may raise an error if the backend is already initialized.
         """
         return self
+
+    async def insert_setting(self, key: str, value: str):
+        """Store a setting as key-value pair."""
+        raise NotImplementedError
+
+    async def query_setting(self, key: str) -> Optional[str]:
+        """Query a settings with the given key."""
+        raise NotImplementedError
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
@@ -58,8 +66,17 @@ class InMemoryStore(StorageBackend):
 
     def __init__(self) -> None:
         """Create a new empty in memory database."""
+        self._settings: Dict[str, str] = {}
         self._documents: Dict[int, bytes] = {}
         self._buckets: Dict[int, Dict[int, Set[int]]] = defaultdict(lambda: defaultdict(set))
+
+    async def insert_setting(self, key: str, value: str):
+        """Store a setting as key-value pair."""
+        self._settings[key] = value
+
+    async def query_setting(self, key: str) -> Optional[str]:
+        """Query a settings with the given key."""
+        return self._settings.get(key)
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
