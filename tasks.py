@@ -151,7 +151,23 @@ def mypy(c):
 def tests(c):
     # type: (Context) -> None
     """Run tests."""
-    pytest_options = ["--xdoctest", "--cov", "--cov-report=", "--cov-fail-under=0"]
+    pytest_options = [
+        "--xdoctest",
+        "--cov",
+        "--cov-report=",
+        "--cov-fail-under=0",
+        "--benchmark-disable",
+    ]
+    _run(c, f"pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
+
+
+@task()
+def benchmarks(c):
+    # type: (Context) -> None
+    """Run benchmark tests."""
+    pytest_options = [
+        "--benchmark-only",
+    ]
     _run(c, f"pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
 
 
