@@ -3,6 +3,7 @@ import asyncio
 
 import pytest
 
+from narrow_down.async_sqlite import AsyncSQLiteStore
 from narrow_down.data_types import StorageLevel
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
@@ -15,15 +16,18 @@ from narrow_down.storage import InMemoryStore
     [
         (InMemoryStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
+        (AsyncSQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__insert_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     if storage_backend == InMemoryStore:
-        storage = InMemoryStore()
+        storage = storage_backend()
     elif storage_backend == SQLiteStore:
-        storage = SQLiteStore(str(tmp_path / "insert_benchmark.db"))
+        storage = storage_backend(str(tmp_path / "insert_benchmark.db"))
+    elif storage_backend == AsyncSQLiteStore:
+        storage = storage_backend(str(tmp_path / "insert_benchmark_aio.db"))
     simstore = SimilarityStore(storage=storage, storage_level=storage_level)
     asyncio.run(simstore.initialize())
 
@@ -45,15 +49,18 @@ def test_similarity_store__insert_benchmark(
     [
         (InMemoryStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
+        (AsyncSQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__query_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     if storage_backend == InMemoryStore:
-        storage = InMemoryStore()
+        storage = storage_backend()
     elif storage_backend == SQLiteStore:
-        storage = SQLiteStore(str(tmp_path / "insert_benchmark.db"))
+        storage = storage_backend(str(tmp_path / "insert_benchmark.db"))
+    elif storage_backend == AsyncSQLiteStore:
+        storage = storage_backend(str(tmp_path / "insert_benchmark_aio.db"))
     simstore = SimilarityStore(storage=storage, storage_level=storage_level)
 
     async def init():
