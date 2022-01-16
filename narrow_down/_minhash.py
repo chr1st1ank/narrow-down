@@ -2,6 +2,8 @@
 
 Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapter 3.
 """
+import dataclasses
+import json
 import warnings
 from dataclasses import dataclass
 from typing import Collection, Optional, Set
@@ -29,6 +31,15 @@ class MinhashLshConfig:
 
     rows_per_band: int
     """Number of rows per band for the LSH part."""
+
+    def to_json(self) -> str:
+        """Serialize to a json string."""
+        return json.dumps(dataclasses.asdict(self))
+
+    @classmethod
+    def from_json(cls, json_str: str) -> "MinhashLshConfig":
+        """Deserialize an object from a json string."""
+        return cls(**json.loads(json_str))
 
 
 class MinHasher:

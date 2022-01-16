@@ -26,7 +26,15 @@ class StorageBackend(ABC):
         raise NotImplementedError
 
     async def query_setting(self, key: str) -> Optional[str]:
-        """Query a settings with the given key."""
+        """Query a setting with the given key.
+
+        Args:
+            key: The identifier of the setting
+
+        Returns:
+            A string with the value. If the key does not exist or the storage is uninitialized
+            None is returned.
+        """  # noqa: DAR202,DAR401
         raise NotImplementedError
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
@@ -75,7 +83,7 @@ class InMemoryStore(StorageBackend):
         self._settings[key] = value
 
     async def query_setting(self, key: str) -> Optional[str]:
-        """Query a settings with the given key."""
+        """Query a setting with the given key."""
         return self._settings.get(key)
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:

@@ -14,7 +14,7 @@ class TooLowStorageLevel(Exception):
 
 
 class AlreadyInitialized(Exception):
-    """Raised by storage backends if it is tried to re-initialize storage."""
+    """Raised when initializing storage twice or changing immutable settings."""
 
 
 class StorageLevel(enum.Flag):  # TODO: Review name

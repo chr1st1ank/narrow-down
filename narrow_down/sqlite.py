@@ -51,12 +51,28 @@ class SQLiteStore(StorageBackend):
             )
 
     async def query_setting(self, key: str) -> Optional[str]:
-        """Query a settings with the given key."""
-        cursor = self._connection.execute("SELECT value FROM settings WHERE key=?", (key,))
-        setting = cursor.fetchone()
-        if setting is not None:
-            return setting[0]
-        return None
+        """Query a setting with the given key.
+
+        Args:
+            key: The identifier of the setting
+
+        Returns:
+            A string with the value. If the key does not exist or the storage is uninitialized
+            None is returned.
+
+        Raises:
+            sqlite3.OperationalError: In case the database query fails for any reason.
+        """
+        try:
+            cursor = self._connection.execute("SELECT value FROM settings WHERE key=?", (key,))
+            setting = cursor.fetchone()
+            if setting is not None:
+                return setting[0]
+            return None
+        except sqlite3.OperationalError as e:
+            if "no such table: settings" in e.args:
+                return None
+            raise
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
