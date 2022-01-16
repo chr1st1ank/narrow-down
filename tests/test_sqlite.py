@@ -20,6 +20,12 @@ async def test_sqlite_store__insert_query_setting(sqlite_driver, tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_sqlite_store__query_setting__uninitialized(sqlite_driver, tmp_path):
+    ims = sqlite_driver(str(tmp_path / "test.db"))
+    assert await ims.query_setting("k") is None
+
+
+@pytest.mark.asyncio
 async def test_sqlite_store__query_setting__not_in(sqlite_driver, tmp_path):
     ims = await sqlite_driver(str(tmp_path / "test.db")).initialize()
     assert await ims.query_setting("k") is None

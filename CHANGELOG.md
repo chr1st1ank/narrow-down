@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Synchronous and Asynchronous SQLite storage backend
+- Settings of SimilarityStore objects are now saved in the storage backend 
+- Deserialization of SimilarityStore from an existing storage backend is now possible
 
 ## [0.3.1] - 2022-01-14
 ### Fixed

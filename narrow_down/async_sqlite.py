@@ -57,15 +57,31 @@ class AsyncSQLiteStore(StorageBackend):
             await connection.commit()
 
     async def query_setting(self, key: str) -> Optional[str]:
-        """Query a settings with the given key."""
-        async with aiosqlite.connect(self.db_filename) as connection:
-            async with connection.execute(
-                "SELECT value FROM settings WHERE key=?", (key,)
-            ) as cursor:
-                setting = await cursor.fetchone()
-                if setting is not None:
-                    return setting[0]
-        return None
+        """Query a setting with the given key.
+
+        Args:
+            key: The identifier of the setting
+
+        Returns:
+            A string with the value. If the key does not exist or the storage is uninitialized
+            None is returned.
+
+        Raises:
+            aiosqlite.OperationalError: In case the database query fails for any reason.
+        """
+        try:
+            async with aiosqlite.connect(self.db_filename) as connection:
+                async with connection.execute(
+                    "SELECT value FROM settings WHERE key=?", (key,)
+                ) as cursor:
+                    setting = await cursor.fetchone()
+                    if setting is not None:
+                        return setting[0]
+            return None
+        except aiosqlite.OperationalError as e:
+            if "no such table: settings" in e.args:
+                return None
+            raise
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""

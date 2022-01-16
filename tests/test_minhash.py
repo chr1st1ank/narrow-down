@@ -6,6 +6,11 @@ from narrow_down import _minhash, data_types, storage
 from narrow_down.data_types import StorageLevel, TooLowStorageLevel
 
 
+def test_minhash_lsh_config__json():
+    config1 = _minhash.MinhashLshConfig(0, 1, 2)
+    assert _minhash.MinhashLshConfig.from_json(config1.to_json()) == config1
+
+
 def test_minhash():
     """Check minhashing of a document with hand-checked result."""
     mh = _minhash.MinHasher(2, 42)
