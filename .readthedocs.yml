@@ -3,7 +3,7 @@ version: 2
 build:
   os: "ubuntu-20.04"
   tools:
-    python: "3.9"
+    python: "3.8"
     rust: "1.55"
 
 formats: all
@@ -12,7 +12,7 @@ sphinx:
   configuration: docs/conf.py
 
 python:
-  version: 3.9
+  version: "3.8"
   install:
     - requirements: docs/requirements.txt
     - method: pip
