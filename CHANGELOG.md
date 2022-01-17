@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- The SQLite backends take now an init parameter "partitions" which leads to internally
+  partitioned tables. This reduces query time by a lot.
+- Parameters for SQLite were optimized in order to increase insertion speed and reduce the number
+  of disk write operations.
 
 ## [0.4.0] - 2022-01-16
 ### Added
