@@ -19,15 +19,17 @@ class SQLiteStore(StorageBackend):
         self,
     ) -> "SQLiteStore":
         """Initialize the tables in the SQLite database file.
+
         Returns:
             self
+
         Raises:
             AlreadyInitialized: If the database file is already initialized
         """
         try:
             with self._connection as conn:
                 conn.execute("CREATE TABLE settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)")
-                conn.execute(f"CREATE TABLE documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)")
+                conn.execute("CREATE TABLE documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)")
                 for i in range(self.partitions):
                     conn.execute(
                         f"CREATE TABLE buckets_{i} ("
@@ -121,18 +123,18 @@ class SQLiteStore(StorageBackend):
 
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
+        partition = int(document_hash % self.partitions)
         with self._connection as conn:
-            partition = document_hash % self.partitions
             conn.execute(
-                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",
+                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",  # noqa: S608
                 (bucket_id, document_hash, document_id),
             )
 
     async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
-        partition = document_hash % self.partitions
+        partition = int(document_hash % self.partitions)
         cursor = self._connection.execute(
-            f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",
+            f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",  # noqa: S608
             (bucket_id, document_hash),
         )
         return [r[0] for r in cursor.fetchall()]
@@ -140,8 +142,9 @@ class SQLiteStore(StorageBackend):
     async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Remove a document from a bucket."""
         with self._connection as conn:
-            partition = document_hash % self.partitions
+            partition = int(document_hash % self.partitions)
             conn.execute(
-                f"DELETE FROM buckets_{partition} WHERE bucket=? AND hash=? AND doc_id=?",
+                f"DELETE FROM buckets_{partition} "  # noqa: S608
+                "WHERE bucket=? AND hash=? AND doc_id=?",
                 (bucket_id, document_hash, document_id),
             )
