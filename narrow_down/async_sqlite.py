@@ -10,9 +10,10 @@ from narrow_down.storage import StorageBackend
 class AsyncSQLiteStore(StorageBackend):
     """File-based storage backend for a SimilarityStore based on AioSQLite."""
 
-    def __init__(self, db_filename: str) -> None:
+    def __init__(self, db_filename: str, partitions: int = 128) -> None:
         """Create a new empty or connect to an existing SQLite database."""
         self.db_filename = db_filename
+        self.partitions = partitions
 
     async def initialize(
         self,
@@ -33,13 +34,16 @@ class AsyncSQLiteStore(StorageBackend):
                 await connection.execute(
                     "CREATE TABLE documents " "(id INTEGER NOT NULL PRIMARY KEY, doc BLOB)"
                 )
-                await connection.execute(
-                    "CREATE TABLE buckets ("
-                    "bucket INTEGER NOT NULL, "
-                    "hash INTEGER NOT NULL, "
-                    "doc_id INTEGER NOT NULL"
-                    ")"
-                )
+                for i in range(self.partitions):
+                    await connection.execute(
+                        f"CREATE TABLE buckets_{i} ("
+                        "bucket INTEGER NOT NULL, "
+                        "hash INTEGER NOT NULL, "
+                        "doc_id INTEGER NOT NULL"
+                        ")"
+                    )
+                await connection.execute("PRAGMA synchronous = OFF")
+                await connection.execute("PRAGMA journal_mode = MEMORY")
                 await connection.commit()
             except aiosqlite.OperationalError as e:
                 raise AlreadyInitialized from e
@@ -88,17 +92,18 @@ class AsyncSQLiteStore(StorageBackend):
         async with aiosqlite.connect(self.db_filename) as connection:
             if document_id:
                 await connection.execute(
-                    "INSERT INTO documents(id,doc) VALUES (?,?) "
-                    "ON CONFLICT(id) DO UPDATE SET doc=?",
-                    (document_id, document, document),
+                    "INSERT INTO documents(id,doc) VALUES (:id,:doc) "
+                    "ON CONFLICT(id) DO UPDATE SET doc=:doc",
+                    dict(id=document_id, doc=document),
                 )
                 await connection.commit()
                 return document_id
 
             async with connection.cursor() as cursor:
                 await cursor.execute(
-                    "INSERT INTO documents(doc) VALUES (?) " "ON CONFLICT(id) DO UPDATE SET doc=?",
-                    (document, document),
+                    "INSERT INTO documents(doc) VALUES (:doc) "
+                    "ON CONFLICT(id) DO UPDATE SET doc=:doc",
+                    dict(doc=document),
                 )
                 row_id = cursor.lastrowid
             await connection.commit()
@@ -134,26 +139,31 @@ class AsyncSQLiteStore(StorageBackend):
 
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
+        partition = int(document_hash % self.partitions)
         async with aiosqlite.connect(self.db_filename) as connection:
             await connection.execute(
-                "INSERT INTO buckets(bucket,hash,doc_id) VALUES (?,?,?)",
+                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",  # noqa: S608
                 (bucket_id, document_hash, document_id),
             )
             await connection.commit()
 
     async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
+        partition = int(document_hash % self.partitions)
         async with aiosqlite.connect(self.db_filename) as connection:
             cursor = await connection.execute(
-                "SELECT doc_id FROM buckets WHERE bucket=? AND hash=?", (bucket_id, document_hash)
+                f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",  # noqa: S608
+                (bucket_id, document_hash),
             )
             return [r[0] for r in await cursor.fetchall()]
 
     async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Remove a document from a bucket."""
+        partition = int(document_hash % self.partitions)
         async with aiosqlite.connect(self.db_filename) as connection:
             await connection.execute(
-                "DELETE FROM buckets WHERE bucket=? AND hash=? AND doc_id=?",
+                f"DELETE FROM buckets_{partition} "  # noqa: S608
+                "WHERE bucket=? AND hash=? AND doc_id=?",
                 (bucket_id, document_hash, document_id),
             )
             await connection.commit()

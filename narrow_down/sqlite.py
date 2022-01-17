@@ -9,9 +9,10 @@ from narrow_down.storage import StorageBackend
 class SQLiteStore(StorageBackend):
     """File-based storage backend for a SimilarityStore based on SQLite."""
 
-    def __init__(self, db_filename: str) -> None:
+    def __init__(self, db_filename: str, partitions: int = 128) -> None:
         """Create a new empty or connect to an existing SQLite database."""
         self.db_filename = db_filename
+        self.partitions = partitions
         self._connection = sqlite3.connect(self.db_filename, isolation_level="IMMEDIATE")
 
     async def initialize(
@@ -29,13 +30,17 @@ class SQLiteStore(StorageBackend):
             with self._connection as conn:
                 conn.execute("CREATE TABLE settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)")
                 conn.execute("CREATE TABLE documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)")
-                conn.execute(
-                    "CREATE TABLE buckets ("
-                    "bucket INTEGER NOT NULL, "
-                    "hash INTEGER NOT NULL, "
-                    "doc_id INTEGER NOT NULL"
-                    ")"
-                )
+                for i in range(self.partitions):
+                    conn.execute(
+                        f"CREATE TABLE buckets_{i} ("
+                        "bucket INTEGER NOT NULL, "
+                        "hash INTEGER NOT NULL, "
+                        "doc_id INTEGER NOT NULL"
+                        ")"
+                    )
+                conn.execute("PRAGMA synchronous = OFF")
+                conn.execute("PRAGMA journal_mode = MEMORY")
+                conn.commit()
         except sqlite3.OperationalError as e:
             raise AlreadyInitialized from e
 
@@ -118,23 +123,28 @@ class SQLiteStore(StorageBackend):
 
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
+        partition = int(document_hash % self.partitions)
         with self._connection as conn:
             conn.execute(
-                "INSERT INTO buckets(bucket,hash,doc_id) VALUES (?,?,?)",
+                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",  # noqa: S608
                 (bucket_id, document_hash, document_id),
             )
 
     async def query_ids_from_bucket(self, bucket_id, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
+        partition = int(document_hash % self.partitions)
         cursor = self._connection.execute(
-            "SELECT doc_id FROM buckets WHERE bucket=? AND hash=?", (bucket_id, document_hash)
+            f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",  # noqa: S608
+            (bucket_id, document_hash),
         )
         return [r[0] for r in cursor.fetchall()]
 
     async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Remove a document from a bucket."""
         with self._connection as conn:
+            partition = int(document_hash % self.partitions)
             conn.execute(
-                "DELETE FROM buckets WHERE bucket=? AND hash=? AND doc_id=?",
+                f"DELETE FROM buckets_{partition} "  # noqa: S608
+                "WHERE bucket=? AND hash=? AND doc_id=?",
                 (bucket_id, document_hash, document_id),
             )
