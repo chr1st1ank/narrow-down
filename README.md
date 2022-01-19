@@ -44,7 +44,8 @@ TODO
 
 ## Similar projects
 - [pylsh](https://github.com/mattilyra/LSH) offers a good implementation of the classic Minhash LSH scheme in Python and Cython. If you only need this and you don't need a database backend it can be a good choice.
-- [Datasketch](https://github.com/ekzhu/datasketch) implements an interesting collection of different data sketching algorithms for similarity matching, cardinality estimation and k-nearest-neighbour search. The implementation is not highly optimized but very well usable, the documentation rich and multiple database backends can be used for some of the sketches.
+- [Datasketch](https://github.com/ekzhu/datasketch) implements an interesting collection of different data sketching algorithms for similarity matching, cardinality estimation and k-nearest-neighbour search. The implementation is not highly optimized but very well usable, the documentation rich and multiple database backends can be used for some of the sketches
+- [Milvus](https://milvus.io/) offers a full database stack for vector search, a different approach for fast searching. It can also be applied to text search when an emedding like Word2Vec or Bert is used to vectorize the text.
 
 ## Credits
 
