@@ -44,7 +44,7 @@ def develop(c):
 def protobuild(c):
     # type: (Context) -> None
     """Build the protobuf objects."""
-    _run(c, "protoc -I . --python_betterproto_out=narrow_down/proto proto/stored_document.proto")
+    _run(c, "protoc -I . --python_out=narrow_down/ proto/stored_document.proto")
 
 
 @task()

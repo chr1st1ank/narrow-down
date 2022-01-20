@@ -4,9 +4,9 @@ package stored_document;
 
 // StoredDocumentProto is a protobuf representation of narrow_down.data_types.StoredDocument
 message StoredDocumentProto {
-  uint64 id_ = 1;
-  string document = 2;
-  string exact_part = 3;
+  optional uint64 id_ = 1;
+  optional string document = 2;
+  optional string exact_part = 3;
   repeated uint32 fingerprint = 4;
-  string data = 5;
+  optional string data = 5;
 }

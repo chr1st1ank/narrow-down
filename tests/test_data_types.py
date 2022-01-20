@@ -7,10 +7,10 @@ import pytest
 from narrow_down.data_types import Fingerprint, StorageLevel, StoredDocument
 
 
-@pytest.mark.parametrize("data", [None, "user data"])
+@pytest.mark.parametrize("data", [None, "", "user data"])
 @pytest.mark.parametrize("fingerprint", [None, Fingerprint(np.array([1]))])
-@pytest.mark.parametrize("exact_part", [None, "text_exact_part"])
-@pytest.mark.parametrize("document", [None, "text_document"])
+@pytest.mark.parametrize("exact_part", [None, "", "text_exact_part"])
+@pytest.mark.parametrize("document", [None, "", "text_document"])
 @pytest.mark.parametrize("id_", [None, 0, 1])
 @pytest.mark.parametrize(
     "storage_level, expected_fields",
@@ -31,7 +31,9 @@ def test_stored_document_serialization(
         fingerprint=fingerprint,
         data=data,
     )
+    print("before:", document)
     deserialized = StoredDocument.deserialize(document.serialize(storage_level), id_=None)
+    print("after:", deserialized)
     for field in dataclasses.fields(deserialized):
         if field.name in expected_fields:
             assert getattr(deserialized, field.name) == getattr(document, field.name)

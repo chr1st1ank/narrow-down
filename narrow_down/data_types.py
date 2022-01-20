@@ -3,12 +3,12 @@ import dataclasses
 import enum
 import pickle  # noqa
 from dataclasses import dataclass
-from typing import NewType, Optional
+from typing import Any, Dict, NewType, Optional
 
 import numpy as np
 from numpy import typing as npt
 
-from narrow_down.proto.stored_document import StoredDocumentProto
+from narrow_down.proto.stored_document_pb2 import StoredDocumentProto
 
 
 class TooLowStorageLevel(Exception):
@@ -63,16 +63,19 @@ class StoredDocument:
     @staticmethod
     def deserialize(doc: bytes, id_: int) -> "StoredDocument":
         """Deserialize a document from bytes."""
-        p = StoredDocumentProto.FromString(doc)
-        return StoredDocument(
+        p = StoredDocumentProto.FromString(doc)  # type: ignore
+        args: Dict[str, Any] = dict(
             id_=id_,
-            document=p.document if p.document else None,
-            exact_part=p.exact_part if p.exact_part else None,
-            fingerprint=Fingerprint(np.array(p.fingerprint, dtype=np.uint32))
-            if p.fingerprint
-            else None,
-            data=p.data if p.data else None,
         )
+        if p.HasField("document"):
+            args["document"] = p.document
+        if p.HasField("exact_part"):
+            args["exact_part"] = p.exact_part
+        if p.fingerprint:
+            args["fingerprint"] = Fingerprint(np.array(p.fingerprint, dtype=np.uint32))
+        if p.HasField("data"):
+            args["data"] = p.data
+        return StoredDocument(**args)
 
     def without(self, *attributes: str) -> "StoredDocument":
         """Create a copy with the specified attributes left out.

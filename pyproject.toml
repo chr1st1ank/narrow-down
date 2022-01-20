@@ -32,7 +32,8 @@ dependencies = [
     "scipy",
     "typing_extensions",
     "aiosqlite~=0.17.0",
-    "betterproto~=1.2.5",
+    "protobuf~=3.15",  # >= 3.15 to support optional fields
+    "types-protobuf"
 ]
 
 [project.urls]
@@ -43,35 +44,34 @@ documentation = "https://narrow-down.readthedocs.io"
 
 [project.optional-dependencies]
 dev = [
-"pre-commit~=2.15",
-"invoke~=1.6",
-"flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
-"flakehell~=0.9",
-"flake8-builtins~=1.5",
-"flake8-blind-except~=0.2",
-"flake8-logging-format~=0.6",
-"flake8-bugbear~=21.9",
-"flake8-annotations~=2.6",
-"flake8-docstrings~=1.6",
-"flake8-bandit~=2.1",
-"darglint~=1.8",
-"isort~=5.9",
-"black~=21.9b0",
-"safety~=1.10",
-"nox",
-"mypy",
-"sphinx~=4.2",
-"bump2version~=1.0",
-"pytest~=6.2",
-"pytest-asyncio",
-"pytest-benchmark",
-"xdoctest~=0.15",
-"coverage[toml]~=6.0",
-"pytest-cov~=3.0",
-"watchdog[watchmedo]~=2.1",
-"myst-parser~=0.16",
-"flake8-pylint~=0.1",
-"betterproto[compiler]~=1.2.5"
+    "pre-commit~=2.15",
+    "invoke~=1.6",
+    "flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
+    "flakehell~=0.9",
+    "flake8-builtins~=1.5",
+    "flake8-blind-except~=0.2",
+    "flake8-logging-format~=0.6",
+    "flake8-bugbear~=21.9",
+    "flake8-annotations~=2.6",
+    "flake8-docstrings~=1.6",
+    "flake8-bandit~=2.1",
+    "darglint~=1.8",
+    "isort~=5.9",
+    "black~=21.9b0",
+    "safety~=1.10",
+    "nox",
+    "mypy",
+    "sphinx~=4.2",
+    "bump2version~=1.0",
+    "pytest~=6.2",
+    "pytest-asyncio",
+    "pytest-benchmark",
+    "xdoctest~=0.15",
+    "coverage[toml]~=6.0",
+    "pytest-cov~=3.0",
+    "watchdog[watchmedo]~=2.1",
+    "myst-parser~=0.16",
+    "flake8-pylint~=0.1",
 ]
 
 [tool.coverage.paths]
@@ -91,6 +91,7 @@ exclude_lines = [
   "raise AssertionError",
   "raise NotImplementedError",
   "if 0:",
+  "if _descriptor._USE_C_DESCRIPTORS == False:",
   "if __name__ == __main__:",
   "def main"
 ]
@@ -107,7 +108,8 @@ docstring-convention = "google"
 extended_default_ignore = []
 
 [tool.flakehell.exceptions."narrow_down/proto/*.py"]
-flake8-docstrings = ["-*"]           # disable a plugin
+"flake8-*" = ["-*"]
+pycodestyle = ["-*"]
 
 [tool.flakehell.plugins]
 pyflakes = ["+*"]
@@ -194,13 +196,16 @@ disable = [
 max-args = 10  # Maximum number of arguments for functions
 max-attributes = 15  # Maximum number of attributes for a class
 
+[tool.mypy]
+exclude = '^.+_pb2.py$'  # Ignore generated protobufs
+
 [[tool.mypy.overrides]]
 module = [
     "pytest",
     "invoke.*",
     "murmurhash.*",
     "nox.*",
-    "scipy.*"
+    "scipy.*",
 ]
 allow_redefinition = false
 check_untyped_defs = true
