@@ -32,6 +32,7 @@ dependencies = [
     "scipy",
     "typing_extensions",
     "aiosqlite~=0.17.0",
+    "betterproto~=1.2.5",
 ]
 
 [project.urls]
