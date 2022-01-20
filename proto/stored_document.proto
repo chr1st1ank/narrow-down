@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package stored_document;
+
+// StoredDocumentProto is a protobuf representation of narrow_down.data_types.StoredDocument
+message StoredDocumentProto {
+  uint64 id_ = 1;
+  string document = 2;
+  string exact_part = 3;
+  repeated uint32 fingerprint = 4;
+  string data = 5;
+}

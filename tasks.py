@@ -41,6 +41,13 @@ def develop(c):
 
 
 @task()
+def protobuild(c):
+    # type: (Context) -> None
+    """Build the protobuf objects."""
+    _run(c, "protoc -I . --python_betterproto_out=narrow_down/proto proto/stored_document.proto")
+
+
+@task()
 def clean_rust(c):
     # type: (Context) -> None
     """Clean up files from Rust built."""

@@ -69,7 +69,8 @@ dev = [
 "pytest-cov~=3.0",
 "watchdog[watchmedo]~=2.1",
 "myst-parser~=0.16",
-"flake8-pylint~=0.1"
+"flake8-pylint~=0.1",
+"betterproto[compiler]~=1.2.5"
 ]
 
 [tool.coverage.paths]
@@ -104,12 +105,16 @@ show_source = true
 docstring-convention = "google"
 extended_default_ignore = []
 
+[tool.flakehell.exceptions."narrow_down/proto/*.py"]
+flake8-docstrings = ["-*"]           # disable a plugin
+
 [tool.flakehell.plugins]
 pyflakes = ["+*"]
 mccabe = ["+*"]
 "flake8-*" = [
     "+*",
 ]
+
 flake8-annotations = [
     "-ANN101",  # Missing type annotation for self in method
     "-ANN102",   # Missing type annotation for cls in classmethod

@@ -102,9 +102,12 @@ class LSH:
 
     def _hash(self, arr: npt.NDArray, exact_part: str = None) -> int:
         """Merge multiple hashes together to one hash."""
+        if arr.dtype != np.uint32:
+            # Other data types like the standard int64 have a different binary representation
+            arr = arr.astype(np.uint32)
         if exact_part:
-            return self._hashfunc(bytes(arr.data) + b"-" + exact_part.encode("utf-8"))
-        return self._hashfunc(bytes(arr.data))
+            return self._hashfunc(arr.tobytes(order="C") + b"-" + exact_part.encode("utf-8"))
+        return self._hashfunc(arr.tobytes(order="C"))
 
     async def insert(
         self, document: StoredDocument, storage_level: StorageLevel = StorageLevel.Full
