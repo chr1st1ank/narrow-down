@@ -151,7 +151,7 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"mypy --config-file=pyproject.toml {PYTHON_TARGETS_STR}")
+    _run(c, f"mypy --verbose {PYTHON_TARGETS_STR}")
 
 
 @task()
