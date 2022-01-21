@@ -5,7 +5,7 @@ use std::hash::Hasher;
 use twox_hash::XxHash32;
 use twox_hash::XxHash64;
 
-const MERSENNE_PRIME: u32 = 4294967295u32; // mersenne prime (1 << 32) - 1
+const MERSENNE_PRIME: u64 = u32::MAX as u64; // mersenne prime (1 << 32) - 1
 
 // enum HashAlgorithm {
 //     Murmur3_32bit,
@@ -49,9 +49,9 @@ fn minhash<'py>(
     assert_eq!(b.ndim(), 1);
     assert_eq!(a.shape()[0], b.shape()[0]);
 
-    let murmur_hashes: Vec<u32> = shingle_list
+    let murmur_hashes: Vec<u64> = shingle_list
         .iter()
-        .map(|s| murmur3_32bit(s.as_bytes()))
+        .map(|s| murmur3_32bit(s.as_bytes()) as u64)
         .collect();
     let mut minhashes: Vec<u32> = Vec::new();
     let a_slice = a.as_slice()?;
@@ -59,9 +59,9 @@ fn minhash<'py>(
     for (a_i, b_i) in a_slice.iter().zip(b_slice) {
         let minhash: u32 = murmur_hashes
             .iter()
-            .map(|h| (a_i * h + b_i) % MERSENNE_PRIME)
+            .map(|h| u64::from(*a_i) * h + u64::from(*b_i) % MERSENNE_PRIME)// TODO
             .min()
-            .unwrap_or(MERSENNE_PRIME);
+            .unwrap_or(MERSENNE_PRIME) as u32;
         minhashes.push(minhash);
     }
     Ok(minhashes)
@@ -80,6 +80,12 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // More an educational test, but not harmful. We rely on u32::MAX being a prime number.
+    #[test]
+    fn test_mersenne_prime() {
+        assert_eq!(MERSENNE_PRIME, (1 << 32) - 1);
+    }
 
     // Test hashes from https://asecuritysite.com/hash/smh
     #[test]

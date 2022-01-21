@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
   consumption.
 
+### Fixed
+- Integer overflows in the minhash calculation which reduced the quality of the permutations
+  (hash functions). Depending on the input effectively max_uint32 was used instead of a prime number 
+  in the modulo calculation.
+
 ## [0.5.0] - 2022-01-17
 ### Changed
 - The SQLite backends take now an init parameter "partitions" which leads to internally

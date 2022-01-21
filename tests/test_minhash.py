@@ -18,7 +18,7 @@ def test_minhash():
 
     assert minhashes.shape == (2,)
     assert minhashes.dtype == np.uint32
-    assert (minhashes == np.array([530362422, 32829942], dtype=np.uint32)).all()
+    assert (minhashes == np.array([2439865586, 4085789398], dtype=np.uint32)).all()
 
 
 def test_minhash_benchmark(benchmark, sample_byte_strings):
