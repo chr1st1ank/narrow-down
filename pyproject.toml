@@ -197,7 +197,7 @@ max-args = 10  # Maximum number of arguments for functions
 max-attributes = 15  # Maximum number of attributes for a class
 
 [tool.mypy]
-exclude = '^.+_pb2.py$'  # Ignore generated protobufs
+exclude = '^narrow_down/proto/.+_pb2.py$'  # Ignore generated protobufs
 
 [[tool.mypy.overrides]]
 module = [
