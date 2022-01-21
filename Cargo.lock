@@ -101,7 +101,7 @@ checksum = "97af489e1e21b68de4c390ecca6703318bc1aa16e9733bcb62c089b73c6fbb1b"
 
 [[package]]
 name = "narrow_down"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "mur3",
  "numpy",
