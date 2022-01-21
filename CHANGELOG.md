@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
+  consumption.
 
 ## [0.5.0] - 2022-01-17
 ### Changed
