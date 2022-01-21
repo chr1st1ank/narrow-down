@@ -81,7 +81,7 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
 mod tests {
     use super::*;
 
-    // More an educational test, but not harmful. We relly on u32::MAX being a prime number.
+    // More an educational test, but not harmful. We rely on u32::MAX being a prime number.
     #[test]
     fn test_mersenne_prime() {
         assert_eq!(MERSENNE_PRIME, (1 << 32) - 1);
