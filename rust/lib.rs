@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
@@ -38,6 +39,25 @@ fn xxhash_64bit(s: &[u8]) -> u64 {
     h.finish()
 }
 
+
+#[pyclass]
+struct Fingerprint {
+    #[pyo3(get, set)]
+    num: i32,
+}
+
+#[pymethods]
+impl Fingerprint {
+    #[new]
+    fn new(num: i32) -> Self {
+        Fingerprint { num }
+    }
+    fn __repr__(&self) -> PyResult<String>{
+        Ok(format!("Fingerprint([{}])", self.num))
+    }
+}
+
+
 #[pyfunction]
 fn minhash<'py>(
     _py: Python<'py>,
@@ -74,6 +94,7 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(xxhash_32bit, m)?)?;
     m.add_function(wrap_pyfunction!(xxhash_64bit, m)?)?;
     m.add_function(wrap_pyfunction!(minhash, m)?)?;
+    m.add_class::<Fingerprint>()?;
     Ok(())
 }
 
