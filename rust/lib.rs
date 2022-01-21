@@ -5,7 +5,7 @@ use std::hash::Hasher;
 use twox_hash::XxHash32;
 use twox_hash::XxHash64;
 
-const MERSENNE_PRIME: u64 = 4294967295u64; // mersenne prime (1 << 32) - 1
+const MERSENNE_PRIME: u64 = u32::MAX as u64; // mersenne prime (1 << 32) - 1
 
 // enum HashAlgorithm {
 //     Murmur3_32bit,
@@ -80,6 +80,12 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // More an educational test, but not harmful. We relly on u32::MAX being a prime number.
+    #[test]
+    fn test_mersenne_prime() {
+        assert_eq!(MERSENNE_PRIME, (1 << 32) - 1);
+    }
 
     // Test hashes from https://asecuritysite.com/hash/smh
     #[test]
