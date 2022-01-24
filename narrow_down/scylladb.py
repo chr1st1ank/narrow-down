@@ -4,6 +4,7 @@ ScyllaDB is a low-latency distributed key-value store, compatible with the Apach
 protocol. For details see _`https://www.scylladb.com/`.
 """
 import asyncio
+import contextlib
 import random
 import re
 from typing import Dict, Iterable, Optional, Union
@@ -64,11 +65,14 @@ class ScyllaDBStore(StorageBackend):
         self._keyspace = keyspace
         self._prepared_statements: Dict[str, cassandra.query.PreparedStatement] = {}
 
+    @contextlib.contextmanager
     def _session(self) -> cassandra.cluster.Session:
         """Get or create a cassandra session."""
-        if isinstance(self._cluster_or_session, cassandra.cluster.Session):
-            return self._cluster_or_session
-        return self._cluster_or_session.connect()
+        if isinstance(self._cluster_or_session, cassandra.cluster.Cluster):
+            with self._cluster_or_session.connect() as session:
+                yield session
+        else:
+            yield self._cluster_or_session
 
     async def _execute(self, session, query, parameters=None, timeout=None):
         """Execute a cassandra query with asyncio."""
@@ -118,10 +122,9 @@ class ScyllaDBStore(StorageBackend):
             is_idempotent=True,
         )
         with self._session() as session:
-            session.set_keyspace(self._keyspace)
-            await _wrap_future(session.execute_async(create_settings, timeout=30))
-            await _wrap_future(session.execute_async(create_documents, timeout=30))
-            await _wrap_future(session.execute_async(create_buckets, timeout=30))
+            await self._execute(session, create_settings, timeout=30)
+            await self._execute(session, create_documents, timeout=30)
+            await self._execute(session, create_buckets, timeout=30)
             self._prepared_statements["set_setting"] = session.prepare(
                 f"INSERT INTO {self._keyspace}.settings(key,value) VALUES (?,?);"
             )
@@ -157,7 +160,6 @@ class ScyllaDBStore(StorageBackend):
     async def insert_setting(self, key: str, value: str):
         """Store a setting as key-value pair."""
         with self._session() as session:
-            session.set_keyspace(self._keyspace)
             await self._execute(session, self._prepared_statements["set_setting"], (key, value))
 
     async def query_setting(self, key: str) -> Optional[str]:
@@ -195,8 +197,7 @@ class ScyllaDBStore(StorageBackend):
                 )
                 return document_id
             else:
-                inserted_successfully = False
-                while not inserted_successfully:
+                for _ in range(10):
                     doc_id = random.randint(a=0, b=2 ** 32)
                     result = await self._execute(
                         session,
@@ -204,7 +205,13 @@ class ScyllaDBStore(StorageBackend):
                         (doc_id, document),
                     )
                     inserted_successfully = result[0].applied
-                return doc_id
+                    if (
+                        inserted_successfully
+                        or result[0].id == doc_id
+                        and result[0].doc == document
+                    ):
+                        return doc_id
+                raise RuntimeError("Unable to find an ID for a document. This should never happen.")
 
     async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
