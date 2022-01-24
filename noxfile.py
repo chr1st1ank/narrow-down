@@ -23,7 +23,7 @@ def install_with_constraints(session: Session, *args: str) -> None:  # noqa
         args: Command-line arguments for pip.
     """
     session.install("maturin")
-    maturin_cmd = ["maturin", "develop", "--release"]
+    maturin_cmd = ["maturin", "develop", "--release", "--extras=scylladb"]
     session.run(*maturin_cmd)
     session.install(".", *args)
 

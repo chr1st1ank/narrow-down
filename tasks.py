@@ -154,7 +154,7 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"mypy {PYTHON_TARGETS_STR}")
+    _run(c, f"mypy  {PYTHON_TARGETS_STR}")
 
 
 @task()

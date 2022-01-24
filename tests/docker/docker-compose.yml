@@ -1,0 +1,16 @@
+version: "2.4"
+
+services:
+
+  scylladb:
+    image: scylladb/scylla:4.5.0
+    restart: unless-stopped
+    command: --smp 1 --memory 750M --overprovisioned 1
+    tmpfs:
+      - /var/lib/scylla
+    ports:
+      - "9042:9042"
+
+networks:
+  default:
+    name: ndtest
