@@ -3,7 +3,7 @@ import collections
 import hashlib
 import os
 import re
-from typing import Dict, List, NamedTuple, Tuple
+from typing import Dict, List, NamedTuple, Tuple, Union
 
 import cassandra.cluster  # type: ignore
 import cassandra.query  # type: ignore
@@ -43,10 +43,10 @@ class SessionMock:
         """Create a new Session object."""
         self.test_keyspace = keyspace
         self._real_session: cassandra.cluster.Session = real_session
-        self._query_responses: Dict[str, List[collections.namedtuple]] = {}
+        self._query_responses: Dict[str, Union[List[NamedTuple], Exception]] = {}
         self._shutdown = False
 
-    def add_mock_response(self, request: str, response: List[NamedTuple]):
+    def add_mock_response(self, request: str, response: Union[List[NamedTuple], Exception]):
         """Add an expected query with response list."""
         self._query_responses[request.replace("<keyspace>", self.test_keyspace)] = response
 
@@ -68,7 +68,8 @@ class SessionMock:
 
         if self._real_session:
             response = self._real_session.execute(query, parameters, timeout)
-            assert response.all() == self._query_responses[query_string]
+            if not isinstance(self._query_responses[query_string], Exception):
+                assert response.all() == self._query_responses[query_string]
         return SessionMock._Result(self._query_responses[query_string])
 
     def execute_async(self, query, parameters, timeout=0.1):
@@ -78,17 +79,20 @@ class SessionMock:
 
         if self._real_session:
             future = self._real_session.execute_async(query, parameters, timeout)
-            assert future.result().all() == self._query_responses.get(query_string)
+            if not isinstance(self._query_responses[query_string], Exception):
+                assert future.result().all() == self._query_responses.get(query_string)
             return future
 
         class FakeFuture:
             @staticmethod
             def add_callback(f):
-                f(self._query_responses[query_string])
+                if not isinstance(self._query_responses[query_string], Exception):
+                    f(self._query_responses[query_string])
 
             @staticmethod
             def add_errback(f):
-                pass
+                if isinstance(self._query_responses[query_string], Exception):
+                    f(self._query_responses[query_string])
 
         return FakeFuture
 
@@ -183,6 +187,32 @@ async def test_scylladb_store__initialize_session(session_mock):
 
 
 @pytest.mark.asyncio
+async def test_scylladb_store__check_keyspace():
+    with pytest.raises(ValueError):
+        narrow_down.scylladb.ScyllaDBStore(None, "; DROP KEYSPACE x;")
+
+
+@pytest.mark.asyncio
+async def test_scylladb_store__handle_query_error(monkeypatch, session_mock):
+    from cassandra.cluster import OperationTimedOut
+
+    def raise_error(future: cassandra.cluster.ResponseFuture):
+        future._set_final_exception(OperationTimedOut("Timeout for testing"))
+
+    storage = await narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace
+    ).initialize()
+    session_mock.add_mock_response(
+        "INSERT INTO <keyspace>.settings(key,value) VALUES (k,155);",
+        OperationTimedOut("Timeout for testing"),
+    )
+    monkeypatch.setattr("cassandra.cluster.ResponseFuture.send_request", raise_error)
+
+    with pytest.raises(OperationTimedOut):
+        await storage.insert_setting(key="k", value="155")
+
+
+@pytest.mark.asyncio
 async def test_scylladb_store__insert_query_setting(session_mock):
     session_mock.add_mock_response("INSERT INTO <keyspace>.settings(key,value) VALUES (k,155);", [])
     session_mock.add_mock_response(
@@ -252,6 +282,27 @@ async def test_scylladb_store__insert_query_document__no_id(monkeypatch, session
     ).initialize()
     id_out = await storage.insert_document(document=b"abcd efgh")
     assert await storage.query_document(id_out) == b"abcd efgh"
+
+
+@pytest.mark.asyncio
+async def test_scylladb_store__insert_query_document__no_id_found(monkeypatch, session_mock):
+    """Check if the driver tries a couple of times before giving up finding a random ID."""
+    n_attempts = 0
+
+    async def return_failure(*args, **kwargs):
+        nonlocal n_attempts
+        n_attempts += 1
+        return [row(applied=False, id=4, doc=b"abcd efgh")]
+
+    storage = await narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace
+    ).initialize()
+
+    monkeypatch.setattr("random.randint", lambda **kwargs: 5)
+    monkeypatch.setattr(storage, "_execute", return_failure)
+    with pytest.raises(RuntimeError):
+        await storage.insert_document(document=b"abcd efgh")
+    assert n_attempts == 10
 
 
 @pytest.mark.asyncio

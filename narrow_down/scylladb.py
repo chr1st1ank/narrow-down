@@ -184,7 +184,7 @@ class ScyllaDBStore(StorageBackend):
             except KeyError as e:
                 if "get_setting" in e.args:
                     return None
-                raise
+                raise  # Don't swallow unknown errors
 
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
