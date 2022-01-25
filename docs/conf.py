@@ -17,7 +17,7 @@ import narrow_down
 
 # General information about the project.
 project = "narrow-down"
-copyright = "2021, Christian Krudewig"  # noqa: A001
+copyright = "2022, Christian Krudewig"  # noqa: A001
 author = "Christian Krudewig"
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -40,6 +40,8 @@ extensions = [
     "myst_parser",
 ]
 
+autodoc_mock_imports = ["cassandra"]
+
 # Napoleon docstring parser settings
 napoleon_include_init_with_doc = True
 
@@ -58,18 +60,27 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+# html_theme = "alabaster"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    "github_user": "chr1st1ank",
-    "github_repo": "narrow-down",
-    "github_banner": True,
-    "show_related": False,
-    "fixed_sidebar": True,
-}
+# html_theme_options = {
+#     "github_user": "chr1st1ank",
+#     "github_repo": "narrow-down",
+#     "github_banner": True,
+#     "show_related": False,
+#     "fixed_sidebar": True,
+#     "page_width": "1024px"
+# }
+html_theme = "nature"
+#
+# # Theme options are theme-specific and customize the look and feel of a theme
+# # further.  For a list of options available for each theme, see the
+# # documentation.
+# html_theme_options = {
+#     "rightsidebar": False,
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
