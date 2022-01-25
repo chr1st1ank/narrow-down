@@ -2,11 +2,12 @@
 
 Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapter 3.
 """
+import asyncio
 import dataclasses
 import json
 import warnings
 from dataclasses import dataclass
-from typing import Collection, Optional, Set
+from typing import Collection, Optional
 
 import numpy as np
 import numpy.typing as npt
@@ -118,15 +119,19 @@ class LSH:
         doc_index = await self._storage.insert_document(
             document.serialize(storage_level), document_id=document.id_
         )
+        tasks = []
         for band_number in range(self.n_bands):
             start_index = band_number * self.rows_per_band
             h = self._hash(
                 document.fingerprint[start_index : start_index + self.rows_per_band],
                 document.exact_part,
             )
-            await self._storage.add_document_to_bucket(
-                bucket_id=band_number, document_hash=h, document_id=doc_index
+            tasks.append(
+                self._storage.add_document_to_bucket(
+                    bucket_id=band_number, document_hash=h, document_id=doc_index
+                )
             )
+        await asyncio.gather(*tasks)
         return doc_index
 
     async def remove_by_id(self, document_id: int, check_if_exists: bool = False) -> None:
@@ -151,31 +156,40 @@ class LSH:
             return
         if doc.fingerprint is None:
             raise TooLowStorageLevel("Fingerprint needed to remove a document from the LSH!")
-        for band_number in range(self.n_bands):  # TODO: parallelize
+        tasks = []
+        for band_number in range(self.n_bands):
             start_index = band_number * self.rows_per_band
             h = self._hash(
                 doc.fingerprint[start_index : start_index + self.rows_per_band], doc.exact_part
             )
-            await self._storage.remove_id_from_bucket(
-                bucket_id=band_number, document_hash=h, document_id=document_id
+            tasks.append(
+                self._storage.remove_id_from_bucket(
+                    bucket_id=band_number, document_hash=h, document_id=document_id
+                )
             )
+        await asyncio.gather(*tasks)
         await self._storage.remove_document(document_id=document_id)
 
     async def query(
         self, fingerprint: Fingerprint, *, exact_part: str = None
     ) -> Collection[StoredDocument]:
         """Find all similar documents."""
-        candidates: Set[int] = set()
-        for band_number in range(self.n_bands):  # TODO: parallelize
+        tasks = []
+        for band_number in range(self.n_bands):
             start_index = band_number * self.rows_per_band
             h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
-            candidates.update(
-                await self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
+            tasks.append(
+                self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
             )
-        documents = []
-        for c in candidates:  # TODO: Deserialize and make all queries async
-            documents.append(StoredDocument.deserialize(await self._storage.query_document(c), c))
-        return documents
+        candidates = set()
+        for new_candidates in await asyncio.gather(*tasks):
+            candidates.update(new_candidates)
+        return await asyncio.gather(*[self._query_document(c) for c in candidates])
+
+    async def _query_document(self, doc_id: int):
+        """Fetch a document from the storage and deserialize it."""
+        doc = await self._storage.query_document(doc_id)
+        return StoredDocument.deserialize(doc, doc_id)
 
 
 def find_optimal_config(
