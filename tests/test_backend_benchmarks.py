@@ -56,9 +56,7 @@ def test_similarity_store__insert_25_benchmark(
 @pytest.mark.parametrize(
     "storage_backend, storage_level",
     [
-        (InMemoryStore, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
-        (SQLiteStore, StorageLevel.Minimal),
         (AsyncSQLiteStore, StorageLevel.Minimal),
     ],
 )
