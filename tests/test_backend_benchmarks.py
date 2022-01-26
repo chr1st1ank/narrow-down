@@ -4,8 +4,15 @@ An individual benchmark can be run and profiled from the command line with::
 
     py.test 'tests/test_backend_benchmarks.py::test_similarity_store__insert_25_benchmark[ScyllaDBStore-StorageLevel.Minimal]' --profile --profile-svg
     py.test 'tests/test_backend_benchmarks.py::test_similarity_store__query_25_benchmark[ScyllaDBStore-StorageLevel.Minimal]' --profile --profile-svg
+    
+The tests against external services are only run when setting::
+
+    export TEST_WITH_DB=True;
+
 """  # noqa:     E501
+
 import asyncio
+import os
 
 import cassandra.cluster  # type: ignore
 import pytest
@@ -148,6 +155,8 @@ def create_storage_for_backend(storage_backend, test_name, tmp_path):
     if storage_backend == InMemoryStore:
         storage = storage_backend()
     elif storage_backend == ScyllaDBStore:
+        if os.environ.get("TEST_WITH_DB", "False").lower() != "true":
+            pytest.skip("Skipping")
         storage = create_scylla_storage(test_name)
     elif storage_backend == SQLiteStore:
         storage = storage_backend(str(tmp_path / f"{test_name}.db"))
