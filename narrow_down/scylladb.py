@@ -61,18 +61,21 @@ class ScyllaDBStore(StorageBackend):
         """
         if not re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*$", keyspace):
             raise ValueError(f"Invalid keyspace name: {keyspace}")
-        self._cluster_or_session = cluster_or_session
+        if isinstance(cluster_or_session, cassandra.cluster.Cluster):
+            self._scylla_cluster = cluster_or_session
+            self._scylla_session = None
+        else:
+            self._scylla_cluster = None
+            self._scylla_session = cluster_or_session
         self._keyspace = keyspace
         self._prepared_statements: Dict[str, cassandra.query.PreparedStatement] = {}
 
     @contextlib.contextmanager
     def _session(self) -> cassandra.cluster.Session:
         """Get or create a cassandra session."""
-        if isinstance(self._cluster_or_session, cassandra.cluster.Cluster):
-            with self._cluster_or_session.connect() as session:
-                yield session
-        else:
-            yield self._cluster_or_session
+        if (not self._scylla_session) and self._scylla_cluster:
+            self._scylla_session = self._scylla_cluster.connect()
+        yield self._scylla_session
 
     async def _execute(self, session, query, parameters=None, timeout=None):
         """Execute a cassandra query with asyncio."""

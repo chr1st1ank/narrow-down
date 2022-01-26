@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
   consumption.
+- Storage queries are done concurrently where possible 
+- ScyllaDB sessions are now reused which give a great performance benefit
 
 ### Fixed
 - Integer overflows in the minhash calculation which reduced the quality of the permutations
