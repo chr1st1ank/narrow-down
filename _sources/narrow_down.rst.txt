@@ -1,0 +1,69 @@
+narrow\_down package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   narrow_down.proto
+
+Submodules
+----------
+
+narrow\_down.data\_types module
+-------------------------------
+
+.. automodule:: narrow_down.data_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+narrow\_down.hash module
+------------------------
+
+.. automodule:: narrow_down.hash
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+narrow\_down.scylladb module
+----------------------------
+
+.. automodule:: narrow_down.scylladb
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+narrow\_down.similarity\_store module
+-------------------------------------
+
+.. automodule:: narrow_down.similarity_store
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+narrow\_down.sqlite module
+--------------------------
+
+.. automodule:: narrow_down.sqlite
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+narrow\_down.storage module
+---------------------------
+
+.. automodule:: narrow_down.storage
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: narrow_down
+   :members:
+   :undoc-members:
+   :show-inheritance:

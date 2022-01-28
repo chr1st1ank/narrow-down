@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>narrow_down.data_types &#8212; narrow-down 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">narrow-down 0.5.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">narrow_down.data_types</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for narrow_down.data_types</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Type definitions of pure data classes and abstract types.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">typing</span> <span class="k">as</span> <span class="n">npt</span>
+
+<span class="kn">from</span> <span class="nn">narrow_down.proto.stored_document_pb2</span> <span class="kn">import</span> <span class="n">StoredDocumentProto</span>
+
+
+<div class="viewcode-block" id="TooLowStorageLevel"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.TooLowStorageLevel">[docs]</a><span class="k">class</span> <span class="nc">TooLowStorageLevel</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised if a feature is used for which a higher storage level is needed.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AlreadyInitialized"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.AlreadyInitialized">[docs]</a><span class="k">class</span> <span class="nc">AlreadyInitialized</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised when initializing storage twice or changing immutable settings.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="StorageLevel"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.StorageLevel">[docs]</a><span class="k">class</span> <span class="nc">StorageLevel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Flag</span><span class="p">):</span>  <span class="c1"># TODO: Review name</span>
+    <span class="sd">&quot;&quot;&quot;Detail level of document persistence.&quot;&quot;&quot;</span>
+
+    <span class="n">Minimal</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">Fingerprint</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">Document</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
+    <span class="n">Full</span> <span class="o">=</span> <span class="n">Minimal</span> <span class="o">|</span> <span class="n">Fingerprint</span> <span class="o">|</span> <span class="n">Document</span></div>
+
+
+<span class="n">Fingerprint</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;Fingerprint&quot;</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;Type representing the result of a minhashing operation&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="StoredDocument"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.StoredDocument">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StoredDocument</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Data object combining all possible fields of a document stored.&quot;&quot;&quot;</span>
+
+    <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;Identifier used to distinguish the document from an identical one.&quot;&quot;&quot;</span>
+
+    <span class="n">document</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;The actual content to use for fuzzy matching, e.g. a full unprocessed sentence.&quot;&quot;&quot;</span>
+
+    <span class="n">exact_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;A string which should be matched exactly.&quot;&quot;&quot;</span>
+
+    <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Fingerprint</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;A fuzzy fingerprint of the document, e.g. a Minhash.&quot;&quot;&quot;</span>
+
+    <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;Payload to persist together with the document in the internal data structures.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StoredDocument.serialize"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.StoredDocument.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">:</span> <span class="n">StorageLevel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Serialize a document to bytes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StoredDocumentProto</span><span class="p">(</span>
+            <span class="n">fingerprint</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">storage_level</span> <span class="o">&amp;</span> <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Fingerprint</span>
+            <span class="k">else</span> <span class="p">[],</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">f</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">_FIELDS_FOR_STORAGE_LEVEL</span><span class="p">[</span><span class="n">storage_level</span><span class="p">]},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="StoredDocument.deserialize"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.StoredDocument.deserialize">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">doc</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StoredDocument&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Deserialize a document from bytes.&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">StoredDocumentProto</span><span class="o">.</span><span class="n">FromString</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">id_</span><span class="o">=</span><span class="n">id_</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;document&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">document</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;exact_part&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;exact_part&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">exact_part</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">:</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Fingerprint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">return</span> <span class="n">StoredDocument</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StoredDocument.without"><a class="viewcode-back" href="../../narrow_down.html#narrow_down.data_types.StoredDocument.without">[docs]</a>    <span class="k">def</span> <span class="nf">without</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">attributes</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StoredDocument&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create a copy with the specified attributes left out.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            attributes: The names of the attributes to leave empty</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A copy of the StoredDocument with all the attributes specified in attributes left out.</span>
+<span class="sd">            So they will have their default value (None).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StoredDocument</span><span class="p">(</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">}</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="n">_FIELDS_FOR_STORAGE_LEVEL</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Minimal</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Fingerprint</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;exact_part&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;exact_part&quot;</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Fields of StoredDocument which need to be serialized to reach a certain storage level.&quot;&quot;&quot;</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">narrow-down 0.5.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">narrow_down.data_types</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Christian Krudewig.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

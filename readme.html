@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Narrow Down &#8212; narrow-down 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Welcome to Narrow Down’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Narrow Down’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">narrow-down 0.5.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Narrow Down</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section class="tex2jax_ignore mathjax_ignore" id="narrow-down">
+<h1>Narrow Down<a class="headerlink" href="#narrow-down" title="Permalink to this headline">¶</a></h1>
+<div align="center">
+<p><a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/narrow-down.svg" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/narrow-down.svg" /></a>
+<a class="reference external" href="https://github.com/chr1st1ank/narrow-down/actions?workflow=tests"><img alt="Tests" src="https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg" /></a>
+<a class="reference external" href="https://codecov.io/gh/chr1st1ank/narrow-down"><img alt="Codecov" src="https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg" /></a>
+<a class="reference external" href="https://narrow-down.readthedocs.io/"><img alt="Read the Docs" src="https://readthedocs.org/projects/narrow-down/badge/" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - License" src="https://img.shields.io/pypi/l/narrow-down.svg" /></a></p>
+<p><a class="reference external" href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a class="reference external" href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white" /></a>
+<a class="reference external" href="https://www.contributor-covenant.org/version/2/0/code_of_conduct/"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg" /></a></p>
+</div>
+<p>Fast fuzzy text search</p>
+<ul class="simple">
+<li><p>GitHub repo: <a class="reference external" href="https://github.com/chr1st1ank/narrow-down.git">https://github.com/chr1st1ank/narrow-down.git</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://narrow-down.readthedocs.io">https://narrow-down.readthedocs.io</a></p></li>
+<li><p>Free software: Apache Software License 2.0</p></li>
+<li><p>Status: Prototype. Solid and fast production quality, but <em>still subject to API changes until version 1.0 is reached</em>.</p></li>
+</ul>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Document indexing and search based on the Minhash LSH algorithm</p></li>
+<li><p>High performance thanks to a native extension module in Rust</p></li>
+<li><p>Easy-to-use API with automated parameter tuning</p></li>
+<li><p>Works with many storage backends. Currently implemented:</p>
+<ul>
+<li><p>In-Memory</p></li>
+<li><p>SQLite</p></li>
+<li><p>Custom backend by implementing a lean interface</p></li>
+</ul>
+</li>
+<li><p>Native asyncio interface</p></li>
+</ul>
+</section>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</section>
+<section id="similar-projects">
+<h2>Similar projects<a class="headerlink" href="#similar-projects" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/mattilyra/LSH">pylsh</a> offers a good implementation of the classic Minhash LSH scheme in Python and Cython. If you only need this and you don’t need a database backend it can be a good choice.</p></li>
+<li><p><a class="reference external" href="https://github.com/ekzhu/datasketch">Datasketch</a> implements an interesting collection of different data sketching algorithms for similarity matching, cardinality estimation and k-nearest-neighbour search. The implementation is not highly optimized but very well usable, the documentation rich and multiple database backends can be used for some of the sketches</p></li>
+<li><p><a class="reference external" href="https://milvus.io/">Milvus</a> offers a full database stack for vector search, a different approach for fast searching. It can also be applied to text search when an emedding like Word2Vec or Bert is used to vectorize the text.</p></li>
+</ul>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>This package was created with <a class="reference external" href="https://github.com/cookiecutter/cookiecutter">Cookiecutter</a> and the <a class="reference external" href="https://github.com/fedejaure/cookiecutter-modern-pypackage">fedejaure/cookiecutter-modern-pypackage</a> project template.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Narrow Down</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li><a class="reference internal" href="#similar-projects">Similar projects</a></li>
+<li><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to Narrow Down’s documentation!</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="installation.html"
+                          title="next chapter">Installation</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/readme.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Narrow Down’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">narrow-down 0.5.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Narrow Down</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Christian Krudewig.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
