@@ -25,10 +25,8 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip maturin
 
-      - uses: messense/maturin-action@v1
-        with:
-          command: develop
-          args: --release --extras=scylladb
+      - name: Install dependencies
+        run: maturin develop --release --extras=scylladb
 
       - run: inv docs
 
