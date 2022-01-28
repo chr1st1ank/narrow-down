@@ -3,13 +3,12 @@ from typing import Type
 
 import pytest
 
-import narrow_down.async_sqlite
 import narrow_down.sqlite
 
 
-@pytest.fixture(params=[narrow_down.sqlite.SQLiteStore, narrow_down.async_sqlite.AsyncSQLiteStore])
-def sqlite_driver(request) -> Type[narrow_down.storage.StorageBackend]:
-    return request.param
+@pytest.fixture()
+def sqlite_driver() -> Type[narrow_down.storage.StorageBackend]:
+    return narrow_down.sqlite.SQLiteStore
 
 
 @pytest.mark.asyncio

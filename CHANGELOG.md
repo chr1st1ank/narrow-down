@@ -12,11 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
   consumption.
+- Storage queries are done concurrently where possible 
+- ScyllaDB sessions are now reused which give a great performance benefit
 
 ### Fixed
 - Integer overflows in the minhash calculation which reduced the quality of the permutations
   (hash functions). Depending on the input effectively max_uint32 was used instead of a prime number 
   in the modulo calculation.
+
+### Removed
+- The backend AsyncSQLiteStore is removed, because it turned out that aiosqlite relies on the user 
+  to guarantee that only one coroutine at a time tries writing. Otherwise, a "Database locked" 
+  exception is thrown. As the performance was anyway worse than expected it was removed.
 
 ## [0.5.0] - 2022-01-17
 ### Changed

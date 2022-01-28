@@ -177,6 +177,7 @@ def benchmarks(c):
     """Run benchmark tests."""
     pytest_options = [
         "--benchmark-only",
+        "--benchmark-sort=name",
     ]
     _run(c, f"pytest {' '.join(pytest_options)} {TEST_DIR} {SOURCE_DIR}")
 
