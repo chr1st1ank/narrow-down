@@ -17,7 +17,6 @@ import os
 import cassandra.cluster  # type: ignore
 import pytest
 
-from narrow_down.async_sqlite import AsyncSQLiteStore
 from narrow_down.data_types import StorageLevel
 from narrow_down.scylladb import ScyllaDBStore
 from narrow_down.similarity_store import SimilarityStore
@@ -31,7 +30,6 @@ from narrow_down.storage import InMemoryStore
         (InMemoryStore, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
-        (AsyncSQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__insert_25_benchmark(
@@ -57,7 +55,7 @@ def test_similarity_store__insert_25_benchmark(
     "storage_backend, storage_level",
     [
         (ScyllaDBStore, StorageLevel.Minimal),
-        (AsyncSQLiteStore, StorageLevel.Minimal),
+        (SQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__insert_25_parallel_benchmark(
@@ -86,7 +84,6 @@ def test_similarity_store__insert_25_parallel_benchmark(
         (InMemoryStore, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
-        (AsyncSQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__query_25_benchmark(
@@ -120,6 +117,7 @@ def test_similarity_store__query_25_benchmark(
     "storage_backend, storage_level",
     [
         (ScyllaDBStore, StorageLevel.Minimal),
+        (SQLiteStore, StorageLevel.Minimal),
     ],
 )
 def test_similarity_store__query_25_parallel_benchmark(
@@ -158,8 +156,6 @@ def create_storage_for_backend(storage_backend, test_name, tmp_path):
         storage = create_scylla_storage(test_name)
     elif storage_backend == SQLiteStore:
         storage = storage_backend(str(tmp_path / f"{test_name}.db"))
-    elif storage_backend == AsyncSQLiteStore:
-        storage = storage_backend(str(tmp_path / f"{test_name}_aio.db"))
     return storage
 
 
