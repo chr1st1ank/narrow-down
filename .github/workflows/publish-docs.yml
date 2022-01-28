@@ -18,17 +18,19 @@ jobs:
           python-version: 3.9
           architecture: x64
 
-      - name: Setup venv
-        run: python -m venv .venv && ./.venv/bin/activate
-
       - name: Upgrade pip
         run: |
           python3 -m pip install --upgrade pip maturin
 
       - uses: messense/maturin-action@v1
         with:
-          command: develop
-          args: --release --extras=scylladb
+          manylinux: 2014
+          command: build
+          args: --release -o dist --no-sdist
+
+      - name: Install project
+        run: |
+          pip install dist/*.whl
 
       - run: inv docs
 
