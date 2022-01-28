@@ -18,6 +18,9 @@ jobs:
           python-version: 3.9
           architecture: x64
 
+      - name: Setup venv
+        run: python -m venv .venv && ./.venv/bin/activate
+
       - name: Upgrade pip
         run: |
           python3 -m pip install --upgrade pip maturin
