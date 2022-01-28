@@ -44,6 +44,10 @@ documentation = "https://narrow-down.readthedocs.io"
 scylladb = [
     "scylla-driver"
 ]
+docs = [
+    "sphinx>=4.2",
+    "recommonmark>=0.7.1"
+]
 dev = [
     "pre-commit~=2.15",
     "invoke~=1.6",

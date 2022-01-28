@@ -22,15 +22,15 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip maturin
 
-      - uses: messense/maturin-action@v1
-        with:
-          manylinux: 2014
-          command: build
-          args: --release -o dist --no-sdist
+#      - uses: messense/maturin-action@v1
+#        with:
+#          manylinux: 2014
+#          command: build
+#          args: --release -o dist --no-sdist
 
       - name: Install project
         run: |
-          pip install dist/*.whl
+          pip install -e .[scylladb,docs]
 
       - run: inv docs
 
