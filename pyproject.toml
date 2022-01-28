@@ -45,7 +45,7 @@ scylladb = [
     "scylla-driver"
 ]
 docs = [
-    "sphinx>=4.2",
+    "sphinx~=4.4",
     "recommonmark>=0.7.1",
     "myst-parser~=0.16",
 ]
@@ -68,7 +68,6 @@ dev = [
     "nox",
     "mypy",
     "mypy-protobuf",
-    "sphinx~=4.2",
     "bump2version~=1.0",
     "pytest~=6.2",
     "pytest-asyncio",
