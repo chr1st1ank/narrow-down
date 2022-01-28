@@ -20,7 +20,7 @@ With Python's standard venv you can set up the project as follows:
 python -m venv .venv
 source ./.venv/bin/activate
 python -m pip install --upgrade pip maturin
-maturin develop --release --extras dev,scylladb
+maturin develop --release --extras dev,docs,scylladb
 ```
 
 We'll also need [nox](https://nox.thea.codes/en/stable/) for automated testing in multiple Python environments so and

@@ -46,7 +46,8 @@ scylladb = [
 ]
 docs = [
     "sphinx>=4.2",
-    "recommonmark>=0.7.1"
+    "recommonmark>=0.7.1",
+    "myst-parser~=0.16",
 ]
 dev = [
     "pre-commit~=2.15",
@@ -77,10 +78,9 @@ dev = [
     "coverage[toml]~=6.0",
     "pytest-cov~=3.0",
     "watchdog[watchmedo]~=2.1",
-    "myst-parser~=0.16",
     "flake8-pylint~=0.1",
     "protoc-wheel-0",
-    "narrow-down[scylladb]"
+    "narrow-down[scylladb,docs]"
 ]
 
 [tool.coverage.paths]

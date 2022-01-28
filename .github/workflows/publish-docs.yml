@@ -17,16 +17,11 @@ jobs:
         with:
           python-version: 3.9
           architecture: x64
+          cache: 'pip'
 
-      - name: Upgrade pip
+      - name: Intall pip maturin invoke
         run: |
           python3 -m pip install --upgrade pip maturin invoke
-
-#      - uses: messense/maturin-action@v1
-#        with:
-#          manylinux: 2014
-#          command: build
-#          args: --release -o dist --no-sdist
 
       - name: Install project
         run: |
