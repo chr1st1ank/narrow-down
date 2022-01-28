@@ -13,22 +13,22 @@ We take our open source community seriously and hold ourselves and other contrib
 
 ### Requirements
 
-We use [maturin](https://maturin.rs/) to build the package and install it with dependencies. For development an additional environment manager (e.g. miniconda, virtualenv, pipenv, ...) is sensible to keep the project environment in a dedicated virtual environment. 
+We use [maturin](https://maturin.rs/) to build the package and install it with dependencies. For development an additional environment manager (e.g. virtualenv, pipenv, miniconda, ...) is sensible to keep the project environment in a dedicated virtual environment. 
 
-Assuming you have [installed miniconda](https://docs.conda.io/en/latest/miniconda.html#installing) you can install the development environment as follows:
-```
-$ conda create -n narrow-down python==3.9 maturin
-$ conda activate narrow-down
-(narrow-down) $ cd <project root>
-(narrow-down) $ maturin develop --release --extras dev
+With Python's standard venv you can set up the project as follows:
+```shell
+python -m venv .venv
+source ./.venv/bin/activate
+python -m pip install --upgrade pip maturin
+maturin develop --release --extras dev,scylladb
 ```
 
 We'll also need [nox](https://nox.thea.codes/en/stable/) for automated testing in multiple Python environments so and
  [invoke](http://www.pyinvoke.org/) to wrap up some useful tasks like formatting, linting, testing and more.
 
 To install the pre-commit hooks:
-```
-$ inv install-hooks
+```shell
+inv install-hooks
 ```
 
 Execute `inv[oke] --list` to see the list of available commands.

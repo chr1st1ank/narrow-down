@@ -1,0 +1,36 @@
+name: publish-docs
+
+on:
+  push:
+    branches:
+      - main
+      - ci/readthedocs
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2.3.1
+        with:
+          python-version: 3.9
+          architecture: x64
+
+      - name: Upgrade pip
+        run: |
+          python3 -m pip install --upgrade pip maturin
+
+      - uses: messense/maturin-action@v1
+        with:
+          command: develop
+          args: --release --extras=scylladb
+
+      - run: inv docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build
