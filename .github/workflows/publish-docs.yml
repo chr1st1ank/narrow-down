@@ -20,7 +20,7 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          python3 -m pip install --upgrade pip maturin
+          python3 -m pip install --upgrade pip maturin invoke
 
 #      - uses: messense/maturin-action@v1
 #        with:
