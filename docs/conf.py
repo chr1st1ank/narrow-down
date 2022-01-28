@@ -34,13 +34,25 @@ release = narrow_down.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    # "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
+    # "sphinx.ext.doctest",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "myst_parser",
 ]
 
 autodoc_mock_imports = ["cassandra"]
+
+autodoc_default_options = {
+    "undoc-members": True,
+    "special-members": "",
+}
+autoclass_content = "both"
+autodoc_class_signature = "mixed"
+autodoc_typehints = "description"
+autodoc_inherit_docstrings = True
+
 
 # Napoleon docstring parser settings
 napoleon_include_init_with_doc = True
@@ -60,20 +72,20 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = "alabaster"
+html_theme = "alabaster"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {
-#     "github_user": "chr1st1ank",
-#     "github_repo": "narrow-down",
-#     "github_banner": True,
-#     "show_related": False,
-#     "fixed_sidebar": True,
-#     "page_width": "1024px"
-# }
-html_theme = "nature"
+html_theme_options = {
+    "github_user": "chr1st1ank",
+    "github_repo": "narrow-down",
+    "github_banner": True,
+    "show_related": False,
+    "fixed_sidebar": True,
+    "page_width": "1024px",
+}
+# html_theme = "nature"
 #
 # # Theme options are theme-specific and customize the look and feel of a theme
 # # further.  For a list of options available for each theme, see the

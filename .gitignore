@@ -70,8 +70,6 @@ instance/
 
 # Sphinx documentation
 docs/_build/
-docs/modules.rst
-docs/narrow_down.rst
 
 # PyBuilder
 target/
