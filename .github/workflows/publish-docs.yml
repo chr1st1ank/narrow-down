@@ -1,0 +1,40 @@
+name: publish-docs
+
+on:
+  push:
+    branches:
+      - main
+      - ci/readthedocs
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2.3.1
+        with:
+          python-version: 3.9
+          architecture: x64
+          cache: 'pip'
+          cache-dependency-path: |
+            pyproject.toml
+            Cargo.toml
+            Cargo.lock
+
+      - name: Intall pip maturin invoke
+        run: |
+          python3 -m pip install --upgrade pip maturin invoke
+
+      - name: Install project
+        run: |
+          pip install -e .[scylladb,docs]
+
+      - run: inv docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build

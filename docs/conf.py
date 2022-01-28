@@ -17,7 +17,7 @@ import narrow_down
 
 # General information about the project.
 project = "narrow-down"
-copyright = "2021, Christian Krudewig"  # noqa: A001
+copyright = "2022, Christian Krudewig"  # noqa: A001
 author = "Christian Krudewig"
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -34,11 +34,25 @@ release = narrow_down.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    # "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
+    # "sphinx.ext.doctest",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "myst_parser",
 ]
+
+autodoc_mock_imports = ["cassandra"]
+
+autodoc_default_options = {
+    "undoc-members": True,
+    "special-members": "",
+}
+autoclass_content = "both"
+autodoc_class_signature = "mixed"
+autodoc_typehints = "description"
+autodoc_inherit_docstrings = True
+
 
 # Napoleon docstring parser settings
 napoleon_include_init_with_doc = True
@@ -69,7 +83,16 @@ html_theme_options = {
     "github_banner": True,
     "show_related": False,
     "fixed_sidebar": True,
+    "page_width": "1024px",
 }
+# html_theme = "nature"
+#
+# # Theme options are theme-specific and customize the look and feel of a theme
+# # further.  For a list of options available for each theme, see the
+# # documentation.
+# html_theme_options = {
+#     "rightsidebar": False,
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

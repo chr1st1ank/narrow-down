@@ -8,7 +8,6 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
 [![Tests](https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg)](https://github.com/chr1st1ank/narrow-down/actions?workflow=tests)
 [![Codecov](https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg)](https://codecov.io/gh/chr1st1ank/narrow-down)
-[![Read the Docs](https://readthedocs.org/projects/narrow-down/badge/)](https://narrow-down.readthedocs.io/)
 [![PyPI - License](https://img.shields.io/pypi/l/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
 
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -22,7 +21,7 @@ Fast fuzzy text search
 
 
 * GitHub repo: <https://github.com/chr1st1ank/narrow-down.git>
-* Documentation: <https://narrow-down.readthedocs.io>
+* Documentation: <https://chr1st1ank.github.io/narrow-down>
 * Free software: Apache Software License 2.0
 * Status: Prototype. Solid and fast production quality, but *still subject to API changes until version 1.0 is reached*.
 
