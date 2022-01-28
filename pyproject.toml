@@ -37,7 +37,7 @@ dependencies = [
 [project.urls]
 homepage = "https://github.com/chr1st1ank/narrow-down"
 repository = "https://github.com/chr1st1ank/narrow-down"
-documentation = "https://narrow-down.readthedocs.io"
+documentation = "https://chr1st1ank.github.io/narrow-down"
 "Bug Tracker" = "https://github.com/chr1st1ank/narrow-down/issues"
 
 [project.optional-dependencies]
