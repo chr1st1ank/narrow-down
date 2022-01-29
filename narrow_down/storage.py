@@ -70,7 +70,15 @@ class StorageBackend(ABC):
 
 
 class InMemoryStore(StorageBackend):
-    """In-Memory storage backend for a SimilarityStore."""
+    """In-Memory storage backend for a SimilarityStore.
+
+    Examples:
+        >>> from asyncio import run
+        >>> storage = run(InMemoryStore().initialize())
+        >>> run(storage.insert_setting("settings key", "settings value"))
+        >>> print(run(storage.query_setting("settings key")))
+        settings value
+    """
 
     def __init__(self) -> None:
         """Create a new empty in memory database."""
