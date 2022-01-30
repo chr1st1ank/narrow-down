@@ -45,7 +45,7 @@ autodoc_default_options = {
     "undoc-members": True,
     "special-members": "",
 }
-autoclass_content = "both"
+# autoclass_content = "both"
 autodoc_class_signature = "mixed"
 autodoc_typehints = "description"
 autodoc_inherit_docstrings = True

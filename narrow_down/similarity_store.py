@@ -58,7 +58,10 @@ class SimilarityStore:
         Raises:
             ValueError: If the function specified with ``tokenize`` cannot be found.
 
-          # noqa: DAR101
+        ..
+          # noqa: DAR101 max_false_negative_proba
+          # noqa: DAR101 max_false_positive_proba
+          # noqa: DAR101 similarity_threshold
         """
         self._storage = storage or InMemoryStore()
         self._storage_level = storage_level

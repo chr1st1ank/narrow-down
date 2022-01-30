@@ -15,8 +15,9 @@
    :maxdepth: 6
    :caption: User Guide
    :hidden:
+   :glob:
 
-   usage_simstore
+   user_guide/*
 
 .. toctree::
    :maxdepth: 6
