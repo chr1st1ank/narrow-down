@@ -140,3 +140,4 @@ dmypy.json
 
 # local folder
 local/
+/docs/apidoc/

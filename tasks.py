@@ -37,7 +37,7 @@ def _run(c: Context, command: str) -> Result:
 def develop(c):
     # type: (Context) -> None
     """Rebuild the Rust library and install all missing dependencies."""
-    _run(c, "maturin develop --release --extras dev")
+    _run(c, "maturin develop --release --extras dev,docs")
 
 
 @task()
@@ -92,8 +92,29 @@ def clean_tests(c):
 def clean_docs(c):
     # type: (Context) -> None
     """Clean up files from documentation builds."""
-    _run(c, f"rm -fr {DOCS_BUILD_DIR}")
-    _run(c, f"rm -f {DOCS_DIR}/modules.rst {DOCS_DIR}/narrow_down.rst")
+    _run(c, f"rm -fr {DOCS_BUILD_DIR} {DOCS_DIR}/apidoc")
+    # _run(c, f"rm -f {DOCS_DIR}/modules.rst {DOCS_DIR}/narrow_down.rst")
+
+
+@task(
+    help={
+        "serve": "Build the docs watching for changes",
+        "open_browser": "Open the docs in the web browser",
+    }
+)
+def docs(c, serve=False, open_browser=False):
+    # type: (Context, bool, bool) -> None
+    """Build documentation."""
+    _run(
+        c,
+        f"sphinx-apidoc --module-first -d 1 --no-toc --separate -o {DOCS_DIR}/apidoc {SOURCE_DIR}",
+    )
+    build_docs = f"sphinx-build -b html {DOCS_DIR} {DOCS_BUILD_DIR}"
+    _run(c, build_docs)
+    if open_browser:
+        webbrowser.open(DOCS_INDEX.absolute().as_uri())
+    if serve:
+        _run(c, f"watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
 
 
 @task(pre=[clean_rust, clean_build, clean_python, clean_tests, clean_docs])
@@ -198,24 +219,6 @@ def coverage(c, fmt="report", open_browser=False):
         _run(c, f"coverage {fmt} -i")
     if fmt == "html" and open_browser:
         webbrowser.open(COVERAGE_REPORT.as_uri())
-
-
-@task(
-    help={
-        "serve": "Build the docs watching for changes",
-        "open_browser": "Open the docs in the web browser",
-    }
-)
-def docs(c, serve=False, open_browser=False):
-    # type: (Context, bool, bool) -> None
-    """Build documentation."""
-    _run(c, f"sphinx-apidoc -o {DOCS_DIR} {SOURCE_DIR}")
-    build_docs = f"sphinx-build -b html {DOCS_DIR} {DOCS_BUILD_DIR}"
-    _run(c, build_docs)
-    if open_browser:
-        webbrowser.open(DOCS_INDEX.absolute().as_uri())
-    if serve:
-        _run(c, f"watchmedo shell-command -p '*.rst;*.md' -c '{build_docs}' -R -D .")
 
 
 @task(pre=[hooks, mypy, docs, safety, tests, coverage])

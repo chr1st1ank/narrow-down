@@ -1,22 +1,34 @@
-Welcome to Narrow Down's documentation!
-===========================================================
+
+
+.. include:: readme.md
+   :parser: myst_parser.sphinx_
+
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 6
+    :caption: Introduction
+    :hidden:
 
-   readme
-   installation
-   usage
-   modules
-   changelog
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    self
 
 .. toctree::
+   :maxdepth: 6
+   :caption: User Guide
    :hidden:
 
-   License <license>
+   usage
+
+.. toctree::
+   :maxdepth: 6
+   :caption: Reference
+   :hidden:
+
+   api
+
+.. toctree::
+   :maxdepth: 6
+   :caption: Project
+   :hidden:
+
+   changelog
+   license

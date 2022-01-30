@@ -2,6 +2,7 @@
 import doctest
 import importlib
 import pkgutil
+from pathlib import Path
 
 import pytest
 
@@ -24,10 +25,34 @@ def modules_in_package(package):
 
 
 @pytest.mark.parametrize("module", modules_in_package(narrow_down))
-def test_doctest(module):
+def test_package_doctest(module):
     """Run a module's doctests."""
     try:
         doctest.testmod(module, raise_on_error=True, verbose=True)
     except doctest.DocTestFailure as f:
         print(f"Got:\n    {f.got}")
         raise
+
+
+@pytest.mark.parametrize("docfile", ["usage.md"])
+def test_doc_snippets_doctest(docfile):
+    """Run the python snippets in the documentation."""
+    doctest.testfile(
+        str((Path(__file__).parent.parent / "docs" / docfile).absolute()),
+        module_relative=False,
+        raise_on_error=True,
+        verbose=True,
+        optionflags=doctest.NORMALIZE_WHITESPACE,
+    )
+
+
+# DONT_ACCEPT_TRUE_FOR_1
+# DONT_ACCEPT_BLANKLINE
+# NORMALIZE_WHITESPACE
+# ELLIPSIS
+# SKIP
+# IGNORE_EXCEPTION_DETAIL
+# REPORT_UDIFF
+# REPORT_CDIFF
+# REPORT_NDIFF
+# REPORT_ONLY_FIRST_FAILURE
