@@ -23,9 +23,13 @@ class StorageLevel(enum.Flag):  # TODO: Review name
     """Detail level of document persistence."""
 
     Minimal = enum.auto()
+    """Minimal storage level. Only store the necessary data to perform the search."""
     Fingerprint = enum.auto()
+    """In addition to Minimal, also store the fingerprint, e.g. the Minhashes"""
     Document = enum.auto()
+    """Store the whole inserted document internally."""
     Full = Minimal | Fingerprint | Document
+    """Store everything."""
 
 
 Fingerprint = NewType("Fingerprint", npt.NDArray[np.uint32])

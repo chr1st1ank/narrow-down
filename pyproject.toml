@@ -46,8 +46,8 @@ scylladb = [
 ]
 docs = [
     "sphinx~=4.4",
-    "recommonmark>=0.7.1",
     "myst-parser~=0.16",
+    "furo"
 ]
 dev = [
     "pre-commit~=2.15",
