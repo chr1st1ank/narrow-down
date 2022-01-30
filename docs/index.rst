@@ -16,7 +16,7 @@
    :caption: User Guide
    :hidden:
 
-   usage
+   usage_simstore
 
 .. toctree::
    :maxdepth: 6

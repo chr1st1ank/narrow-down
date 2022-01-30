@@ -32,9 +32,8 @@ release = narrow_down.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
-    # "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "myst_parser",
@@ -50,10 +49,13 @@ autoclass_content = "both"
 autodoc_class_signature = "mixed"
 autodoc_typehints = "description"
 autodoc_inherit_docstrings = True
+autodoc_member_order = "bysource"
 
 
 # Napoleon docstring parser settings
 napoleon_include_init_with_doc = True
+
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -93,6 +95,7 @@ exclude_patterns = [
 
 html_theme = "furo"
 html_theme_options = {}
+html_title = f"{project} {release}"
 
 
 # html_theme = "nature"
