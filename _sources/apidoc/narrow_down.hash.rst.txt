@@ -1,0 +1,7 @@
+narrow\_down.hash module
+========================
+
+.. automodule:: narrow_down.hash
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,5 +1,5 @@
 
-# Narrow Down
+# Narrow Down - Efficient near-duplicate search
 
 
 <div align="center">
@@ -8,22 +8,23 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
 [![Tests](https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg)](https://github.com/chr1st1ank/narrow-down/actions?workflow=tests)
 [![Codecov](https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg)](https://codecov.io/gh/chr1st1ank/narrow-down)
-[![PyPI - License](https://img.shields.io/pypi/l/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/)
 
+
 </div>
 
-
-Fast fuzzy text search
-
+Narrow Down offers a flexible but easy-to-use Python API to finding duplicates or similar documents also in very large datasets. It reduces the O(n²) problem of comparing all strings with each other to linear scale by using approximation algorithms like Locality Sensitive Hashing.
 
 * GitHub repo: <https://github.com/chr1st1ank/narrow-down.git>
 * Documentation: <https://chr1st1ank.github.io/narrow-down>
-* Free software: Apache Software License 2.0
-* Status: Prototype. Solid and fast production quality, but *still subject to API changes until version 1.0 is reached*.
+
+ 
+**Status**: Prototype. Solid and fast production quality, but _API changes are still possible until version 1.0 is reached_.
 
 
 ## Features
@@ -31,15 +32,24 @@ Fast fuzzy text search
 * Document indexing and search based on the Minhash LSH algorithm
 * High performance thanks to a native extension module in Rust
 * Easy-to-use API with automated parameter tuning
-* Works with many storage backends. Currently implemented:
+* Works with exchangeable storage backends. Currently implemented:
   * In-Memory
+  * Cassandra / ScyllaDB 
   * SQLite
-  * Custom backend by implementing a lean interface
+  * User defined backends (by implementing a small interface)
 * Native asyncio interface
 
-## Quickstart
+## Installation
+The Python package can be installed with *pip*:
 
-TODO
+  pip install narrow-down
+
+### Extras
+
+Some of the heavier functionality is available as *extra*:
+```shell
+  pip install narrow-down[scylladb]   # Cassandra / ScyllaDB storage backend
+```
 
 ## Similar projects
 - [pylsh](https://github.com/mattilyra/LSH) offers a good implementation of the classic Minhash LSH scheme in Python and Cython. If you only need this and you don't need a database backend it can be a good choice.

@@ -1,0 +1,448 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="narrow_down.sqlite module" href="narrow_down.sqlite.html" /><link rel="prev" title="narrow_down.scylladb module" href="narrow_down.scylladb.html" />
+
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>narrow_down.similarity_store module - narrow-down 0.6.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">narrow-down 0.6.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">narrow-down 0.6.0</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Narrow Down - Efficient near-duplicate search</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage_simstore.html">SimilarityStore</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">API Documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../narrow_down.html">narrow_down package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.data_types.html">narrow_down.data_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.hash.html">narrow_down.hash module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">narrow_down.similarity_store module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.sqlite.html">narrow_down.sqlite module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.storage.html">narrow_down.storage module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">Apache Software License 2.0</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-narrow_down.similarity_store">
+<span id="narrow-down-similarity-store-module"></span><h1>narrow_down.similarity_store module<a class="headerlink" href="#module-narrow_down.similarity_store" title="Permalink to this headline">¶</a></h1>
+<p>High-level API for indexing and retrieval of documents.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.similarity_store.</span></span><span class="sig-name descname"><span class="pre">SimilarityStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">StorageLevel.Minimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_negative_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_positive_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Storage class for indexing and fuzzy search of documents.</p>
+<p>Create a new SimilarityStore object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><em>narrow_down.storage.StorageBackend</em></a>) – Storage backend to use for persisting the data. Per default this is an
+in-memory backend.</p></li>
+<li><p><strong>storage_level</strong> (<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><em>narrow_down.data_types.StorageLevel</em></a>) – The granularity of the internal storage mechanism. Per default nothing
+than the document IDs are stored.</p></li>
+<li><p><strong>tokenize</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – <p>The tokenization function to use to split the documents into smaller parts.
+E.g. the document may be split into words or into character n-grams. Per default
+word 3-grams are used.</p>
+<p>Built-in tokenizers can be used by passing their name and parameters as string.
+Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">"word_ngrams(n)"</span></code> enables the word-ngram tokenizer
+<code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.word_ngrams()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"char_ngrams(n)"</span></code> or <code class="docutils literal notranslate"><span class="pre">"char_ngrams(n,c)"</span></code> enables the character-ngram
+tokenizer <code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.char_ngrams()</span></code>.</p></li>
+</ul>
+<p>It is also possible to pass a custom function (not as string in this case, but
+the function itself). In this case it needs to be taken care to specify the same
+function again when saving and re-creating the SimilarityStore object.</p>
+</p></li>
+<li><p><strong>max_false_negative_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false negatives. Setting this
+higher decreases the risk of not finding a similar document, but it leads to slower
+processing and more storage consumption.</p></li>
+<li><p><strong>max_false_positive_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false positives. Setting this
+higher decreases the risk of finding documents which are in reality not similar,
+but it leads to slower processing and more storage consumption.</p></li>
+<li><p><strong>similarity_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The minimum Jaccard similarity threshold used to identify two
+documents as being similar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – <p>If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p>
+<p># noqa: DAR101</p>
+</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">StorageLevel.Minimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_negative_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_positive_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new SimilarityStore object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><em>narrow_down.storage.StorageBackend</em></a><em>]</em>) – Storage backend to use for persisting the data. Per default this is an
+in-memory backend.</p></li>
+<li><p><strong>storage_level</strong> (<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><em>narrow_down.data_types.StorageLevel</em></a>) – The granularity of the internal storage mechanism. Per default nothing
+than the document IDs are stored.</p></li>
+<li><p><strong>tokenize</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em><em>]</em><em>]</em>) – <p>The tokenization function to use to split the documents into smaller parts.
+E.g. the document may be split into words or into character n-grams. Per default
+word 3-grams are used.</p>
+<p>Built-in tokenizers can be used by passing their name and parameters as string.
+Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">"word_ngrams(n)"</span></code> enables the word-ngram tokenizer
+<code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.word_ngrams()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"char_ngrams(n)"</span></code> or <code class="docutils literal notranslate"><span class="pre">"char_ngrams(n,c)"</span></code> enables the character-ngram
+tokenizer <code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.char_ngrams()</span></code>.</p></li>
+</ul>
+<p>It is also possible to pass a custom function (not as string in this case, but
+the function itself). In this case it needs to be taken care to specify the same
+function again when saving and re-creating the SimilarityStore object.</p>
+</p></li>
+<li><p><strong>max_false_negative_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false negatives. Setting this
+higher decreases the risk of not finding a similar document, but it leads to slower
+processing and more storage consumption.</p></li>
+<li><p><strong>max_false_positive_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false positives. Setting this
+higher decreases the risk of finding documents which are in reality not similar,
+but it leads to slower processing and more storage consumption.</p></li>
+<li><p><strong>similarity_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The minimum Jaccard similarity threshold used to identify two
+documents as being similar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – <p>If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p>
+<p># noqa: DAR101</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.load_from_storage">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_from_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.load_from_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.load_from_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a SimilarityStore object from already initialized storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><em>narrow_down.storage.StorageBackend</em></a>) – A StorageBackend object which must already have been initialized by a
+SimilarityStore object before.</p></li>
+<li><p><strong>tokenize</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em><em>]</em><em>]</em>) – The tokenization function originally specified in the init when initializing
+the Similarity Store. See <code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down.SimilarityStore.__init__()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A SimilarityStore object using the given storage backend and with the settings stored
+in the storage.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – If settings in the storage are missing, corrupt or cannot be deserialized.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#narrow_down.similarity_store.SimilarityStore" title="narrow_down.similarity_store.SimilarityStore">narrow_down.similarity_store.SimilarityStore</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.initialize">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the internal storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.AlreadyInitialized" title="narrow_down.data_types.AlreadyInitialized"><strong>AlreadyInitialized</strong></a> – When the object or the underlying storage had already be
+    initialized before.</p>
+</dd>
+</dl>
+<p>Must be called exactly once for a new object. Should not be called when connecting to an
+existing database.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.insert">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index a new document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>document_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – </p></li>
+<li><p><strong>exact_part</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.remove_by_id">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_if_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.remove_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.remove_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the document with the given ID from the internal data structures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – ID of the document to remove.</p></li>
+<li><p><strong>check_if_exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Raise a KeyError if the document does not exist.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If no document with the given ID is stored.</p></li>
+<li><p><a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.TooLowStorageLevel" title="narrow_down.data_types.TooLowStorageLevel"><strong>TooLowStorageLevel</strong></a> – If the storage level is too low and fingerprints are not available.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method is only usable with StorageLevel ‘Fingerprint’ or higher.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.query">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query all similar documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument">narrow_down.data_types.StoredDocument</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="narrow_down.sqlite.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">narrow_down.sqlite module</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="narrow_down.scylladb.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">narrow_down.scylladb module</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, Christian Krudewig |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/apidoc/narrow_down.similarity_store.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

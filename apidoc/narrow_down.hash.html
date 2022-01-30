@@ -2,10 +2,11 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="narrow_down.scylladb module" href="narrow_down.scylladb.html" /><link rel="prev" title="narrow_down.data_types module" href="narrow_down.data_types.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
-        <title>Overview: module code - narrow-down 0.6.0</title>
+        <title>narrow_down.hash module - narrow-down 0.6.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
@@ -162,15 +163,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage_simstore.html">SimilarityStore</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">API Documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../narrow_down.html">narrow_down package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.data_types.html">narrow_down.data_types module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.hash.html">narrow_down.hash module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.similarity_store.html">narrow_down.similarity_store module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.sqlite.html">narrow_down.sqlite module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.storage.html">narrow_down.storage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.data_types.html">narrow_down.data_types module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">narrow_down.hash module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.similarity_store.html">narrow_down.similarity_store module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.sqlite.html">narrow_down.sqlite module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrow_down.storage.html">narrow_down.storage module</a></li>
 </ul>
 </li>
 </ul>
@@ -204,28 +205,79 @@
           </label>
         </div>
         <article role="main">
-          <h1>All modules for which code is available</h1>
-<ul><li><a href="narrow_down/_rust.html">narrow_down._rust</a></li>
-<li><a href="narrow_down/data_types.html">narrow_down.data_types</a></li>
-<li><a href="narrow_down/hash.html">narrow_down.hash</a></li>
-<li><a href="narrow_down/scylladb.html">narrow_down.scylladb</a></li>
-<li><a href="narrow_down/similarity_store.html">narrow_down.similarity_store</a></li>
-<li><a href="narrow_down/sqlite.html">narrow_down.sqlite</a></li>
-<li><a href="narrow_down/storage.html">narrow_down.storage</a></li>
-</ul>
+          <section id="module-narrow_down.hash">
+<span id="narrow-down-hash-module"></span><h1>narrow_down.hash module<a class="headerlink" href="#module-narrow_down.hash" title="Permalink to this headline">¶</a></h1>
+<p>Hash algorithms.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="narrow_down.hash.HashAlgorithm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.hash.</span></span><span class="sig-name descname"><span class="pre">HashAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/hash.html#HashAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.hash.HashAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Flag" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Flag</span></code></a></p>
+<p>Enum of available hash algorithms.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="narrow_down.hash.HashAlgorithm.Murmur3_32bit">
+<span class="sig-name descname"><span class="pre">Murmur3_32bit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#narrow_down.hash.HashAlgorithm.Murmur3_32bit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="narrow_down.hash.HashAlgorithm.Xxhash_32bit">
+<span class="sig-name descname"><span class="pre">Xxhash_32bit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#narrow_down.hash.HashAlgorithm.Xxhash_32bit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="narrow_down.hash.HashAlgorithm.Xxhash_64bit">
+<span class="sig-name descname"><span class="pre">Xxhash_64bit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#narrow_down.hash.HashAlgorithm.Xxhash_64bit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="narrow_down.hash.murmur3_32bit">
+<span class="sig-prename descclassname"><span class="pre">narrow_down.hash.</span></span><span class="sig-name descname"><span class="pre">murmur3_32bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#narrow_down.hash.murmur3_32bit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the 32 bit murmur3 hash of the input string.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="narrow_down.hash.xxhash_32bit">
+<span class="sig-prename descclassname"><span class="pre">narrow_down.hash.</span></span><span class="sig-name descname"><span class="pre">xxhash_32bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#narrow_down.hash.xxhash_32bit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the 32 bit xxhash of the input string.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="narrow_down.hash.xxhash_64bit">
+<span class="sig-prename descclassname"><span class="pre">narrow_down.hash.</span></span><span class="sig-name descname"><span class="pre">xxhash_64bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#narrow_down.hash.xxhash_64bit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the 64 bit xxhash of the input string.</p>
+</dd></dl>
+</section>
+
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="narrow_down.scylladb.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">narrow_down.scylladb module</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="narrow_down.data_types.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">narrow_down.data_types module</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
               Copyright &#169; 2022, Christian Krudewig |
           Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
           <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/apidoc/narrow_down.hash.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
         </div>
         
       </footer>

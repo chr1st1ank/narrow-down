@@ -1,0 +1,7 @@
+narrow\_down.scylladb module
+============================
+
+.. automodule:: narrow_down.scylladb
+   :members:
+   :undoc-members:
+   :show-inheritance:

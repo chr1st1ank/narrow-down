@@ -1,0 +1,7 @@
+narrow\_down.storage module
+===========================
+
+.. automodule:: narrow_down.storage
+   :members:
+   :undoc-members:
+   :show-inheritance:

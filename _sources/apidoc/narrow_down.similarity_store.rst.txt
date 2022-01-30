@@ -1,0 +1,7 @@
+narrow\_down.similarity\_store module
+=====================================
+
+.. automodule:: narrow_down.similarity_store
+   :members:
+   :undoc-members:
+   :show-inheritance:

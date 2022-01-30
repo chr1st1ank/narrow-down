@@ -1,0 +1,7 @@
+narrow\_down.sqlite module
+==========================
+
+.. automodule:: narrow_down.sqlite
+   :members:
+   :undoc-members:
+   :show-inheritance:
