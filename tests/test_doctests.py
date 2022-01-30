@@ -34,7 +34,7 @@ def test_package_doctest(module):
         raise
 
 
-@pytest.mark.parametrize("docfile", ["usage.md"])
+@pytest.mark.parametrize("docfile", ["usage_simstore.md"])
 def test_doc_snippets_doctest(docfile):
     """Run the python snippets in the documentation."""
     doctest.testfile(
