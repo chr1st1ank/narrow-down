@@ -1,5 +1,6 @@
 """High-level API for indexing and retrieval of documents."""
 import re
+import warnings
 from typing import Callable, Collection, Union
 
 from narrow_down import _minhash, _tokenize
@@ -11,11 +12,33 @@ from narrow_down.storage import InMemoryStore, StorageBackend
 class SimilarityStore:
     """Storage class for indexing and fuzzy search of documents."""
 
-    _minhasher: _minhash.MinHasher
-    _lsh: _minhash.LSH
+    __slots__ = (
+        "_minhasher",
+        "_lsh",
+        "_storage",
+        "_storage_level",
+        "_tokenize",
+        "_tokenize_callable",
+        "_lsh_config",
+    )
 
-    def __init__(
-        self,
+    def __init__(self):  # noqa: D107  # Not meant to be called, therefore omitting docstring.
+        warnings.warn(
+            "The __init__ function is not meant to be called in isolation. "
+            "To create a SimilarityStore object use the coroutine functions "
+            "SimilarityStore.create() or SimilarityStore.load_from_storage()."
+        )
+        self._minhasher: _minhash.MinHasher
+        self._lsh: _minhash.LSH
+        self._storage: StorageBackend
+        self._storage_level: StorageLevel
+        self._tokenize: Union[str, Callable[[str], Collection[str]]]
+        self._tokenize_callable: Callable[[str], Collection[str]]
+        self._lsh_config: MinhashLshConfig
+
+    @classmethod
+    async def create(
+        cls,
         *,
         storage: StorageBackend = None,
         storage_level: StorageLevel = StorageLevel.Minimal,
@@ -23,7 +46,7 @@ class SimilarityStore:
         max_false_negative_proba: float = 0.05,
         max_false_positive_proba: float = 0.05,
         similarity_threshold: float = 0.75,
-    ):
+    ) -> "SimilarityStore":
         """Create a new SimilarityStore object.
 
         Args:
@@ -58,23 +81,83 @@ class SimilarityStore:
         Raises:
             ValueError: If the function specified with ``tokenize`` cannot be found.
 
-          # noqa: DAR101
+        Returns:
+            A new SimilarityStore object with already initialized storage.
+
+        ..
+          # noqa: DAR101 max_false_negative_proba
+          # noqa: DAR101 max_false_positive_proba
+          # noqa: DAR101 similarity_threshold
         """
-        self._storage = storage or InMemoryStore()
-        self._storage_level = storage_level
-        self._tokenize_callable: Callable[[str], Collection[str]]
-        if isinstance(tokenize, str) or tokenize is None:
-            self._tokenize = tokenize or "word_ngrams(3)"
-            self._tokenize_callable = self._get_tokenize_callable(self._tokenize)
-        else:
-            self._tokenize = "custom"
-            self._tokenize_callable = tokenize
+        obj = await cls._create_object_base(storage, storage_level, tokenize)
         # TODO: What about a setup with an existing database?
-        self._lsh_config = _minhash.find_optimal_config(
+        obj._lsh_config = _minhash.find_optimal_config(
             jaccard_threshold=similarity_threshold,
             max_false_negative_proba=max_false_negative_proba,
             max_false_positive_proba=max_false_positive_proba,
         )
+        await obj._initialize_storage()
+        return obj
+
+    @classmethod
+    async def load_from_storage(
+        cls, storage: StorageBackend, tokenize: Union[str, Callable[[str], Collection[str]]] = None
+    ) -> "SimilarityStore":
+        """Load a SimilarityStore object from already initialized storage.
+
+        Args:
+            storage: A StorageBackend object which must already have been initialized by a
+                SimilarityStore object before.
+            tokenize: The tokenization function originally specified in the init when initializing
+                the Similarity Store. See :func:`narrow_down.SimilarityStore.__init__`.
+
+        Returns:
+            A SimilarityStore object using the given storage backend and with the settings stored
+            in the storage.
+
+        Raises:
+            TypeError: If settings in the storage are missing, corrupt or cannot be deserialized.
+            ValueError: If the function specified with ``tokenize`` cannot be found.
+        """
+        storage_level = StorageLevel(
+            # Let it throw TypeError if None:
+            int(await storage.query_setting("storage_level"))  # type: ignore
+        )
+        tokenize_spec: Union[
+            str, Callable[[str], Collection[str]], None
+        ] = await storage.query_setting("tokenize")
+        if tokenize_spec == "custom":
+            tokenize_spec = tokenize
+        if not tokenize_spec:
+            raise TypeError("tokenize function cannot be deserialized")
+        lsh_config_setting = await storage.query_setting("lsh_config")
+        if not lsh_config_setting:
+            raise TypeError("lsh_config setting could not be read from storage.")
+        lsh_config = MinhashLshConfig.from_json(lsh_config_setting)
+
+        simstore = await cls._create_object_base(
+            storage=storage,
+            storage_level=storage_level,
+            tokenize=tokenize_spec,
+        )
+        simstore._lsh_config = lsh_config
+        simstore._minhasher = _minhash.MinHasher(n_hashes=lsh_config.n_hashes)
+        simstore._lsh = _minhash.LSH(lsh_config, storage=storage)
+        return simstore
+
+    @classmethod
+    async def _create_object_base(cls, storage, storage_level, tokenize) -> "SimilarityStore":
+        """Create a new SimilarityStore object with storage, storage_level and tokenize set."""
+        obj = SimilarityStore.__new__(cls)
+        obj._storage = storage or InMemoryStore()
+        obj._storage_level = storage_level
+        if isinstance(tokenize, str) or tokenize is None:
+            obj._tokenize = tokenize or "word_ngrams(3)"
+            obj._tokenize_callable = obj._get_tokenize_callable(obj._tokenize)
+        else:
+            obj._tokenize = "custom"
+            obj._tokenize_callable = tokenize
+        return obj
 
     @staticmethod
     def _get_tokenize_callable(tokenize_spec: str):
@@ -100,53 +183,7 @@ class SimilarityStore:
             return lambda s: _tokenize.char_ngrams(s, n=n)
         raise ValueError(f"Tokenization function not found: {tokenize_spec}")
 
-    @classmethod
-    async def load_from_storage(
-        cls, storage: StorageBackend, tokenize: Union[str, Callable[[str], Collection[str]]] = None
-    ) -> "SimilarityStore":
-        """Load a SimilarityStore object from already initialized storage.
-
-        Args:
-            storage: A StorageBackend object which must already have been initialized by a
-                SimilarityStore object before.
-            tokenize: The tokenization function originally specified in the init when initializing
-                the Similarity Store. See :func:`narrow_down.SimilarityStore.__init__`.
-
-        Returns:
-            A SimilarityStore object using the given storage backend and with the settings stored
-            in the storage.
-
-        Raises:
-            TypeError: If settings in the storage are missing, corrupt or cannot be deserialized.
-            ValueError: If the function specified with ``tokenize`` cannot be found.
-        """
-        storage_level = StorageLevel(
-            # Let it to throw TypeError if None:
-            int(await storage.query_setting("storage_level"))  # type: ignore
-        )
-        tokenize_spec: Union[
-            str, Callable[[str], Collection[str]], None
-        ] = await storage.query_setting("tokenize")
-        if tokenize_spec == "custom":
-            tokenize_spec = tokenize
-        if not tokenize_spec:
-            raise TypeError("tokenize function cannot be deserialized")
-        lsh_config_setting = await storage.query_setting("lsh_config")
-        if not lsh_config_setting:
-            raise TypeError("lsh_config setting could not be read from storage.")
-        lsh_config = MinhashLshConfig.from_json(lsh_config_setting)
-
-        simstore = cls(
-            storage=storage,
-            storage_level=storage_level,
-            tokenize=tokenize_spec,
-        )
-        simstore._lsh_config = lsh_config
-        simstore._minhasher = _minhash.MinHasher(n_hashes=lsh_config.n_hashes)
-        simstore._lsh = _minhash.LSH(lsh_config, storage=storage)
-        return simstore
-
-    async def initialize(self):
+    async def _initialize_storage(self):
         """Initialize the internal storage.
 
         Raises:

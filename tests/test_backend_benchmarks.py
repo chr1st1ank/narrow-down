@@ -36,8 +36,7 @@ def test_similarity_store__insert_25_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     storage = create_storage_for_backend(storage_backend, "insert_25_benchmark", tmp_path)
-    simstore = SimilarityStore(storage=storage, storage_level=storage_level)
-    asyncio.run(simstore.initialize())
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
 
     def f():
         async def async_f():
@@ -62,8 +61,7 @@ def test_similarity_store__insert_25_parallel_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     storage = create_storage_for_backend(storage_backend, "insert_25_parallel_benchmark", tmp_path)
-    simstore = SimilarityStore(storage=storage, storage_level=storage_level)
-    asyncio.run(simstore.initialize())
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
 
     def f():
         async def async_f():
@@ -90,10 +88,9 @@ def test_similarity_store__query_25_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     storage = create_storage_for_backend(storage_backend, "query_25_benchmark", tmp_path)
-    simstore = SimilarityStore(storage=storage, storage_level=storage_level)
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
 
     async def init():
-        await simstore.initialize()
         for doc in sample_sentences_french:
             await simstore.insert(document=doc)
 
@@ -124,10 +121,9 @@ def test_similarity_store__query_25_parallel_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     storage = create_storage_for_backend(storage_backend, "query_25_parallel_benchmark", tmp_path)
-    simstore = SimilarityStore(storage=storage, storage_level=storage_level)
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
 
     async def init():
-        await simstore.initialize()
         for doc in sample_sentences_french:
             await simstore.insert(document=doc)
 

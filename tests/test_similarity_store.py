@@ -17,8 +17,7 @@ from narrow_down.sqlite import SQLiteStore
     ],
 )
 async def test_similarity_store__insert_and_query_with_default_settings(storage_level):
-    simstore = SimilarityStore(storage_level=storage_level)
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(storage_level=storage_level)
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
@@ -31,6 +30,11 @@ async def test_similarity_store__insert_and_query_with_default_settings(storage_
         assert list(results)[0].document == sample_doc
     else:
         assert list(results)[0].document is None
+
+
+def test_similarity_store_warns_on_init():
+    with pytest.warns(UserWarning):
+        SimilarityStore()
 
 
 @pytest.mark.asyncio
@@ -50,12 +54,11 @@ async def test_similarity_store__insert_reload_and_query_with_custom_tokenizer(t
 
     async def init_and_insert():
         storage = SQLiteStore(testfile)
-        simstore = SimilarityStore(
+        simstore = await SimilarityStore.create(
             storage=storage,
             tokenize=tokenize,
             storage_level=StorageLevel.Document,
         )
-        await simstore.initialize()
         return await simstore.insert("Some example document")
 
     async def load_and_query():
@@ -113,8 +116,7 @@ async def test_similarity_store__load_from_storage__invalid_tokenize_function():
     ],
 )
 async def test_similarity_store__insert_and_query_with_custom_tokenizer(tokenize: str):
-    simstore = SimilarityStore(tokenize=tokenize)
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(tokenize=tokenize)
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
@@ -124,15 +126,15 @@ async def test_similarity_store__insert_and_query_with_custom_tokenizer(tokenize
     assert list(results)[0].id_ == doc_id
 
 
-def test_similarity_store__insert_and_query_with_invalid_tokenizer():
+@pytest.mark.asyncio
+async def test_similarity_store__insert_and_query_with_invalid_tokenizer():
     with pytest.raises(ValueError):
-        SimilarityStore(tokenize="x(y)")
+        await SimilarityStore.create(tokenize="x(y)")
 
 
 @pytest.mark.asyncio
 async def test_similarity_store__insert_and_query_with_tokenizer_str():
-    simstore = SimilarityStore(tokenize=lambda s: s.split())
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(tokenize=lambda s: s.split())
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
@@ -144,8 +146,7 @@ async def test_similarity_store__insert_and_query_with_tokenizer_str():
 
 @pytest.mark.asyncio
 async def test_similarity_store__remove_by_id():
-    simstore = SimilarityStore(storage_level=StorageLevel.Fingerprint)
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(storage_level=StorageLevel.Fingerprint)
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
@@ -158,8 +159,7 @@ async def test_similarity_store__remove_by_id():
 
 @pytest.mark.asyncio
 async def test_similarity_store__remove_by_id__error_storage_level():
-    simstore = SimilarityStore(storage_level=StorageLevel.Minimal)
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(storage_level=StorageLevel.Minimal)
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
@@ -172,8 +172,7 @@ async def test_similarity_store__remove_by_id__error_storage_level():
 
 @pytest.mark.asyncio
 async def test_similarity_store__remove_by_id__key_error():
-    simstore = SimilarityStore(storage_level=StorageLevel.Fingerprint)
-    await simstore.initialize()
+    simstore = await SimilarityStore.create(storage_level=StorageLevel.Fingerprint)
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)

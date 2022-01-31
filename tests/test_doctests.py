@@ -8,6 +8,8 @@ import pytest
 
 import narrow_down
 
+REPOSITORY_ROOT = Path(__file__).parent.parent
+
 
 def modules_in_package(package):
     """Find and import all modules in the given package."""
@@ -34,25 +36,21 @@ def test_package_doctest(module):
         raise
 
 
-@pytest.mark.parametrize("docfile", ["usage_simstore.md"])
+@pytest.fixture(
+    params=REPOSITORY_ROOT.glob("docs/user_guide/*.md"),
+    ids=lambda p: str(p.relative_to(REPOSITORY_ROOT)),
+)
+def docfile(request):
+    """Return all documentation files with Python code to be tested."""
+    return request.param
+
+
 def test_doc_snippets_doctest(docfile):
     """Run the python snippets in the documentation."""
     doctest.testfile(
-        str((Path(__file__).parent.parent / "docs" / docfile).absolute()),
+        str((REPOSITORY_ROOT / docfile).absolute()),
         module_relative=False,
         raise_on_error=True,
         verbose=True,
         optionflags=doctest.NORMALIZE_WHITESPACE,
     )
-
-
-# DONT_ACCEPT_TRUE_FOR_1
-# DONT_ACCEPT_BLANKLINE
-# NORMALIZE_WHITESPACE
-# ELLIPSIS
-# SKIP
-# IGNORE_EXCEPTION_DETAIL
-# REPORT_UDIFF
-# REPORT_CDIFF
-# REPORT_NDIFF
-# REPORT_ONLY_FIRST_FAILURE
