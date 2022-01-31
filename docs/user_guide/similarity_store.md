@@ -14,13 +14,13 @@ Here we choose the [StorageLevel](narrow_down.data_types.StorageLevel) `Document
 >>> import narrow_down as nd
 >>> from narrow_down.data_types import StoredDocument
 
->>> similarity_store = nd.similarity_store.SimilarityStore(
-...     storage_level=nd.data_types.StorageLevel.Document,
-...     similarity_threshold=0.8,
-...     tokenize="char_ngrams(5)",
+>>> similarity_store = asyncio.run(
+...     nd.similarity_store.SimilarityStore.create(
+...         storage_level=nd.data_types.StorageLevel.Document,
+...         similarity_threshold=0.8,
+...         tokenize="char_ngrams(5)",
+...     )
 ... )
->>> asyncio.run(similarity_store.initialize()) is None
-True
 
 ```
 
