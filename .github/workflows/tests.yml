@@ -43,8 +43,29 @@ jobs:
           - python-version: "3.9"
             os: ubuntu-latest
             publish-results: true
+          - os: ubuntu-latest
+            pip-cache-path: ~/.cache/pip
+          - os: macos-latest
+            pip-cache-path: ~/Library/Caches/pip
+          - os: windows-latest
+            pip-cache-path: ~\AppData\Local\pip\Cache
       fail-fast: true
     steps:
+      - uses: actions/cache@v2
+        with:
+          path: ${{ matrix.pip-cache-path }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
       - uses: actions/checkout@v2.4.0
 
       - name: Set up Python ${{ matrix.python-version }}
