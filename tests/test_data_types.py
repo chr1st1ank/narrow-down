@@ -16,7 +16,7 @@ from narrow_down.data_types import Fingerprint, StorageLevel, StoredDocument
     "storage_level, expected_fields",
     [
         (StorageLevel.Minimal, {"data"}),
-        (StorageLevel.Document, {"data", "document"}),
+        (StorageLevel.Document, {"data", "document", "exact_part"}),
         (StorageLevel.Fingerprint, {"data", "exact_part", "fingerprint"}),
         (StorageLevel.Full, {"data", "document", "exact_part", "fingerprint"}),
     ],

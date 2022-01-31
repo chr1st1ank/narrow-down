@@ -201,7 +201,7 @@ class ScyllaDBStore(StorageBackend):
                 return document_id
             else:
                 for _ in range(10):
-                    doc_id = random.randint(a=0, b=2 ** 32)
+                    doc_id = random.randint(a=0, b=2**32)
                     result = await self._execute(
                         session,
                         self._prepared_statements["set_doc_checked"],

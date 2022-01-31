@@ -98,7 +98,7 @@ class StoredDocument:
 
 _FIELDS_FOR_STORAGE_LEVEL = {
     StorageLevel.Minimal: {"data"},
-    StorageLevel.Document: {"data", "document"},
+    StorageLevel.Document: {"data", "document", "exact_part"},
     StorageLevel.Fingerprint: {"data", "exact_part"},
     StorageLevel.Full: {"data", "document", "exact_part"},
 }
