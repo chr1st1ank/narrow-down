@@ -219,8 +219,10 @@
 <div class="viewcode-block" id="SQLiteStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""Create a new empty or connect to an existing SQLite database."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span> <span class="o">=</span> <span class="n">db_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span> <span class="o">=</span> <span class="n">partitions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">"IMMEDIATE"</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">"IMMEDIATE"</span><span class="p">)</span>
+        <span class="c1"># On reopening we can read the number of partitions from the db</span>
+        <span class="n">partitions_from_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_setting_sync</span><span class="p">(</span><span class="s2">"__sqlite_partitions"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">partitions_from_db</span><span class="p">)</span> <span class="k">if</span> <span class="n">partitions_from_db</span> <span class="k">else</span> <span class="n">partitions</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -251,6 +253,8 @@
         <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">OperationalError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AlreadyInitialized</span> <span class="kn">from</span> <span class="nn">e</span>
 
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">"__sqlite_partitions"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -275,6 +279,9 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            sqlite3.OperationalError: In case the database query fails for any reason.</span>
 <span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_setting_sync</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_query_setting_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT value FROM settings WHERE key=?"</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,))</span>
             <span class="n">setting</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
@@ -284,7 +291,7 @@
         <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">OperationalError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">"no such table: settings"</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">raise</span></div>
+            <span class="k">raise</span>
 
 <div class="viewcode-block" id="SQLiteStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">"""Add the data of a document to the storage and return its ID."""</span>
