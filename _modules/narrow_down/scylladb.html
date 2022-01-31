@@ -408,7 +408,7 @@
                 <span class="k">return</span> <span class="n">document_id</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-                    <span class="n">doc_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span><span class="p">)</span>
+                    <span class="n">doc_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                         <span class="n">session</span><span class="p">,</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc_checked"</span><span class="p">],</span>
