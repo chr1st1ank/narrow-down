@@ -12,8 +12,10 @@ class SQLiteStore(StorageBackend):
     def __init__(self, db_filename: str, partitions: int = 128) -> None:
         """Create a new empty or connect to an existing SQLite database."""
         self.db_filename = db_filename
-        self.partitions = partitions
         self._connection = sqlite3.connect(self.db_filename, isolation_level="IMMEDIATE")
+        # On reopening we can read the number of partitions from the db
+        partitions_from_db = self._query_setting_sync("__sqlite_partitions")
+        self.partitions = int(partitions_from_db) if partitions_from_db else partitions
 
     async def initialize(
         self,
@@ -44,6 +46,8 @@ class SQLiteStore(StorageBackend):
         except sqlite3.OperationalError as e:
             raise AlreadyInitialized from e
 
+        await self.insert_setting("__sqlite_partitions", str(self.partitions))
+
         return self
 
     async def insert_setting(self, key: str, value: str):
@@ -68,6 +72,9 @@ class SQLiteStore(StorageBackend):
         Raises:
             sqlite3.OperationalError: In case the database query fails for any reason.
         """
+        return self._query_setting_sync(key)
+
+    def _query_setting_sync(self, key: str) -> Optional[str]:
         try:
             cursor = self._connection.execute("SELECT value FROM settings WHERE key=?", (key,))
             setting = cursor.fetchone()
