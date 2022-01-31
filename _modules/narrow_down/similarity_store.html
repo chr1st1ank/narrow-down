@@ -159,7 +159,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../usage_simstore.html">SimilarityStore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/similarity_store.html">SimilarityStore</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
@@ -207,6 +207,7 @@
           <h1>Source code for narrow_down.similarity_store</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""High-level API for indexing and retrieval of documents."""</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">narrow_down</span> <span class="kn">import</span> <span class="n">_minhash</span><span class="p">,</span> <span class="n">_tokenize</span>
@@ -218,11 +219,33 @@
 <div class="viewcode-block" id="SimilarityStore"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore">[docs]</a><span class="k">class</span> <span class="nc">SimilarityStore</span><span class="p">:</span>
     <span class="sd">"""Storage class for indexing and fuzzy search of documents."""</span>
 
-    <span class="n">_minhasher</span><span class="p">:</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span>
-    <span class="n">_lsh</span><span class="p">:</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"_minhasher"</span><span class="p">,</span>
+        <span class="s2">"_lsh"</span><span class="p">,</span>
+        <span class="s2">"_storage"</span><span class="p">,</span>
+        <span class="s2">"_storage_level"</span><span class="p">,</span>
+        <span class="s2">"_tokenize"</span><span class="p">,</span>
+        <span class="s2">"_tokenize_callable"</span><span class="p">,</span>
+        <span class="s2">"_lsh_config"</span><span class="p">,</span>
+    <span class="p">)</span>
 
-<div class="viewcode-block" id="SimilarityStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: D107  # Not meant to be called, therefore omitting docstring.</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"The __init__ function is not meant to be called in isolation. "</span>
+            <span class="s2">"To create a SimilarityStore object use the coroutine functions "</span>
+            <span class="s2">"SimilarityStore.create() or SimilarityStore.load_from_storage()."</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span><span class="p">:</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="p">:</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">:</span> <span class="n">StorageBackend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storage_level</span><span class="p">:</span> <span class="n">StorageLevel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="p">:</span> <span class="n">MinhashLshConfig</span>
+
+<div class="viewcode-block" id="SimilarityStore.create"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">storage_level</span><span class="p">:</span> <span class="n">StorageLevel</span> <span class="o">=</span> <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Minimal</span><span class="p">,</span>
@@ -230,7 +253,7 @@
         <span class="n">max_false_negative_proba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">max_false_positive_proba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">similarity_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.75</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SimilarityStore"</span><span class="p">:</span>
         <span class="sd">"""Create a new SimilarityStore object.</span>
 
 <span class="sd">        Args:</span>
@@ -265,23 +288,83 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the function specified with ``tokenize`` cannot be found.</span>
 
-<span class="sd">          # noqa: DAR101</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A new SimilarityStore object with already initialized storage.</span>
+
+<span class="sd">        ..</span>
+<span class="sd">          # noqa: DAR101 max_false_negative_proba</span>
+<span class="sd">          # noqa: DAR101 max_false_positive_proba</span>
+<span class="sd">          # noqa: DAR101 similarity_threshold</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span> <span class="o">=</span> <span class="n">storage</span> <span class="ow">or</span> <span class="n">InMemoryStore</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_storage_level</span> <span class="o">=</span> <span class="n">storage_level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenize</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tokenize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="ow">or</span> <span class="s2">"word_ngrams(3)"</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tokenize_callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span> <span class="o">=</span> <span class="s2">"custom"</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span> <span class="o">=</span> <span class="n">tokenize</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_create_object_base</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">)</span>
         <span class="c1"># TODO: What about a setup with an existing database?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">find_optimal_config</span><span class="p">(</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_lsh_config</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">find_optimal_config</span><span class="p">(</span>
             <span class="n">jaccard_threshold</span><span class="o">=</span><span class="n">similarity_threshold</span><span class="p">,</span>
             <span class="n">max_false_negative_proba</span><span class="o">=</span><span class="n">max_false_negative_proba</span><span class="p">,</span>
             <span class="n">max_false_positive_proba</span><span class="o">=</span><span class="n">max_false_positive_proba</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">obj</span><span class="o">.</span><span class="n">_initialize_storage</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="SimilarityStore.load_from_storage"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.load_from_storage">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_from_storage</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SimilarityStore"</span><span class="p">:</span>
+        <span class="sd">"""Load a SimilarityStore object from already initialized storage.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            storage: A StorageBackend object which must already have been initialized by a</span>
+<span class="sd">                SimilarityStore object before.</span>
+<span class="sd">            tokenize: The tokenization function originally specified in the init when initializing</span>
+<span class="sd">                the Similarity Store. See :func:`narrow_down.SimilarityStore.__init__`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A SimilarityStore object using the given storage backend and with the settings stored</span>
+<span class="sd">            in the storage.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If settings in the storage are missing, corrupt or cannot be deserialized.</span>
+<span class="sd">            ValueError: If the function specified with ``tokenize`` cannot be found.</span>
+<span class="sd">        """</span>
+        <span class="n">storage_level</span> <span class="o">=</span> <span class="n">StorageLevel</span><span class="p">(</span>
+            <span class="c1"># Let it throw TypeError if None:</span>
+            <span class="nb">int</span><span class="p">(</span><span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"storage_level"</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+        <span class="p">)</span>
+        <span class="n">tokenize_spec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="kc">None</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"tokenize"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tokenize_spec</span> <span class="o">==</span> <span class="s2">"custom"</span><span class="p">:</span>
+            <span class="n">tokenize_spec</span> <span class="o">=</span> <span class="n">tokenize</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tokenize_spec</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"tokenize function cannot be deserialized"</span><span class="p">)</span>
+        <span class="n">lsh_config_setting</span> <span class="o">=</span> <span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"lsh_config"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lsh_config_setting</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"lsh_config setting could not be read from storage."</span><span class="p">)</span>
+        <span class="n">lsh_config</span> <span class="o">=</span> <span class="n">MinhashLshConfig</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">lsh_config_setting</span><span class="p">)</span>
+
+        <span class="n">simstore</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_create_object_base</span><span class="p">(</span>
+            <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span>
+            <span class="n">storage_level</span><span class="o">=</span><span class="n">storage_level</span><span class="p">,</span>
+            <span class="n">tokenize</span><span class="o">=</span><span class="n">tokenize_spec</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">simstore</span><span class="o">.</span><span class="n">_lsh_config</span> <span class="o">=</span> <span class="n">lsh_config</span>
+        <span class="n">simstore</span><span class="o">.</span><span class="n">_minhasher</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span><span class="p">(</span><span class="n">n_hashes</span><span class="o">=</span><span class="n">lsh_config</span><span class="o">.</span><span class="n">n_hashes</span><span class="p">)</span>
+        <span class="n">simstore</span><span class="o">.</span><span class="n">_lsh</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span><span class="p">(</span><span class="n">lsh_config</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">simstore</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_create_object_base</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">storage</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SimilarityStore"</span><span class="p">:</span>
+        <span class="sd">"""Create a new SimilarityStore object with storage, storage_level and tokenize set."""</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">SimilarityStore</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_storage</span> <span class="o">=</span> <span class="n">storage</span> <span class="ow">or</span> <span class="n">InMemoryStore</span><span class="p">()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_storage_level</span> <span class="o">=</span> <span class="n">storage_level</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenize</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tokenize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">_tokenize</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="ow">or</span> <span class="s2">"word_ngrams(3)"</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">_tokenize_callable</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">_get_tokenize_callable</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">_tokenize</span> <span class="o">=</span> <span class="s2">"custom"</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">_tokenize_callable</span> <span class="o">=</span> <span class="n">tokenize</span>
+        <span class="k">return</span> <span class="n">obj</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_tokenize_callable</span><span class="p">(</span><span class="n">tokenize_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -307,53 +390,7 @@
             <span class="k">return</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">_tokenize</span><span class="o">.</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tokenization function not found: </span><span class="si">{</span><span class="n">tokenize_spec</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SimilarityStore.load_from_storage"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.load_from_storage">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_from_storage</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SimilarityStore"</span><span class="p">:</span>
-        <span class="sd">"""Load a SimilarityStore object from already initialized storage.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            storage: A StorageBackend object which must already have been initialized by a</span>
-<span class="sd">                SimilarityStore object before.</span>
-<span class="sd">            tokenize: The tokenization function originally specified in the init when initializing</span>
-<span class="sd">                the Similarity Store. See :func:`narrow_down.SimilarityStore.__init__`.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A SimilarityStore object using the given storage backend and with the settings stored</span>
-<span class="sd">            in the storage.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            TypeError: If settings in the storage are missing, corrupt or cannot be deserialized.</span>
-<span class="sd">            ValueError: If the function specified with ``tokenize`` cannot be found.</span>
-<span class="sd">        """</span>
-        <span class="n">storage_level</span> <span class="o">=</span> <span class="n">StorageLevel</span><span class="p">(</span>
-            <span class="c1"># Let it to throw TypeError if None:</span>
-            <span class="nb">int</span><span class="p">(</span><span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"storage_level"</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
-        <span class="p">)</span>
-        <span class="n">tokenize_spec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
-            <span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="kc">None</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"tokenize"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tokenize_spec</span> <span class="o">==</span> <span class="s2">"custom"</span><span class="p">:</span>
-            <span class="n">tokenize_spec</span> <span class="o">=</span> <span class="n">tokenize</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">tokenize_spec</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"tokenize function cannot be deserialized"</span><span class="p">)</span>
-        <span class="n">lsh_config_setting</span> <span class="o">=</span> <span class="k">await</span> <span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"lsh_config"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">lsh_config_setting</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"lsh_config setting could not be read from storage."</span><span class="p">)</span>
-        <span class="n">lsh_config</span> <span class="o">=</span> <span class="n">MinhashLshConfig</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">lsh_config_setting</span><span class="p">)</span>
-
-        <span class="n">simstore</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span>
-            <span class="n">storage_level</span><span class="o">=</span><span class="n">storage_level</span><span class="p">,</span>
-            <span class="n">tokenize</span><span class="o">=</span><span class="n">tokenize_spec</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">simstore</span><span class="o">.</span><span class="n">_lsh_config</span> <span class="o">=</span> <span class="n">lsh_config</span>
-        <span class="n">simstore</span><span class="o">.</span><span class="n">_minhasher</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span><span class="p">(</span><span class="n">n_hashes</span><span class="o">=</span><span class="n">lsh_config</span><span class="o">.</span><span class="n">n_hashes</span><span class="p">)</span>
-        <span class="n">simstore</span><span class="o">.</span><span class="n">_lsh</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span><span class="p">(</span><span class="n">lsh_config</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">simstore</span></div>
-
-<div class="viewcode-block" id="SimilarityStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_initialize_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Initialize the internal storage.</span>
 
 <span class="sd">        Raises:</span>
@@ -368,7 +405,7 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">"tokenize"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">"lsh_config"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span><span class="p">(</span><span class="n">n_hashes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="o">.</span><span class="n">n_hashes</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SimilarityStore.insert"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.insert">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>

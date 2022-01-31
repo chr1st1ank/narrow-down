@@ -160,7 +160,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../usage_simstore.html">SimilarityStore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/similarity_store.html">SimilarityStore</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -210,51 +210,12 @@
 <p>High-level API for indexing and retrieval of documents.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.similarity_store.</span></span><span class="sig-name descname"><span class="pre">SimilarityStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">StorageLevel.Minimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_negative_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_positive_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.similarity_store.</span></span><span class="sig-name descname"><span class="pre">SimilarityStore</span></span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Storage class for indexing and fuzzy search of documents.</p>
-<p>Create a new SimilarityStore object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>storage</strong> (<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><em>narrow_down.storage.StorageBackend</em></a>) – Storage backend to use for persisting the data. Per default this is an
-in-memory backend.</p></li>
-<li><p><strong>storage_level</strong> (<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><em>narrow_down.data_types.StorageLevel</em></a>) – The granularity of the internal storage mechanism. Per default nothing
-than the document IDs are stored.</p></li>
-<li><p><strong>tokenize</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – <p>The tokenization function to use to split the documents into smaller parts.
-E.g. the document may be split into words or into character n-grams. Per default
-word 3-grams are used.</p>
-<p>Built-in tokenizers can be used by passing their name and parameters as string.
-Options:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">"word_ngrams(n)"</span></code> enables the word-ngram tokenizer
-<code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.word_ngrams()</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">"char_ngrams(n)"</span></code> or <code class="docutils literal notranslate"><span class="pre">"char_ngrams(n,c)"</span></code> enables the character-ngram
-tokenizer <code class="xref py py-func docutils literal notranslate"><span class="pre">narrow_down._tokenize.char_ngrams()</span></code>.</p></li>
-</ul>
-<p>It is also possible to pass a custom function (not as string in this case, but
-the function itself). In this case it needs to be taken care to specify the same
-function again when saving and re-creating the SimilarityStore object.</p>
-</p></li>
-<li><p><strong>max_false_negative_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false negatives. Setting this
-higher decreases the risk of not finding a similar document, but it leads to slower
-processing and more storage consumption.</p></li>
-<li><p><strong>max_false_positive_proba</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The target probability for false positives. Setting this
-higher decreases the risk of finding documents which are in reality not similar,
-but it leads to slower processing and more storage consumption.</p></li>
-<li><p><strong>similarity_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The minimum Jaccard similarity threshold used to identify two
-documents as being similar.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – <p>If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p>
-<p># noqa: DAR101</p>
-</p>
-</dd>
-</dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">StorageLevel.Minimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_negative_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_positive_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.create">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">StorageLevel.Minimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_negative_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_false_positive_proba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new SimilarityStore object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,9 +250,13 @@ documents as being similar.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – <p>If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p>
-<p># noqa: DAR101</p>
-</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the function specified with <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> cannot be found.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new SimilarityStore object with already initialized storage.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#narrow_down.similarity_store.SimilarityStore" title="narrow_down.similarity_store.SimilarityStore">narrow_down.similarity_store.SimilarityStore</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,19 +287,6 @@ in the storage.</p>
 <dd class="field-even"><p><a class="reference internal" href="#narrow_down.similarity_store.SimilarityStore" title="narrow_down.similarity_store.SimilarityStore">narrow_down.similarity_store.SimilarityStore</a></p>
 </dd>
 </dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.initialize">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the internal storage.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.AlreadyInitialized" title="narrow_down.data_types.AlreadyInitialized"><strong>AlreadyInitialized</strong></a> – When the object or the underlying storage had already be
-    initialized before.</p>
-</dd>
-</dl>
-<p>Must be called exactly once for a new object. Should not be called when connecting to an
-existing database.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.insert">
