@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SimilarityStore objects can now be created by a factory coroutine `create()` instead of
   calling first `__init__()` and then `initialize()`. This makes the usage of the class more 
   straight-forward.
+- The exact_part of a document is now also stored in storage level "Document".
+
+### Fixed
+- The number of partitions is now stored in the database for the SQLite backend. This way the DB 
+  is self-contained and the user doesn't have to keep the number elsewhere.
 
 ## [0.6.0] - 2022-01-29
 ### Added
