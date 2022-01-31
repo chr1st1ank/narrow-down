@@ -32,6 +32,11 @@ async def test_similarity_store__insert_and_query_with_default_settings(storage_
         assert list(results)[0].document is None
 
 
+def test_similarity_store_warns_on_init():
+    with pytest.warns(UserWarning):
+        SimilarityStore()
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "tokenize",
