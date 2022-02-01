@@ -12,8 +12,14 @@ jobs:
     # Static code analysis. Running on lowest supported Python version to catch use of new syntax.
     name: Linting
     runs-on: ubuntu-latest
-    steps:
+    steps:            
       - uses: actions/checkout@v2.4.0
+      
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-linting-${{ hashFiles('**/pyproject.toml', '**/.pre-commit-config.yaml') }}
+
 
       - name: Set up Python 3.7
         uses: actions/setup-python@v2.3.1
@@ -42,10 +48,32 @@ jobs:
         include:
           - python-version: "3.9"
             os: ubuntu-latest
+            pip-cache-path: ~/.cache/pip
             publish-results: true
+          - os: ubuntu-latest
+            pip-cache-path: ~/.cache/pip
+          - os: macos-latest
+            pip-cache-path: ~/Library/Caches/pip
+          - os: windows-latest
+            pip-cache-path: ~\AppData\Local\pip\Cache
       fail-fast: true
     steps:
       - uses: actions/checkout@v2.4.0
+      
+      - uses: actions/cache@v2
+        with:
+          path: ${{ matrix.pip-cache-path }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/pyproject.toml') }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2.3.1
