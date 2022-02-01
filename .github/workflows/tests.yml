@@ -63,7 +63,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ${{ matrix.pip-cache-path }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/pyproject.toml') }}
 
       - uses: actions/cache@v2
         with:
@@ -73,7 +73,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2.3.1
