@@ -21,13 +21,14 @@ from narrow_down.data_types import StorageLevel
 from narrow_down.scylladb import ScyllaDBStore
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
-from narrow_down.storage import InMemoryStore
+from narrow_down.storage import InMemoryStore, RustMemoryStoreWrapper
 
 
 @pytest.mark.parametrize(
     "storage_backend, storage_level",
     [
         (InMemoryStore, StorageLevel.Minimal),
+        (RustMemoryStoreWrapper, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
     ],
@@ -80,6 +81,7 @@ def test_similarity_store__insert_25_parallel_benchmark(
     "storage_backend, storage_level",
     [
         (InMemoryStore, StorageLevel.Minimal),
+        (RustMemoryStoreWrapper, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
     ],
@@ -144,14 +146,14 @@ def test_similarity_store__query_25_parallel_benchmark(
 
 
 def create_storage_for_backend(storage_backend, test_name, tmp_path):
-    if storage_backend == InMemoryStore:
-        storage = storage_backend()
-    elif storage_backend == ScyllaDBStore:
+    if storage_backend == ScyllaDBStore:
         if os.environ.get("TEST_WITH_DB", "False").lower() != "true":
             pytest.skip("Skipping")
         storage = create_scylla_storage(test_name)
     elif storage_backend == SQLiteStore:
         storage = storage_backend(str(tmp_path / f"{test_name}.db"))
+    else:
+        storage = storage_backend()
     return storage
 
 

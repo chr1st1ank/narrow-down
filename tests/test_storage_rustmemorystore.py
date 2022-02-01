@@ -1,20 +1,21 @@
-"""Tests for the `narrow_down.storage` module."""
+"""Tests for RustMemoryStoreWrapper."""
+
 import pytest
 
-import narrow_down.storage
+from narrow_down.storage import RustMemoryStoreWrapper
 
 
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_setting():
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     await ims.insert_setting(key="k", value="155")
     assert await ims.query_setting("k") == "155"
 
 
 @pytest.mark.asyncio
-async def test_in_memory_store__insert_query_setting__overwrite():
+async def test_in_memory_store__insert_query_document__overwrite():
     """Adding a duplicate before to see if that's also handled."""
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     await ims.insert_setting(key="k", value="155")
     await ims.insert_setting(key="k", value="268")
     assert await ims.query_setting("k") == "268"
@@ -22,7 +23,7 @@ async def test_in_memory_store__insert_query_setting__overwrite():
 
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_document__no_id():
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     id_out = await ims.insert_document(document=b"abcd efgh")
     assert await ims.query_document(id_out) == b"abcd efgh"
 
@@ -30,7 +31,7 @@ async def test_in_memory_store__insert_query_document__no_id():
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_document__duplicate_doc():
     """Adding a duplicate before to see if that's also handled."""
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     await ims.insert_document(document=b"abcd efgh")
     id_out = await ims.insert_document(document=b"abcd efgh")
     assert await ims.query_document(id_out) == b"abcd efgh"
@@ -38,7 +39,7 @@ async def test_in_memory_store__insert_query_document__duplicate_doc():
 
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_document__given_id():
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     id_out = await ims.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
     assert await ims.query_document(id_out) == b"abcd efgh"
@@ -47,7 +48,7 @@ async def test_in_memory_store__insert_query_document__given_id():
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_document__given_id_duplicate():
     """Adding a duplicate before to see if that's also handled."""
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     id_out = await ims.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
     id_out = await ims.insert_document(document=b"abcd efgh", document_id=1234)
@@ -57,7 +58,7 @@ async def test_in_memory_store__insert_query_document__given_id_duplicate():
 
 @pytest.mark.asyncio
 async def test_in_memory_store__add_documents_to_bucket_and_query():
-    ims = narrow_down.storage.InMemoryStore()
+    ims = RustMemoryStoreWrapper()
     await ims.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
     await ims.add_document_to_bucket(bucket_id=1, document_hash=20, document_id=20)
     await ims.add_document_to_bucket(bucket_id=1, document_hash=20, document_id=21)
