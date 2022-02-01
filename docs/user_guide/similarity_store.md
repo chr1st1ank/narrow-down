@@ -2,7 +2,7 @@
 
 The class [SimilarityStore](narrow_down.similarity_store.SimilarityStore) allows to incrementally index and search documents.
 
-The API is fully asynchronous. That means it can directly called with `await` from coroutine functions. But it can also be called from synchronous code with [asyncio.run()](asyncio.run). This creates a little overhead to establish an event loop. So it is better to call `run()` not to often but rather on a higher level in the call chain. 
+The API is fully asynchronous. That means all relevant methods can directly called with `await` from coroutine functions. But it can also be called from synchronous code with [asyncio.run()](asyncio.run). This creates a little overhead to establish an event loop. So it is better to call `run()` not to often but rather on a higher level in the call chain. 
 
 ## Indexing
 The code block below shows how to create and configure a SimilarityStore() object. 
