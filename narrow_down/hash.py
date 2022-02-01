@@ -1,4 +1,4 @@
-"""Hash algorithms."""
+"""General purpose hash functions."""
 import enum
 
 from ._rust import murmur3_32bit, xxhash_32bit, xxhash_64bit
