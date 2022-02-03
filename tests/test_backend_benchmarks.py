@@ -21,15 +21,13 @@ from narrow_down.data_types import StorageLevel
 from narrow_down.scylladb import ScyllaDBStore
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
-from narrow_down.storage import InMemoryStore, OptimizedInMemoryStore, RustMemoryStoreWrapper
+from narrow_down.storage import InMemoryStore
 
 
 @pytest.mark.parametrize(
     "storage_backend, storage_level",
     [
         (InMemoryStore, StorageLevel.Minimal),
-        (OptimizedInMemoryStore, StorageLevel.Minimal),
-        (RustMemoryStoreWrapper, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
     ],
@@ -82,8 +80,6 @@ def test_similarity_store__insert_25_parallel_benchmark(
     "storage_backend, storage_level",
     [
         (InMemoryStore, StorageLevel.Minimal),
-        (OptimizedInMemoryStore, StorageLevel.Minimal),
-        (RustMemoryStoreWrapper, StorageLevel.Minimal),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
     ],

@@ -61,7 +61,7 @@ impl RustMemoryStore {
             None
         }
     }
-    fn document_id(&mut self, document_id: u64) {
+    fn remove_document(&mut self, document_id: u64) {
         self.documents.remove(&document_id);
     }
     fn add_document_to_bucket(&mut self, bucket_id: u32, document_hash: u32, document_id: u64) {
