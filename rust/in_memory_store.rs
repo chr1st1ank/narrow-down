@@ -2,7 +2,7 @@
 
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
-use std::collections::HashMap;
+use rustc_hash::{FxHashMap, FxHashSet};
 
 /// A small struct to use as key for a HashMap
 #[derive(PartialEq, Hash, std::cmp::Eq)]
@@ -14,9 +14,9 @@ struct BucketKey {
 /// Python class with the in-memory storage implementation.
 #[pyclass]
 pub struct RustMemoryStore {
-    settings: HashMap<String, String>,
-    documents: HashMap<u64, Vec<u8>>,
-    buckets: HashMap<BucketKey, Vec<u64>>,
+    settings: FxHashMap<String, String>,
+    documents: FxHashMap<u64, Vec<u8>>,
+    buckets: FxHashMap<BucketKey, FxHashSet<u64>>,
     last_doc_id: u64,
 }
 
@@ -25,9 +25,9 @@ impl RustMemoryStore {
     #[new]
     fn new() -> Self {
         RustMemoryStore {
-            settings: HashMap::new(),
-            documents: HashMap::new(),
-            buckets: HashMap::new(),
+            settings: FxHashMap::default(),
+            documents: FxHashMap::default(),
+            buckets: FxHashMap::default(),
             last_doc_id: 0,
         }
     }
@@ -71,19 +71,19 @@ impl RustMemoryStore {
                 bucket_id,
                 document_hash,
             })
-            .or_insert(Vec::with_capacity(1));
-        if documents.iter().find(|x| **x == document_id).is_none() {
-            documents.push(document_id);
-        }
+            .or_insert(FxHashSet::with_capacity_and_hasher(1, Default::default()));
+        documents.insert(document_id);
     }
     fn query_ids_from_bucket(&self, bucket_id: u32, document_hash: u32) -> Vec<u64> {
-        self.buckets
+        if let Some(bucket) = self.buckets
             .get(&BucketKey {
                 bucket_id,
                 document_hash,
-            })
-            .unwrap_or(&Vec::<u64>::with_capacity(0))
-            .clone()
+            }){
+            bucket.into_iter().map(|x|*x).collect::<Vec<_>>()
+        }else {
+            Vec::<u64>::with_capacity(0)
+        }
     }
     fn remove_id_from_bucket(&mut self, bucket_id: u32, document_hash: u32, document_id: u64) {
         let maybe_bucket = self.buckets.get_mut(&BucketKey {
@@ -91,10 +91,7 @@ impl RustMemoryStore {
             document_hash,
         });
         if let Some(bucket) = maybe_bucket {
-            let maybe_index_in_bucket = bucket.iter().position(|x| *x == document_id);
-            if let Some(index_in_bucket) = maybe_index_in_bucket {
-                bucket.swap_remove(index_in_bucket);
-            }
+            bucket.remove(&document_id);
         }
     }
 }

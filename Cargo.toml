@@ -16,3 +16,4 @@ twox-hash = "1.6.2"
 mur3 = "0.1.0"
 numpy = "0.15.0"
 pyo3 = { version = "0.15.1", features = ["extension-module", "abi3-py37"] }
+rustc-hash = "1.1.0"
