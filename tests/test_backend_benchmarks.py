@@ -21,7 +21,7 @@ from narrow_down.data_types import StorageLevel
 from narrow_down.scylladb import ScyllaDBStore
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
-from narrow_down.storage import InMemoryStore, RustMemoryStoreWrapper, OptimizedInMemoryStore
+from narrow_down.storage import InMemoryStore, OptimizedInMemoryStore, RustMemoryStoreWrapper
 
 
 @pytest.mark.parametrize(
@@ -51,31 +51,31 @@ def test_similarity_store__insert_25_benchmark(
 
     assert asyncio.run(simstore.query(sample_sentences_french[0]))
 
-#
-# @pytest.mark.parametrize(
-#     "storage_backend, storage_level",
-#     [
-#         (ScyllaDBStore, StorageLevel.Minimal),
-#         (SQLiteStore, StorageLevel.Minimal),
-#     ],
-# )
-# def test_similarity_store__insert_25_parallel_benchmark(
-#     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
-# ):
-#     storage = create_storage_for_backend(storage_backend, "insert_25_parallel_benchmark", tmp_path)
-#     simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
-#
-#     def f():
-#         async def async_f():
-#             await asyncio.gather(
-#                 *[simstore.insert(document=doc) for doc in sample_sentences_french]
-#             )
-#
-#         asyncio.run(async_f())
-#
-#     benchmark(f)
-#
-#     assert asyncio.run(simstore.query(sample_sentences_french[0]))
+
+@pytest.mark.parametrize(
+    "storage_backend, storage_level",
+    [
+        (ScyllaDBStore, StorageLevel.Minimal),
+        (SQLiteStore, StorageLevel.Minimal),
+    ],
+)
+def test_similarity_store__insert_25_parallel_benchmark(
+    benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
+):
+    storage = create_storage_for_backend(storage_backend, "insert_25_parallel_benchmark", tmp_path)
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
+
+    def f():
+        async def async_f():
+            await asyncio.gather(
+                *[simstore.insert(document=doc) for doc in sample_sentences_french]
+            )
+
+        asyncio.run(async_f())
+
+    benchmark(f)
+
+    assert asyncio.run(simstore.query(sample_sentences_french[0]))
 
 
 @pytest.mark.parametrize(
@@ -113,39 +113,39 @@ def test_similarity_store__query_25_benchmark(
 
     assert isinstance(i, list)
 
-#
-# @pytest.mark.parametrize(
-#     "storage_backend, storage_level",
-#     [
-#         (ScyllaDBStore, StorageLevel.Minimal),
-#         (SQLiteStore, StorageLevel.Minimal),
-#     ],
-# )
-# def test_similarity_store__query_25_parallel_benchmark(
-#     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
-# ):
-#     storage = create_storage_for_backend(storage_backend, "query_25_parallel_benchmark", tmp_path)
-#     simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
-#
-#     async def init():
-#         for doc in sample_sentences_french:
-#             await simstore.insert(document=doc)
-#
-#     asyncio.run(init())
-#
-#     def f():
-#         async def async_f():
-#             i = await asyncio.gather(
-#                 *[simstore.query(document=doc) for doc in sample_sentences_french]
-#             )
-#             return i[0]
-#
-#         return asyncio.run(async_f())
-#
-#     i = benchmark(f)
-#
-#     assert isinstance(i, list)
-#
+
+@pytest.mark.parametrize(
+    "storage_backend, storage_level",
+    [
+        (ScyllaDBStore, StorageLevel.Minimal),
+        (SQLiteStore, StorageLevel.Minimal),
+    ],
+)
+def test_similarity_store__query_25_parallel_benchmark(
+    benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
+):
+    storage = create_storage_for_backend(storage_backend, "query_25_parallel_benchmark", tmp_path)
+    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
+
+    async def init():
+        for doc in sample_sentences_french:
+            await simstore.insert(document=doc)
+
+    asyncio.run(init())
+
+    def f():
+        async def async_f():
+            i = await asyncio.gather(
+                *[simstore.query(document=doc) for doc in sample_sentences_french]
+            )
+            return i[0]
+
+        return asyncio.run(async_f())
+
+    i = benchmark(f)
+
+    assert isinstance(i, list)
+
 
 def create_storage_for_backend(storage_backend, test_name, tmp_path):
     if storage_backend == ScyllaDBStore:

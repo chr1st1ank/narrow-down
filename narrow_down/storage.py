@@ -1,7 +1,7 @@
 """Base classes and interfaces for storage."""
 from abc import ABC
 from collections import defaultdict
-from typing import Dict, Iterable, Optional, Set, List, Tuple
+from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 from . import hash
 from ._rust import RustMemoryStore
@@ -144,14 +144,14 @@ class InMemoryStore(StorageBackend):
 
 
 class OptimizedInMemoryStore(StorageBackend):
-    """In-Memory storage backend for a SimilarityStore.
-    """
+    """In-Memory storage backend for a SimilarityStore."""
 
     def __init__(self) -> None:
         """Create a new empty in memory database."""
         self._settings: Dict[str, str] = {}
         self._documents: Dict[int, bytes] = {}
         self._buckets: Dict[Tuple[int, int], List[int]] = defaultdict(list)
+        self._next_doc_id = 0
 
     async def insert_setting(self, key: str, value: str):
         """Store a setting as key-value pair."""
@@ -203,10 +203,11 @@ class OptimizedInMemoryStore(StorageBackend):
 
     def _find_next_document_id(self, document: bytes) -> int:
         """Find an unused document ID."""
-        x: int = hash.xxhash_32bit(document)
-        while x in self._documents:
-            x += 1
-        return x
+        doc_id = self._next_doc_id
+        while doc_id in self._documents:
+            doc_id += 1
+        self._next_doc_id = doc_id + 1
+        return doc_id
 
 
 class RustMemoryStoreWrapper(StorageBackend):
