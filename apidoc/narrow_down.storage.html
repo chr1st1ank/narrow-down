@@ -348,29 +348,11 @@ None is returned.</p>
 <dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.storage.</span></span><span class="sig-name descname"><span class="pre">InMemoryStore</span></span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">narrow_down.storage.StorageBackend</span></code></a></p>
-<p>In-Memory storage backend for a SimilarityStore.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">run</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">storage</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">InMemoryStore</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">run</span><span class="p">(</span><span class="n">storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">"settings key"</span><span class="p">,</span> <span class="s2">"settings value"</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="p">(</span><span class="n">storage</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="s2">"settings key"</span><span class="p">)))</span>
-<span class="go">settings value</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
+<p>Rust implementation of InMemoryStore.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new empty in memory database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
+<dd><p>Create a new RustMemoryStore.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.insert_setting">
