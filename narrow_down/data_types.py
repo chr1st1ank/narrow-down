@@ -19,7 +19,7 @@ class AlreadyInitialized(Exception):
     """Raised when initializing storage twice or changing immutable settings."""
 
 
-class StorageLevel(enum.Flag):  # TODO: Review name
+class StorageLevel(enum.Flag):
     """Detail level of document persistence."""
 
     Minimal = enum.auto()

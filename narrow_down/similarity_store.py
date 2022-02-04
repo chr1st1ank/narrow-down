@@ -90,7 +90,6 @@ class SimilarityStore:
           # noqa: DAR101 similarity_threshold
         """
         obj = await cls._create_object_base(storage, storage_level, tokenize)
-        # TODO: What about a setup with an existing database?
         obj._lsh_config = _minhash.find_optimal_config(
             jaccard_threshold=similarity_threshold,
             max_false_negative_proba=max_false_negative_proba,
