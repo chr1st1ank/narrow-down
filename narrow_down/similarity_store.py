@@ -235,7 +235,34 @@ class SimilarityStore:
         await self._lsh.remove_by_id(document_id, check_if_exists)
 
     async def query(self, document: str, *, exact_part=None) -> Collection[StoredDocument]:
-        """Query all similar documents."""
+        """Query all similar documents.
+
+        Args:
+            document: A document to search similar items for.
+            exact_part: Part that should be exactly matched.
+
+        Returns:
+            A List of `narrow_down.data_types.StoredDocument`_ objects with all elements which are
+            estimated to be above the similarity threshold.
+        """
         tokens = self._tokenize_callable(document)
         fingerprint = self._minhasher.minhash(tokens)
         return await self._lsh.query(fingerprint=fingerprint, exact_part=exact_part)
+
+    async def query_top_n(
+        self, n: int, document: str, *, exact_part=None
+    ) -> Collection[StoredDocument]:
+        """Query the top n similar documents.
+
+        Args:
+            n: The number of similar documents to retrieve.
+            document: A document to search similar items for.
+            exact_part: Part that should be exactly matched.
+
+        Returns:
+            A List of `narrow_down.data_types.StoredDocument`_ objects with the n elements which are
+            most likely above the similarity threshold.
+        """
+        tokens = self._tokenize_callable(document)
+        fingerprint = self._minhasher.minhash(tokens)
+        return await self._lsh.query_top_n(n=n, fingerprint=fingerprint, exact_part=exact_part)

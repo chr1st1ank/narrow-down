@@ -32,6 +32,49 @@ async def test_similarity_store__insert_and_query_with_default_settings(storage_
         assert list(results)[0].document is None
 
 
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "storage_level",
+    [
+        StorageLevel.Minimal,
+        StorageLevel.Document,
+    ],
+)
+async def test_similarity_store__compare_query_and_query_top_1(storage_level):
+    simstore = await SimilarityStore.create(storage_level=storage_level)
+    sample_doc = "Some example document"
+
+    await simstore.insert(sample_doc)
+    results = await simstore.query(sample_doc)
+    results_top_1 = await simstore.query_top_n(n=1, document=sample_doc)
+
+    assert results == results_top_1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "storage_level",
+    [
+        StorageLevel.Minimal,
+        StorageLevel.Document,
+    ],
+)
+async def test_similarity_store__insert_and_query_top_n(storage_level):
+    simstore = await SimilarityStore.create(storage_level=storage_level, tokenize="char_ngrams(1)")
+    sample_doc = "Some long example document. An impressive text."
+
+    id1 = await simstore.insert(sample_doc)
+    id2 = await simstore.insert(sample_doc + "1")
+    await simstore.insert(sample_doc + "12")
+    await simstore.insert(sample_doc + "123")
+
+    results_top_n = [d.id_ for d in await simstore.query_top_n(n=1, document=sample_doc)]
+    assert results_top_n == [id1]
+
+    results_top_n = [d.id_ for d in await simstore.query_top_n(n=2, document=sample_doc)]
+    assert results_top_n == [id1, id2]
+
+
 def test_similarity_store_warns_on_init():
     with pytest.warns(UserWarning):
         SimilarityStore()

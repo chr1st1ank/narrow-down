@@ -76,6 +76,51 @@ async def test_lsh__basic_lookup_with_exact_part():
 
 
 @pytest.mark.asyncio
+async def test_lsh__top_n():
+    """Minimal check if an LSH can be constructed."""
+    lsh = _minhash.LSH(
+        _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
+        storage=await storage.InMemoryStore().initialize(),
+    )
+    await lsh.insert(
+        data_types.StoredDocument(
+            document="1", fingerprint=data_types.Fingerprint(np.array([2, 4, 6]))
+        ),
+    )
+    await lsh.insert(
+        data_types.StoredDocument(
+            document="2", fingerprint=data_types.Fingerprint(np.array([2, 4, 7]))
+        ),
+    )
+    await lsh.insert(
+        data_types.StoredDocument(
+            document="3", fingerprint=data_types.Fingerprint(np.array([2, 5, 7]))
+        ),
+    )
+    await lsh.insert(
+        data_types.StoredDocument(
+            document="4", fingerprint=data_types.Fingerprint(np.array([3, 5, 7]))
+        ),
+    )
+
+    result = await lsh.query_top_n(n=1, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    print(result)
+    assert sorted([r.document for r in result]) == ["1"]
+
+    result = await lsh.query_top_n(n=2, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    print(result)
+    assert sorted([r.document for r in result]) == ["1", "2"]
+
+    result = await lsh.query_top_n(n=3, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    print(result)
+    assert sorted([r.document for r in result]) == ["1", "2", "3"]
+
+    result = await lsh.query_top_n(n=4, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    print(result)
+    assert sorted([r.document for r in result]) == ["1", "2", "3"]
+
+
+@pytest.mark.asyncio
 async def test_lsh__insert_invalid_document():
     """Test error handling of insert()."""
     lsh = _minhash.LSH(_minhash.MinhashLshConfig(1, 1, 1), None)
