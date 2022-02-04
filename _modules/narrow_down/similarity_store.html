@@ -297,7 +297,6 @@
 <span class="sd">          # noqa: DAR101 similarity_threshold</span>
 <span class="sd">        """</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_create_object_base</span><span class="p">(</span><span class="n">storage</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">)</span>
-        <span class="c1"># TODO: What about a setup with an existing database?</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_lsh_config</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">find_optimal_config</span><span class="p">(</span>
             <span class="n">jaccard_threshold</span><span class="o">=</span><span class="n">similarity_threshold</span><span class="p">,</span>
             <span class="n">max_false_negative_proba</span><span class="o">=</span><span class="n">max_false_negative_proba</span><span class="p">,</span>

@@ -219,6 +219,8 @@ and this project adheres to <a class="reference external" href="https://semver.o
 calling first <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> and then <code class="docutils literal notranslate"><span class="pre">initialize()</span></code>. This makes the usage of the class more
 straight-forward.</p></li>
 <li><p>The exact_part of a document is now also stored in storage level “Document”.</p></li>
+<li><p>The InMemoryStore no longer uses Python dictionaries as storage, but rather a class in the Rust
+extension to reduce the memory footprint by a lot.</p></li>
 </ul>
 </section>
 <section id="fixed">
