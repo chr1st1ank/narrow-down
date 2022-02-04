@@ -4,6 +4,7 @@ Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapt
 """
 import asyncio
 import collections
+import collections.abc
 import dataclasses
 import json
 import warnings
@@ -198,7 +199,7 @@ class LSH:
             tasks.append(
                 self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
             )
-        candidates = collections.Counter()
+        candidates: collections.Counter[int] = collections.Counter()
         for new_candidates in await asyncio.gather(*tasks):
             candidates.update(new_candidates)
         return await asyncio.gather(
