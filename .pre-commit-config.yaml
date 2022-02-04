@@ -25,7 +25,6 @@ repos:
   hooks:
     - id: flakehell
       name: flakehell
-      description: "`Flakehell` it's a Flake8 wrapper to make it cools."
       entry: flakehell
       args: [lint]
       language: python
@@ -43,3 +42,13 @@ repos:
         'flake8-bandit~=2.1.2',
         'darglint~=1.8.0'
       ]
+- repo: https://github.com/doublify/pre-commit-rust
+  rev: v1.0
+  hooks:
+  -   id: fmt
+  -   id: clippy
+      args:
+        - --release
+        - --
+        - -D
+        - warnings

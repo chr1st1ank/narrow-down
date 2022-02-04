@@ -1,5 +1,4 @@
-/// This module contains a Rust implementation of an in-memory storage backend for LSH.
-
+//! This module contains a Rust implementation of an in-memory storage backend for LSH.
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
 use rustc_hash::{FxHashMap, FxHashSet};
@@ -32,7 +31,7 @@ impl RustMemoryStore {
         }
     }
     fn __repr__(&self) -> PyResult<String> {
-        Ok(format!("RustMemoryStore()"))
+        Ok("RustMemoryStore()".to_string())
     }
     fn insert_setting(&mut self, key: String, value: String) {
         self.settings.insert(key, value);
@@ -71,17 +70,16 @@ impl RustMemoryStore {
                 bucket_id,
                 document_hash,
             })
-            .or_insert(FxHashSet::with_capacity_and_hasher(1, Default::default()));
+            .or_insert_with(|| FxHashSet::with_capacity_and_hasher(1, Default::default()));
         documents.insert(document_id);
     }
     fn query_ids_from_bucket(&self, bucket_id: u32, document_hash: u32) -> Vec<u64> {
-        if let Some(bucket) = self.buckets
-            .get(&BucketKey {
-                bucket_id,
-                document_hash,
-            }){
-            bucket.into_iter().map(|x|*x).collect::<Vec<_>>()
-        }else {
+        if let Some(bucket) = self.buckets.get(&BucketKey {
+            bucket_id,
+            document_hash,
+        }) {
+            bucket.iter().copied().collect::<Vec<_>>()
+        } else {
             Vec::<u64>::with_capacity(0)
         }
     }
