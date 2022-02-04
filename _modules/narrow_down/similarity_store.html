@@ -409,7 +409,17 @@
 <div class="viewcode-block" id="SimilarityStore.insert"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.insert">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""Index a new document."""</span>
+        <span class="sd">"""Index a new document.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            document: A document (as string to index).</span>
+<span class="sd">            document_id: Optional ID to assign to the document.</span>
+<span class="sd">            exact_part: Optional exact string to match when searching for the document.</span>
+<span class="sd">            data: Optional additional payload to save together with the document.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The ID under which the document was indexed.</span>
+<span class="sd">        """</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
         <span class="n">fingerprint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span><span class="o">.</span><span class="n">minhash</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
         <span class="n">stored_doc</span> <span class="o">=</span> <span class="n">StoredDocument</span><span class="p">(</span>
@@ -442,10 +452,37 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">remove_by_id</span><span class="p">(</span><span class="n">document_id</span><span class="p">,</span> <span class="n">check_if_exists</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SimilarityStore.query"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.query">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Collection</span><span class="p">[</span><span class="n">StoredDocument</span><span class="p">]:</span>
-        <span class="sd">"""Query all similar documents."""</span>
+        <span class="sd">"""Query all similar documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            document: A document to search similar items for.</span>
+<span class="sd">            exact_part: Part that should be exactly matched.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with all elements</span>
+<span class="sd">            which are estimated to be above the similarity threshold.</span>
+<span class="sd">        """</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
         <span class="n">fingerprint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span><span class="o">.</span><span class="n">minhash</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">fingerprint</span><span class="o">=</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="n">exact_part</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">fingerprint</span><span class="o">=</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="n">exact_part</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SimilarityStore.query_top_n"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.query_top_n">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_top_n</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Collection</span><span class="p">[</span><span class="n">StoredDocument</span><span class="p">]:</span>
+        <span class="sd">"""Query the top n similar documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n: The number of similar documents to retrieve.</span>
+<span class="sd">            document: A document to search similar items for.</span>
+<span class="sd">            exact_part: Part that should be exactly matched.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with the n</span>
+<span class="sd">            elements which are most likely above the similarity threshold.</span>
+<span class="sd">        """</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="n">fingerprint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span><span class="o">.</span><span class="n">minhash</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">query_top_n</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">fingerprint</span><span class="o">=</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="n">exact_part</span><span class="p">)</span></div></div>
 </pre></div>
         </article>
       </div>

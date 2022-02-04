@@ -212,6 +212,12 @@
 and this project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <section id="unreleased">
 <h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.6.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>SimilarityStore.top_n_query() now allows to find a limited number of most similar documents.</p></li>
+</ul>
+</section>
 <section id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -233,14 +239,14 @@ is self-contained and the user doesn’t have to keep the number elsewhere.</p><
 </section>
 <section id="id1">
 <h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.5.0...v0.6.0">0.6.0</a> - 2022-01-29<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<section id="added">
-<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<section id="id2">
+<h3>Added<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Storage backend for ScyllaDB, a cassandra-like distributed key-value store.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Changed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<section id="id3">
+<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
 consumption.</p></li>
@@ -248,8 +254,8 @@ consumption.</p></li>
 <li><p>ScyllaDB sessions are now reused which give a great performance benefit</p></li>
 </ul>
 </section>
-<section id="id3">
-<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="id4">
+<h3>Fixed<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Integer overflows in the minhash calculation which reduced the quality of the permutations
 (hash functions). Depending on the input effectively max_uint32 was used instead of a prime number
@@ -265,10 +271,10 @@ exception is thrown. As the performance was anyway worse than expected it was re
 </ul>
 </section>
 </section>
-<section id="id4">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.4.0...v0.5.0">0.5.0</a> - 2022-01-17<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <section id="id5">
-<h3>Changed<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.4.0...v0.5.0">0.5.0</a> - 2022-01-17<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<section id="id6">
+<h3>Changed<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The SQLite backends take now an init parameter “partitions” which leads to internally
 partitioned tables. This reduces query time by a lot.</p></li>
@@ -277,10 +283,10 @@ of disk write operations.</p></li>
 </ul>
 </section>
 </section>
-<section id="id6">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.1...v0.4.0">0.4.0</a> - 2022-01-16<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <section id="id7">
-<h3>Added<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.1...v0.4.0">0.4.0</a> - 2022-01-16<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<section id="id8">
+<h3>Added<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Synchronous and Asynchronous SQLite storage backend</p></li>
 <li><p>Settings of SimilarityStore objects are now saved in the storage backend</p></li>
@@ -288,37 +294,37 @@ of disk write operations.</p></li>
 </ul>
 </section>
 </section>
-<section id="id8">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.0...v0.3.1">0.3.1</a> - 2022-01-14<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <section id="id9">
-<h3>Fixed<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.0...v0.3.1">0.3.1</a> - 2022-01-14<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<section id="id10">
+<h3>Fixed<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Wrong order of parameters for Minhash LSH in the SimilarityStore class</p></li>
 </ul>
 </section>
 </section>
-<section id="id10">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.1...v0.3.0">0.3.0</a> - 2022-01-09<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <section id="id11">
-<h3>Added<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.1...v0.3.0">0.3.0</a> - 2022-01-09<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<section id="id12">
+<h3>Added<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Documents can now be removed from the index again with SimilarityStore.remove_by_id()</p></li>
 </ul>
 </section>
 </section>
-<section id="id12">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.0...v0.2.1">0.2.1</a> - 2022-01-09<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <section id="id13">
-<h3>Fixed<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.0...v0.2.1">0.2.1</a> - 2022-01-09<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<section id="id14">
+<h3>Fixed<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>CI only: Wrong URL of test-pypi</p></li>
 </ul>
 </section>
 </section>
-<section id="id14">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...v0.2.0">0.2.0</a> - 2022-01-09<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <section id="id15">
-<h3>Added<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...v0.2.0">0.2.0</a> - 2022-01-09<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<section id="id16">
+<h3>Added<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>A rust extension was added and therefore moving the build system to Maturin.</p></li>
 <li><p>A Minhash-LSH data structure was implemented.</p></li>
@@ -326,13 +332,13 @@ of disk write operations.</p></li>
 </ul>
 </section>
 </section>
-<section id="id16">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1">0.1.1</a> - 2021-12-30<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
-</section>
 <section id="id17">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0">0.1.0</a> - 2021-12-30<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1">0.1.1</a> - 2021-12-30<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+</section>
 <section id="id18">
-<h3>Added<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0">0.1.0</a> - 2021-12-30<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<section id="id19">
+<h3>Added<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>First release on PyPI.</p></li>
 </ul>
@@ -393,44 +399,45 @@ of disk write operations.</p></li>
             <ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
 <li><a class="reference internal" href="#unreleased">Unreleased</a><ul>
+<li><a class="reference internal" href="#added">Added</a></li>
 <li><a class="reference internal" href="#changed">Changed</a></li>
 <li><a class="reference internal" href="#fixed">Fixed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id1">0.6.0 - 2022-01-29</a><ul>
-<li><a class="reference internal" href="#added">Added</a></li>
-<li><a class="reference internal" href="#id2">Changed</a></li>
-<li><a class="reference internal" href="#id3">Fixed</a></li>
+<li><a class="reference internal" href="#id2">Added</a></li>
+<li><a class="reference internal" href="#id3">Changed</a></li>
+<li><a class="reference internal" href="#id4">Fixed</a></li>
 <li><a class="reference internal" href="#removed">Removed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id4">0.5.0 - 2022-01-17</a><ul>
-<li><a class="reference internal" href="#id5">Changed</a></li>
+<li><a class="reference internal" href="#id5">0.5.0 - 2022-01-17</a><ul>
+<li><a class="reference internal" href="#id6">Changed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id6">0.4.0 - 2022-01-16</a><ul>
-<li><a class="reference internal" href="#id7">Added</a></li>
+<li><a class="reference internal" href="#id7">0.4.0 - 2022-01-16</a><ul>
+<li><a class="reference internal" href="#id8">Added</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id8">0.3.1 - 2022-01-14</a><ul>
-<li><a class="reference internal" href="#id9">Fixed</a></li>
+<li><a class="reference internal" href="#id9">0.3.1 - 2022-01-14</a><ul>
+<li><a class="reference internal" href="#id10">Fixed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">0.3.0 - 2022-01-09</a><ul>
-<li><a class="reference internal" href="#id11">Added</a></li>
+<li><a class="reference internal" href="#id11">0.3.0 - 2022-01-09</a><ul>
+<li><a class="reference internal" href="#id12">Added</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id12">0.2.1 - 2022-01-09</a><ul>
-<li><a class="reference internal" href="#id13">Fixed</a></li>
+<li><a class="reference internal" href="#id13">0.2.1 - 2022-01-09</a><ul>
+<li><a class="reference internal" href="#id14">Fixed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id14">0.2.0 - 2022-01-09</a><ul>
-<li><a class="reference internal" href="#id15">Added</a></li>
+<li><a class="reference internal" href="#id15">0.2.0 - 2022-01-09</a><ul>
+<li><a class="reference internal" href="#id16">Added</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id16">0.1.1 - 2021-12-30</a></li>
-<li><a class="reference internal" href="#id17">0.1.0 - 2021-12-30</a><ul>
-<li><a class="reference internal" href="#id18">Added</a></li>
+<li><a class="reference internal" href="#id17">0.1.1 - 2021-12-30</a></li>
+<li><a class="reference internal" href="#id18">0.1.0 - 2021-12-30</a><ul>
+<li><a class="reference internal" href="#id19">Added</a></li>
 </ul>
 </li>
 </ul>
