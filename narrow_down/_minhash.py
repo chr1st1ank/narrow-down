@@ -3,6 +3,8 @@
 Source: Leskovec, Rajaraman and Ullman, “Mining of Massive Datasets.”, Chapter 3.
 """
 import asyncio
+import collections
+import collections.abc
 import dataclasses
 import json
 import warnings
@@ -185,6 +187,24 @@ class LSH:
         for new_candidates in await asyncio.gather(*tasks):
             candidates.update(new_candidates)
         return await asyncio.gather(*[self._query_document(c) for c in candidates])
+
+    async def query_top_n(
+        self, n, fingerprint: Fingerprint, *, exact_part: str = None
+    ) -> Collection[StoredDocument]:
+        """Find n most similar documents."""
+        tasks = []
+        for band_number in range(self.n_bands):
+            start_index = band_number * self.rows_per_band
+            h = self._hash(fingerprint[start_index : start_index + self.rows_per_band], exact_part)
+            tasks.append(
+                self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
+            )
+        candidates: collections.Counter[int] = collections.Counter()
+        for new_candidates in await asyncio.gather(*tasks):
+            candidates.update(new_candidates)
+        return await asyncio.gather(
+            *[self._query_document(c) for c, _ in candidates.most_common(n)]
+        )
 
     async def _query_document(self, doc_id: int):
         """Fetch a document from the storage and deserialize it."""
