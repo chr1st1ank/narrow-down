@@ -144,14 +144,14 @@ def test_similarity_store__query_25_parallel_benchmark(
 
 
 def create_storage_for_backend(storage_backend, test_name, tmp_path):
-    if storage_backend == InMemoryStore:
-        storage = storage_backend()
-    elif storage_backend == ScyllaDBStore:
+    if storage_backend == ScyllaDBStore:
         if os.environ.get("TEST_WITH_DB", "False").lower() != "true":
             pytest.skip("Skipping")
         storage = create_scylla_storage(test_name)
     elif storage_backend == SQLiteStore:
         storage = storage_backend(str(tmp_path / f"{test_name}.db"))
+    else:
+        storage = storage_backend()
     return storage
 
 

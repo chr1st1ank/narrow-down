@@ -1,9 +1,13 @@
+mod in_memory_store;
+
 use numpy::PyReadonlyArray1;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use std::hash::Hasher;
 use twox_hash::XxHash32;
 use twox_hash::XxHash64;
+
+use in_memory_store::RustMemoryStore;
 
 const MERSENNE_PRIME: u64 = u32::MAX as u64; // mersenne prime (1 << 32) - 1
 
@@ -37,6 +41,7 @@ fn xxhash_64bit(s: &[u8]) -> u64 {
     h.write(s);
     h.finish()
 }
+
 
 #[pyfunction]
 fn minhash<'py>(
@@ -74,6 +79,7 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(xxhash_32bit, m)?)?;
     m.add_function(wrap_pyfunction!(xxhash_64bit, m)?)?;
     m.add_function(wrap_pyfunction!(minhash, m)?)?;
+    m.add_class::<RustMemoryStore>()?;
     Ok(())
 }
 
