@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   calling first `__init__()` and then `initialize()`. This makes the usage of the class more 
   straight-forward.
 - The exact_part of a document is now also stored in storage level "Document".
+- The InMemoryStore no longer uses Python dictionaries as storage, but rather a class in the Rust
+  extension to reduce the memory footprint by a lot.
 
 ### Fixed
 - The number of partitions is now stored in the database for the SQLite backend. This way the DB 

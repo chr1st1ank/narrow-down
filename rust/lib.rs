@@ -64,7 +64,7 @@ fn minhash<'py>(
     for (a_i, b_i) in a_slice.iter().zip(b_slice) {
         let minhash: u32 = murmur_hashes
             .iter()
-            .map(|h| u64::from(*a_i) * h + u64::from(*b_i) % MERSENNE_PRIME)// TODO
+            .map(|h| u64::from(*a_i) * h + u64::from(*b_i) % MERSENNE_PRIME)
             .min()
             .unwrap_or(MERSENNE_PRIME) as u32;
         minhashes.push(minhash);

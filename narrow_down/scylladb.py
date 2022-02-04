@@ -50,8 +50,6 @@ class ScyllaDBStore(StorageBackend):
     ) -> None:
         """Create a new empty or connect to an existing SQLite database.
 
-        TODO: Describe cluster/session
-
         Args:
             cluster_or_session: Can be a cassandra cluster or a session object.
             keyspace: Name of the keyspace to use.
