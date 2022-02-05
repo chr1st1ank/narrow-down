@@ -99,3 +99,47 @@ async def test_in_memory_store__remove_documents_from_bucket():
     assert list(await ims.query_ids_from_bucket(bucket_id=1, document_hash=10)) == [10]
     await ims.remove_id_from_bucket(bucket_id=1, document_hash=10, document_id=10)
     assert list(await ims.query_ids_from_bucket(bucket_id=1, document_hash=10)) == []
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__insert_query_document__close_and_reopen():
+    """Adding a duplicate before to see if that's also handled."""
+
+    async def insert_setting():
+        store = await InMemoryStore().initialize()
+        await store.insert_setting(key="k", value="155")
+        return store.serialize()
+
+    msgpack = await insert_setting()
+
+    assert isinstance(msgpack, bytes)
+    store2 = InMemoryStore.deserialize(msgpack)
+    assert await store2.query_setting("k") == "155"
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__insert_query_document__reopen():
+    async def insert_doc():
+        store = await InMemoryStore().initialize()
+        id_ = await store.insert_document(document=b"abcd efgh")
+        return id_, store.serialize()
+
+    id_out, msgpack = await insert_doc()
+
+    assert isinstance(msgpack, bytes)
+    store2 = InMemoryStore.deserialize(msgpack)
+    assert await store2.query_document(id_out) == b"abcd efgh"
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__add_documents_to_bucket_and_query__reopen():
+    async def insert_doc():
+        store = await InMemoryStore().initialize()
+        await store.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
+        return store.serialize()
+
+    msgpack = await insert_doc()
+
+    assert isinstance(msgpack, bytes)
+    store2 = InMemoryStore.deserialize(msgpack)
+    assert list(await store2.query_ids_from_bucket(bucket_id=1, document_hash=10)) == [10]
