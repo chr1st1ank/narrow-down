@@ -75,6 +75,17 @@ class InMemoryStore(StorageBackend):
         """Create a new RustMemoryStore."""
         self.rms = RustMemoryStore()
 
+    def serialize(self) -> bytes:
+        """Serialize the data into a messagepack so that it can be persisted somewhere."""
+        return self.rms.serialize()
+
+    @classmethod
+    def deserialize(cls, msgpack: bytes) -> "InMemoryStore":
+        """Deserialize an InMemoryStore object from messagepack."""
+        obj = cls.__new__(cls)
+        obj.rms = RustMemoryStore.deserialize(msgpack)
+        return obj
+
     async def insert_setting(self, key: str, value: str):
         """Store a setting as key-value pair."""
         self.rms.insert_setting(key, value)

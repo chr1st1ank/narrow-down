@@ -37,7 +37,7 @@ def _run(c: Context, command: str) -> Result:
 def develop(c):
     # type: (Context) -> None
     """Rebuild the Rust library and install all missing dependencies."""
-    _run(c, "maturin develop --release --extras dev,docs")
+    _run(c, "maturin develop --release --extras dev,docs,experiments")
 
 
 @task()

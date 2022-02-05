@@ -81,6 +81,11 @@ dev = [
     "protoc-wheel-0",
     "narrow-down[scylladb,docs]"
 ]
+experiments = [
+    "pandas~=1.0",
+    "tabulate",
+    "tqdm"
+]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
