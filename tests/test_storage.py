@@ -143,3 +143,69 @@ async def test_in_memory_store__add_documents_to_bucket_and_query__reopen():
     assert isinstance(msgpack, bytes)
     store2 = InMemoryStore.deserialize(msgpack)
     assert list(await store2.query_ids_from_bucket(bucket_id=1, document_hash=10)) == [10]
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__to_file_from_file(tmpdir):
+    msgpck_file = tmpdir / "store.msgpck"
+
+    store = await InMemoryStore().initialize()
+    await store.insert_setting(key="k", value="155")
+    id_out = await store.insert_document(document=b"abcd efgh")
+    await store.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
+
+    data = store.serialize()
+    store.to_file(str(msgpck_file))
+
+    with msgpck_file.open("rb") as f:
+        assert data == f.read()
+
+    store2 = InMemoryStore.from_file(str(msgpck_file))
+
+    with msgpck_file.open("wb") as f:
+        f.write(data)
+
+    assert (await store2.query_setting("k")) == (await store.query_setting("k")) == "155"
+    assert (
+        (await store2.query_document(id_out))
+        == (await store.query_document(id_out))
+        == b"abcd efgh"
+    )
+    assert (
+        list(await store2.query_ids_from_bucket(bucket_id=1, document_hash=10))
+        == list(await store.query_ids_from_bucket(bucket_id=1, document_hash=10))
+        == [10]
+    )
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__to_file_serialize(tmpdir):
+    """Validate to_file and serialize() have identical output."""
+    msgpck_file = tmpdir / "store.msgpck"
+
+    store = await InMemoryStore().initialize()
+    await store.insert_setting(key="k", value="155")
+    await store.insert_document(document=b"abcd efgh")
+    await store.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
+
+    data = store.serialize()
+    store.to_file(str(msgpck_file))
+
+    with msgpck_file.open("rb") as f:
+        assert data == f.read()
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store__from_file__deserialize(tmpdir):
+    """Make sure from_file() and deserialize() work the same way."""
+    msgpck_file = tmpdir / "store.msgpck"
+
+    store = await InMemoryStore().initialize()
+    await store.insert_setting(key="k", value="155")
+    await store.insert_document(document=b"abcd efgh")
+    await store.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
+
+    store.to_file(str(msgpck_file))
+    store2 = InMemoryStore.from_file(str(msgpck_file))
+    with msgpck_file.open("rb") as f:
+        assert store2.serialize() == InMemoryStore.deserialize(f.read()).serialize()

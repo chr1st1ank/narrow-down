@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyType};
 use rustc_hash::{FxHashMap, FxHashSet};
 use serde::{Deserialize, Serialize};
+use std::fs::File;
 
 /// A small struct to use as key for a HashMap
 #[derive(PartialEq, Hash, std::cmp::Eq, Serialize, Deserialize)]
@@ -46,9 +47,19 @@ impl RustMemoryStore {
             &rmp_serde::encode::to_vec_named(&self).unwrap(),
         ))
     }
+    fn to_file(&self, file_path: &str) {
+        let mut f = File::create(file_path).unwrap();
+        rmp_serde::encode::write_named(&mut f, self).unwrap();
+    }
     #[classmethod]
     fn deserialize(_cls: &PyType, msgpack: &[u8]) -> PyResult<RustMemoryStore> {
         Ok(rmp_serde::from_read_ref(msgpack).unwrap())
+    }
+    #[classmethod]
+    fn from_file(_cls: &PyType, file_path: &str) -> PyResult<RustMemoryStore> {
+        let mut f = File::open(file_path).unwrap();
+        let obj = rmp_serde::from_read(&mut f).unwrap();
+        Ok(obj)
     }
     fn insert_setting(&mut self, key: String, value: String) {
         self.settings.insert(key, value);
