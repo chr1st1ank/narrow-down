@@ -1,10 +1,11 @@
 //! This module contains a Rust implementation of an in-memory storage backend for LSH.
 use pyo3::prelude::*;
-use pyo3::types::PyBytes;
+use pyo3::types::{PyBytes, PyType};
 use rustc_hash::{FxHashMap, FxHashSet};
+use serde::{Deserialize, Serialize};
 
 /// A small struct to use as key for a HashMap
-#[derive(PartialEq, Hash, std::cmp::Eq)]
+#[derive(PartialEq, Hash, std::cmp::Eq, Serialize, Deserialize)]
 struct BucketKey {
     bucket_id: u32,
     document_hash: u32,
@@ -12,6 +13,7 @@ struct BucketKey {
 
 /// Python class with the in-memory storage implementation.
 #[pyclass]
+#[derive(Serialize, Deserialize)]
 pub struct RustMemoryStore {
     settings: FxHashMap<String, String>,
     documents: FxHashMap<u64, Vec<u8>>,
@@ -31,7 +33,22 @@ impl RustMemoryStore {
         }
     }
     fn __repr__(&self) -> PyResult<String> {
-        Ok("RustMemoryStore()".to_string())
+        let serialized = serde_json::to_string(&self.settings).unwrap();
+        Ok(format!(
+            "InMemoryStore(size={}, settings={})",
+            self.documents.len(),
+            serialized
+        ))
+    }
+    fn serialize<'a>(&self, py: Python<'a>) -> PyResult<&'a PyBytes> {
+        Ok(PyBytes::new(
+            py,
+            &rmp_serde::encode::to_vec_named(&self).unwrap(),
+        ))
+    }
+    #[classmethod]
+    fn deserialize(_cls: &PyType, msgpack: &[u8]) -> PyResult<RustMemoryStore> {
+        Ok(rmp_serde::from_read_ref(msgpack).unwrap())
     }
     fn insert_setting(&mut self, key: String, value: String) {
         self.settings.insert(key, value);
