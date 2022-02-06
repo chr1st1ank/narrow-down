@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- InMemoryStore can be serialized to and deserialized from MessagePack.
 - SimilarityStore.top_n_query() now allows to find a limited number of most similar documents.
+- SimilarityStore offers the option to validate the similarity score if the document is available
+  to avoid false positives.
 
 ### Changed
 - SimilarityStore objects can now be created by a factory coroutine `create()` instead of
