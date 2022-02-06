@@ -282,6 +282,17 @@
         <span class="sd">"""Create a new RustMemoryStore."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span> <span class="o">=</span> <span class="n">RustMemoryStore</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="InMemoryStore.serialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">"""Serialize the data into a messagepack so that it can be persisted somewhere."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="InMemoryStore.deserialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.deserialize">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">msgpack</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InMemoryStore"</span><span class="p">:</span>
+        <span class="sd">"""Deserialize an InMemoryStore object from messagepack."""</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">rms</span> <span class="o">=</span> <span class="n">RustMemoryStore</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">msgpack</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
 <div class="viewcode-block" id="InMemoryStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">"""Store a setting as key-value pair."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>

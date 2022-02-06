@@ -220,8 +220,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">similarity_store</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">nd</span><span class="o">.</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">SimilarityStore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
 <span class="gp">... </span>        <span class="n">storage_level</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">data_types</span><span class="o">.</span><span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">tokenize</span><span class="o">=</span><span class="s2">"char_ngrams(5)"</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">tokenize</span><span class="o">=</span><span class="s2">"char_ngrams(3)"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
 
@@ -253,7 +253,7 @@
 <span class="gp">... </span>    <span class="s2">"Love these cookies especially for the kids"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s2">"My kids loved them."</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s2">"Lunchbox or Work Staple"</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s2">"So Delious"</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">"So Delious as no other"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s2">"Over-Packaged Product"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s2">"yum"</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="s2">"Great taste"</span><span class="p">,</span>
@@ -275,21 +275,12 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"awesome cookies"</span><span class="p">)]</span>
 <span class="go">True</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"So Delicious"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"So Delicious as no other"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"so delious as no other"</span><span class="p">)]</span>
 <span class="go">True</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Awesome!"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"awesome cookies"</span><span class="p">)]</span>
-<span class="go">True</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Like Homemade!"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span>
-<span class="gp">... </span>    <span class="n">StoredDocument</span><span class="p">(</span>
-<span class="gp">... </span>        <span class="n">id_</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">document</span><span class="o">=</span><span class="s2">"good, but not homemade."</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="p">)</span>
-<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Very, very good cookie"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"very good cookie"</span><span class="p">)]</span>
 <span class="go">True</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">search_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Loving every bit of it!"</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>

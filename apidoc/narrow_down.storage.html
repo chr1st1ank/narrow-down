@@ -355,6 +355,29 @@ None is returned.</p>
 <dd><p>Create a new RustMemoryStore.</p>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize the data into a messagepack so that it can be persisted somewhere.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.deserialize">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgpack</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserialize an InMemoryStore object from messagepack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msgpack</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#narrow_down.storage.InMemoryStore" title="narrow_down.storage.InMemoryStore">narrow_down.storage.InMemoryStore</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.insert_setting">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">insert_setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.insert_setting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.insert_setting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a setting as key-value pair.</p>

@@ -41,14 +41,15 @@ Narrow Down offers a flexible but easy-to-use Python API to finding duplicates o
 
 ## Installation
 The Python package can be installed with *pip*:
-
-  pip install narrow-down
+```shell
+pip install narrow-down
+```
 
 ### Extras
 
 Some of the heavier functionality is available as *extra*:
 ```shell
-  pip install narrow-down[scylladb]   # Cassandra / ScyllaDB storage backend
+pip install narrow-down[scylladb]   # Cassandra / ScyllaDB storage backend
 ```
 
 ## Similar projects

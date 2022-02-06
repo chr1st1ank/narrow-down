@@ -335,13 +335,16 @@ in the storage.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.query">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.query" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query all similar documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A document to search similar items for.</p></li>
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A document for which to search similar items.</p></li>
 <li><p><strong>exact_part</strong> – Part that should be exactly matched.</p></li>
+<li><p><strong>validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>]</em>) – Whether to validate if the results are really above the similarity threshold.
+This is only possible if the storage level is at least “Document”. Per default
+validation is done if the data is available, otherwise not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -355,14 +358,17 @@ which are estimated to be above the similarity threshold.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.similarity_store.SimilarityStore.query_top_n">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query_top_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.query_top_n"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.query_top_n" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query_top_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/similarity_store.html#SimilarityStore.query_top_n"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.similarity_store.SimilarityStore.query_top_n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the top n similar documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The number of similar documents to retrieve.</p></li>
-<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A document to search similar items for.</p></li>
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A document for which to search similar items.</p></li>
 <li><p><strong>exact_part</strong> – Part that should be exactly matched.</p></li>
+<li><p><strong>validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>]</em>) – Whether to validate if the results are really above the similarity threshold.
+This is only possible if the storage level is at least “Document”. Per default
+validation is done if the data is available, otherwise not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -373,6 +379,10 @@ elements which are most likely above the similarity threshold.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument">narrow_down.data_types.StoredDocument</a>]</p>
 </dd>
 </dl>
+<p>Note that the results are probabilistic. The documents are assumed to be the most likely
+candidates if they have the most likely fingerprint. But the actual similarity of the
+documents themselves might differ. However, if <cite>validate</cite> is <cite>True</cite> the ordering of the
+results is correct, because the actual documents are compared with each other.</p>
 </dd></dl>
 </dd></dl>
 </section>

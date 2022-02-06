@@ -17,8 +17,8 @@ Here we choose the [StorageLevel](narrow_down.data_types.StorageLevel) `Document
 >>> similarity_store = asyncio.run(
 ...     nd.similarity_store.SimilarityStore.create(
 ...         storage_level=nd.data_types.StorageLevel.Document,
-...         similarity_threshold=0.8,
-...         tokenize="char_ngrams(5)",
+...         similarity_threshold=0.75,
+...         tokenize="char_ngrams(3)",
 ...     )
 ... )
 
@@ -51,7 +51,7 @@ Now the object can be filled with documents. As example reviews of a popular oat
 ...     "Love these cookies especially for the kids",
 ...     "My kids loved them.",
 ...     "Lunchbox or Work Staple",
-...     "So Delious",
+...     "So Delious as no other",
 ...     "Over-Packaged Product",
 ...     "yum",
 ...     "Great taste",
@@ -74,21 +74,12 @@ Now that the some data is indexed, the SimilarityStore is ready to execute searc
 >>> search_result == [StoredDocument(id_=13, document="awesome cookies")]
 True
 
->>> search_result = asyncio.run(similarity_store.query("So Delicious".lower()))
->>> search_result == []
+>>> search_result = asyncio.run(similarity_store.query("So Delicious as no other".lower()))
+>>> search_result == [StoredDocument(id_=24, document="so delious as no other")]
 True
 
->>> search_result = asyncio.run(similarity_store.query("Awesome!".lower()))
->>> search_result == [StoredDocument(id_=13, document="awesome cookies")]
-True
-
->>> search_result = asyncio.run(similarity_store.query("Like Homemade!".lower()))
->>> search_result == [
-...     StoredDocument(
-...         id_=18,
-...         document="good, but not homemade.",
-...     )
-... ]
+>>> search_result = asyncio.run(similarity_store.query("Very, very good cookie".lower()))
+>>> search_result == [StoredDocument(id_=20, document="very good cookie")]
 True
 
 >>> search_result = asyncio.run(similarity_store.query("Loving every bit of it!".lower()))
