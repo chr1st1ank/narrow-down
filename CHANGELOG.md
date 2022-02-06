@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [0.7.0] - 2022-02-06
 ### Added
 - InMemoryStore can be serialized to and deserialized from MessagePack.
 - SimilarityStore.top_n_query() now allows to find a limited number of most similar documents.
@@ -81,7 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.3.1...v0.4.0
