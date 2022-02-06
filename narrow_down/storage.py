@@ -79,11 +79,22 @@ class InMemoryStore(StorageBackend):
         """Serialize the data into a messagepack so that it can be persisted somewhere."""
         return self.rms.serialize()
 
+    def to_file(self, file_path: str):
+        """Serialize the data into a messagepack file with the given path."""
+        return self.rms.to_file(file_path)
+
     @classmethod
     def deserialize(cls, msgpack: bytes) -> "InMemoryStore":
         """Deserialize an InMemoryStore object from messagepack."""
         obj = cls.__new__(cls)
         obj.rms = RustMemoryStore.deserialize(msgpack)
+        return obj
+
+    @classmethod
+    def from_file(cls, file_path: str) -> "InMemoryStore":
+        """Deserialize an InMemoryStore object the given messagepack file."""
+        obj = cls.__new__(cls)
+        obj.rms = RustMemoryStore.from_file(file_path)
         return obj
 
     async def insert_setting(self, key: str, value: str):
