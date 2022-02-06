@@ -2,7 +2,7 @@
 import pytest
 
 import narrow_down.data_types
-from narrow_down.data_types import StorageLevel
+from narrow_down.data_types import StorageLevel, StoredDocument
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
 
@@ -49,6 +49,100 @@ async def test_similarity_store__compare_query_and_query_top_1(storage_level):
     results_top_1 = await simstore.query_top_n(n=1, document=sample_doc)
 
     assert results == results_top_1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "validate",
+    [True, False, None],
+)
+@pytest.mark.parametrize(
+    "storage_level",
+    [
+        StorageLevel.Minimal,
+        StorageLevel.Fingerprint,
+        StorageLevel.Document,
+        StorageLevel.Full,
+    ],
+)
+async def test_similarity_store__query_with_validation(monkeypatch, storage_level, validate):
+    fake_results = [
+        StoredDocument(id_=1, document="XYZ", exact_part="A"),
+        StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
+        StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+        StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
+        StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+    ]
+
+    async def fake_query(*args, **kwargs):
+        return fake_results
+
+    simstore = await SimilarityStore.create(storage_level=storage_level, tokenize="char_ngrams(1)")
+    monkeypatch.setattr(simstore._lsh, "query", fake_query)
+
+    results = await simstore.query(
+        document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A", validate=validate
+    )
+
+    print(results)
+    if validate is not False and (storage_level & StorageLevel.Document):
+        assert results == [
+            StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+            StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+            StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
+        ]
+    else:
+        assert results == fake_results
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "validate",
+    [True, False, None],
+)
+@pytest.mark.parametrize(
+    "storage_level",
+    [
+        StorageLevel.Minimal,
+        StorageLevel.Fingerprint,
+        StorageLevel.Document,
+        StorageLevel.Full,
+    ],
+)
+async def test_similarity_store__query_top_n_with_validation(monkeypatch, validate, storage_level):
+    fake_results = [
+        StoredDocument(id_=1, document="XYZ", exact_part="A"),
+        StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
+        StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+        StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
+        StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+    ]
+
+    async def fake_query(*args, **kwargs):
+        return fake_results
+
+    async def fake_query_top_n(n, *args, **kwargs):
+        return fake_results[:n]
+
+    simstore = await SimilarityStore.create(storage_level=storage_level, tokenize="char_ngrams(1)")
+    monkeypatch.setattr(simstore._lsh, "query", fake_query)
+    monkeypatch.setattr(simstore._lsh, "query_top_n", fake_query_top_n)
+
+    results = await simstore.query_top_n(
+        n=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A", validate=validate
+    )
+
+    print(results)
+    if validate is not False and (storage_level & StorageLevel.Document):
+        assert results == [
+            StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+            StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+        ]
+    else:
+        assert results == [
+            StoredDocument(id_=1, document="XYZ", exact_part="A"),
+            StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
+        ]
 
 
 @pytest.mark.asyncio
@@ -124,6 +218,7 @@ async def test_similarity_store__insert_reload_and_query_with_custom_tokenizer(t
 @pytest.mark.asyncio
 async def test_similarity_store__load_from_storage__invalid_storage_level():
     storage = narrow_down.storage.InMemoryStore()
+    await storage.insert_setting("similarity_threshold", "0.8")
     with pytest.raises(TypeError, match=r"int\(\) argument"):
         await SimilarityStore.load_from_storage(storage)
 
@@ -132,6 +227,7 @@ async def test_similarity_store__load_from_storage__invalid_storage_level():
 async def test_similarity_store__load_from_storage__invalid_lsh_config():
     storage = narrow_down.storage.InMemoryStore()
     await storage.insert_setting("storage_level", "1")
+    await storage.insert_setting("similarity_threshold", "0.8")
     await storage.insert_setting("tokenize", "char_ngrams(3)")
     with pytest.raises(TypeError, match="lsh_config setting could not be read"):
         await SimilarityStore.load_from_storage(storage)
@@ -141,6 +237,7 @@ async def test_similarity_store__load_from_storage__invalid_lsh_config():
 async def test_similarity_store__load_from_storage__invalid_tokenize_function():
     storage = narrow_down.storage.InMemoryStore()
     await storage.insert_setting("storage_level", "1")
+    await storage.insert_setting("similarity_threshold", "0.8")
     await storage.insert_setting("lsh_config", '{"n_hashes": 0, "n_bands": 1, "rows_per_band": 2}')
     await storage.insert_setting("tokenize", "custom")
     with pytest.raises(TypeError, match="tokenize function cannot be deserialized"):

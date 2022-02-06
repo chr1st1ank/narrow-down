@@ -1,7 +1,7 @@
 """High-level API for indexing and retrieval of documents."""
 import re
 import warnings
-from typing import Callable, Collection, Union
+from typing import Callable, Collection, Iterable, List, Union
 
 from narrow_down import _minhash, _tokenize
 from narrow_down._minhash import MinhashLshConfig
@@ -14,6 +14,7 @@ class SimilarityStore:
 
     __slots__ = (
         "_minhasher",
+        "_similarity_threshold",
         "_lsh",
         "_storage",
         "_storage_level",
@@ -29,6 +30,7 @@ class SimilarityStore:
             "SimilarityStore.create() or SimilarityStore.load_from_storage()."
         )
         self._minhasher: _minhash.MinHasher
+        self._similarity_threshold: float
         self._lsh: _minhash.LSH
         self._storage: StorageBackend
         self._storage_level: StorageLevel
@@ -89,7 +91,7 @@ class SimilarityStore:
           # noqa: DAR101 max_false_positive_proba
           # noqa: DAR101 similarity_threshold
         """
-        obj = await cls._create_object_base(storage, storage_level, tokenize)
+        obj = await cls._create_object_base(storage, storage_level, similarity_threshold, tokenize)
         obj._lsh_config = _minhash.find_optimal_config(
             jaccard_threshold=similarity_threshold,
             max_false_negative_proba=max_false_negative_proba,
@@ -122,6 +124,10 @@ class SimilarityStore:
             # Let it throw TypeError if None:
             int(await storage.query_setting("storage_level"))  # type: ignore
         )
+        similarity_threshold = float(
+            # Let it throw TypeError if None:
+            await storage.query_setting("similarity_threshold")  # type: ignore
+        )
         tokenize_spec: Union[
             str, Callable[[str], Collection[str]], None
         ] = await storage.query_setting("tokenize")
@@ -137,6 +143,7 @@ class SimilarityStore:
         simstore = await cls._create_object_base(
             storage=storage,
             storage_level=storage_level,
+            similarity_threshold=similarity_threshold,
             tokenize=tokenize_spec,
         )
         simstore._lsh_config = lsh_config
@@ -145,11 +152,14 @@ class SimilarityStore:
         return simstore
 
     @classmethod
-    async def _create_object_base(cls, storage, storage_level, tokenize) -> "SimilarityStore":
-        """Create a new SimilarityStore object with storage, storage_level and tokenize set."""
+    async def _create_object_base(
+        cls, storage, storage_level, similarity_threshold, tokenize
+    ) -> "SimilarityStore":
+        """Create a new SimilarityStore object with the given attributes."""
         obj = SimilarityStore.__new__(cls)
         obj._storage = storage or InMemoryStore()
         obj._storage_level = storage_level
+        obj._similarity_threshold = similarity_threshold
         if isinstance(tokenize, str) or tokenize is None:
             obj._tokenize = tokenize or "word_ngrams(3)"
             obj._tokenize_callable = obj._get_tokenize_callable(obj._tokenize)
@@ -193,6 +203,7 @@ class SimilarityStore:
         existing database.
         """
         await self._storage.initialize()
+        await self._storage.insert_setting("similarity_threshold", str(self._similarity_threshold))
         await self._storage.insert_setting("storage_level", str(self._storage_level.value))
         await self._storage.insert_setting("tokenize", self._tokenize)
         await self._storage.insert_setting("lsh_config", self._lsh_config.to_json())
@@ -244,12 +255,30 @@ class SimilarityStore:
             )
         await self._lsh.remove_by_id(document_id, check_if_exists)
 
-    async def query(self, document: str, *, exact_part=None) -> Collection[StoredDocument]:
+    def _filter_candidates(self, candidates, tokens, exact_part) -> List[StoredDocument]:
+        """Filter out candidates below the similarity threshold and sort by similarity."""
+        candidates = list(filter(lambda c: c.exact_part == exact_part, candidates))
+        candidate_tokens = [set(self._tokenize_callable(c.document)) for c in candidates]
+        tokens = set(tokens)
+        true_jaccards = [_jaccard_similarity(tokens, ct) for ct in candidate_tokens]
+        candidates = [
+            c
+            for jaccard, c in sorted(zip(true_jaccards, candidates), reverse=True)
+            if jaccard >= self._similarity_threshold
+        ]
+        return list(candidates)
+
+    async def query(
+        self, document: str, *, exact_part=None, validate: bool = None
+    ) -> Collection[StoredDocument]:
         """Query all similar documents.
 
         Args:
-            document: A document to search similar items for.
+            document: A document for which to search similar items.
             exact_part: Part that should be exactly matched.
+            validate: Whether to validate if the results are really above the similarity threshold.
+                This is only possible if the storage level is at least "Document". Per default
+                validation is done if the data is available, otherwise not.
 
         Returns:
             A List of :obj:`~narrow_down.data_types.StoredDocument` objects with all elements
@@ -257,22 +286,44 @@ class SimilarityStore:
         """
         tokens = self._tokenize_callable(document)
         fingerprint = self._minhasher.minhash(tokens)
-        return await self._lsh.query(fingerprint=fingerprint, exact_part=exact_part)
+        candidates = await self._lsh.query(fingerprint=fingerprint, exact_part=exact_part)
+        if (self._storage_level & StorageLevel.Document) and validate is not False:
+            candidates = self._filter_candidates(candidates, tokens, exact_part)
+        return candidates
 
     async def query_top_n(
-        self, n: int, document: str, *, exact_part=None
+        self, n: int, document: str, *, exact_part=None, validate: bool = None
     ) -> Collection[StoredDocument]:
         """Query the top n similar documents.
 
         Args:
             n: The number of similar documents to retrieve.
-            document: A document to search similar items for.
+            document: A document for which to search similar items.
             exact_part: Part that should be exactly matched.
+            validate: Whether to validate if the results are really above the similarity threshold.
+                This is only possible if the storage level is at least "Document". Per default
+                validation is done if the data is available, otherwise not.
 
         Returns:
             A List of :obj:`~narrow_down.data_types.StoredDocument` objects with the n
             elements which are most likely above the similarity threshold.
+
+        Note that the results are probabilistic. The documents are assumed to be the most likely
+        candidates if they have the most likely fingerprint. But the actual similarity of the
+        documents themselves might differ. However, if `validate` is `True` the ordering of the
+        results is correct, because the actual documents are compared with each other.
         """
+        if (self._storage_level & StorageLevel.Document) and validate is not False:
+            candidates = await self.query(document=document, exact_part=exact_part, validate=True)
+            return candidates[:n]  # type: ignore
         tokens = self._tokenize_callable(document)
         fingerprint = self._minhasher.minhash(tokens)
         return await self._lsh.query_top_n(n=n, fingerprint=fingerprint, exact_part=exact_part)
+
+
+def _jaccard_similarity(s1: Iterable, s2: Iterable):
+    if not isinstance(s1, set):
+        s1 = set(s1)
+    if not isinstance(s2, set):
+        s2 = set(s2)
+    return len(s1.intersection(s2)) / len(s1.union(s2))

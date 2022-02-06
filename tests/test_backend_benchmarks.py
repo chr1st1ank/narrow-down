@@ -80,6 +80,7 @@ def test_similarity_store__insert_25_parallel_benchmark(
     "storage_backend, storage_level",
     [
         (InMemoryStore, StorageLevel.Minimal),
+        (InMemoryStore, StorageLevel.Document),
         (ScyllaDBStore, StorageLevel.Minimal),
         (SQLiteStore, StorageLevel.Minimal),
     ],
