@@ -365,12 +365,35 @@ None is returned.</p>
 </dl>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize the data into a messagepack file with the given path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.deserialize">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgpack</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.deserialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deserialize an InMemoryStore object from messagepack.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>msgpack</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#narrow_down.storage.InMemoryStore" title="narrow_down.storage.InMemoryStore">narrow_down.storage.InMemoryStore</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="narrow_down.storage.InMemoryStore.from_file">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/storage.html#InMemoryStore.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.storage.InMemoryStore.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserialize an InMemoryStore object the given messagepack file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#narrow_down.storage.InMemoryStore" title="narrow_down.storage.InMemoryStore">narrow_down.storage.InMemoryStore</a></p>
