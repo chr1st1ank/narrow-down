@@ -1,7 +1,7 @@
 """High-level API for indexing and retrieval of documents."""
 import re
 import warnings
-from typing import Callable, Collection, Iterable, Union
+from typing import Callable, Collection, Iterable, List, Union
 
 from narrow_down import _minhash, _tokenize
 from narrow_down._minhash import MinhashLshConfig
@@ -255,6 +255,19 @@ class SimilarityStore:
             )
         await self._lsh.remove_by_id(document_id, check_if_exists)
 
+    def _filter_candidates(self, candidates, tokens, exact_part) -> List[StoredDocument]:
+        """Filter out candidates below the similarity threshold and sort by similarity."""
+        candidates = list(filter(lambda c: c.exact_part == exact_part, candidates))
+        candidate_tokens = [set(self._tokenize_callable(c.document)) for c in candidates]
+        tokens = set(tokens)
+        true_jaccards = [_jaccard_similarity(tokens, ct) for ct in candidate_tokens]
+        candidates = [
+            c
+            for jaccard, c in sorted(zip(true_jaccards, candidates), reverse=True)
+            if jaccard >= self._similarity_threshold
+        ]
+        return list(candidates)
+
     async def query(
         self, document: str, *, exact_part=None, validate: bool = None
     ) -> Collection[StoredDocument]:
@@ -278,19 +291,6 @@ class SimilarityStore:
             candidates = self._filter_candidates(candidates, tokens, exact_part)
         return candidates
 
-    def _filter_candidates(self, candidates, tokens, exact_part):
-        """Filter out candidates below the similarity threshold and sort by similarity."""
-        candidates = list(filter(lambda c: c.exact_part == exact_part, candidates))
-        candidate_tokens = [set(self._tokenize_callable(c.document)) for c in candidates]
-        tokens = set(tokens)
-        true_jaccards = [_jaccard_similarity(tokens, ct) for ct in candidate_tokens]
-        candidates = [
-            c
-            for jaccard, c in sorted(zip(true_jaccards, candidates), reverse=True)
-            if jaccard >= self._similarity_threshold
-        ]
-        return list(candidates)
-
     async def query_top_n(
         self, n: int, document: str, *, exact_part=None, validate: bool = None
     ) -> Collection[StoredDocument]:
@@ -313,6 +313,9 @@ class SimilarityStore:
         documents themselves might differ. However, if `validate` is `True` the ordering of the
         results is correct, because the actual documents are compared with each other.
         """
+        if (self._storage_level & StorageLevel.Document) and validate is not False:
+            candidates = await self.query(document=document, exact_part=exact_part, validate=True)
+            return candidates[:n]  # type: ignore
         tokens = self._tokenize_callable(document)
         fingerprint = self._minhasher.minhash(tokens)
         return await self._lsh.query_top_n(n=n, fingerprint=fingerprint, exact_part=exact_part)

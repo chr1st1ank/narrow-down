@@ -53,6 +53,10 @@ async def test_similarity_store__compare_query_and_query_top_1(storage_level):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
+    "validate",
+    [True, False, None],
+)
+@pytest.mark.parametrize(
     "storage_level",
     [
         StorageLevel.Minimal,
@@ -61,7 +65,7 @@ async def test_similarity_store__compare_query_and_query_top_1(storage_level):
         StorageLevel.Full,
     ],
 )
-async def test_similarity_store__query_with_validation(monkeypatch, storage_level):
+async def test_similarity_store__query_with_validation(monkeypatch, storage_level, validate):
     fake_results = [
         StoredDocument(id_=1, document="XYZ", exact_part="A"),
         StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
@@ -76,10 +80,12 @@ async def test_similarity_store__query_with_validation(monkeypatch, storage_leve
     simstore = await SimilarityStore.create(storage_level=storage_level, tokenize="char_ngrams(1)")
     monkeypatch.setattr(simstore._lsh, "query", fake_query)
 
-    results = await simstore.query(document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A")
+    results = await simstore.query(
+        document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A", validate=validate
+    )
 
     print(results)
-    if storage_level & StorageLevel.Document:
+    if validate is not False and (storage_level & StorageLevel.Document):
         assert results == [
             StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
             StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
@@ -87,6 +93,56 @@ async def test_similarity_store__query_with_validation(monkeypatch, storage_leve
         ]
     else:
         assert results == fake_results
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "validate",
+    [True, False, None],
+)
+@pytest.mark.parametrize(
+    "storage_level",
+    [
+        StorageLevel.Minimal,
+        StorageLevel.Fingerprint,
+        StorageLevel.Document,
+        StorageLevel.Full,
+    ],
+)
+async def test_similarity_store__query_top_n_with_validation(monkeypatch, validate, storage_level):
+    fake_results = [
+        StoredDocument(id_=1, document="XYZ", exact_part="A"),
+        StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
+        StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+        StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
+        StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+    ]
+
+    async def fake_query(*args, **kwargs):
+        return fake_results
+
+    async def fake_query_top_n(n, *args, **kwargs):
+        return fake_results[:n]
+
+    simstore = await SimilarityStore.create(storage_level=storage_level, tokenize="char_ngrams(1)")
+    monkeypatch.setattr(simstore._lsh, "query", fake_query)
+    monkeypatch.setattr(simstore._lsh, "query_top_n", fake_query_top_n)
+
+    results = await simstore.query_top_n(
+        n=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A", validate=validate
+    )
+
+    print(results)
+    if validate is not False and (storage_level & StorageLevel.Document):
+        assert results == [
+            StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+            StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
+        ]
+    else:
+        assert results == [
+            StoredDocument(id_=1, document="XYZ", exact_part="A"),
+            StoredDocument(id_=2, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="B"),
+        ]
 
 
 @pytest.mark.asyncio
