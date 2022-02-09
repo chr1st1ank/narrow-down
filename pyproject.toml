@@ -47,6 +47,7 @@ scylladb = [
 docs = [
     "sphinx~=4.4",
     "myst-parser~=0.16",
+    "nbconvert",
     "furo"
 ]
 dev = [
@@ -65,6 +66,8 @@ dev = [
     "isort~=5.9",
     "black~=21.9b0",
     "safety~=1.10",
+    "jupyter",
+    "nbqa",
     "nox",
     "mypy",
     "mypy-protobuf",

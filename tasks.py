@@ -105,6 +105,7 @@ def clean_docs(c):
 def docs(c, serve=False, open_browser=False):
     # type: (Context, bool, bool) -> None
     """Build documentation."""
+    _run(c, "jupyter-nbconvert --to rst docs/user_guide/*.ipynb")
     _run(
         c,
         f"sphinx-apidoc --module-first -d 1 --no-toc --separate -o {DOCS_DIR}/apidoc {SOURCE_DIR}",
