@@ -31,6 +31,39 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
+  doctests:
+    name: Doctest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-doctest-${{ hashFiles('**/pyproject.toml', '**/.pre-commit-config.yaml') }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-doctest-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Intall pip maturin invoke
+        run: |
+          python3 -m pip install --upgrade pip maturin invoke
+
+      - name: Install project
+        run: |
+          pip install -e .[scylladb,docs,dev]
+
+      - name: Run Jupyter notebook tests
+        shell: bash
+        run: inv doctest
+
   tests:
     # Tests are run on all platform/python combinations for which numpy wheels exist.
     needs: linting
@@ -91,11 +124,6 @@ jobs:
       - name: Run tests with nox
         shell: bash
         run: nox --verbose --force-color -s tests-${{ matrix.python-version }}
-
-      - name: Run safety check
-        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
-        shell: bash
-        run: inv doctest
 
       - name: Run safety check
         if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
