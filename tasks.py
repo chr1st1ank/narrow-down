@@ -202,8 +202,6 @@ def tests(c):
     """Run tests."""
     pytest_options = [
         "--xdoctest",
-        "--nbmake",
-        "docs/user_guide",
         "--cov",
         "--cov-report=",
         "--cov-fail-under=0",
