@@ -5,11 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="narrow_down.hash module" href="narrow_down.hash.html" /><link rel="prev" title="narrow_down package" href="../narrow_down.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.02.14.1"/>
         <title>narrow_down.data_types module - narrow-down 0.7.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=a8f031f701c6af50c9919b48f173a5785af06fac" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
 
@@ -41,17 +41,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" />
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
     </svg>
   </symbol>
   <symbol id="svg-menu" viewBox="0 0 24 24">
     <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
       <line x1="3" y1="12" x2="21" y2="12"></line>
       <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -60,14 +56,14 @@
   </symbol>
   <symbol id="svg-arrow-right" viewBox="0 0 24 24">
     <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   </symbol>
   <symbol id="svg-sun" viewBox="0 0 24 24">
     <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -82,7 +78,7 @@
   </symbol>
   <symbol id="svg-moon" viewBox="0 0 24 24">
     <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
@@ -90,7 +86,7 @@
   </symbol>
   <symbol id="svg-sun-half" viewBox="0 0 24 24">
     <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <circle cx="12" cy="12" r="9" />
@@ -160,7 +156,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/similarity_store.html">SimilarityStore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/configuration_of_indexing_and_search.html">Configuration of Indexing and Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/storage_backends.html">Storage Backends</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -183,6 +181,7 @@
 
 </div>
 </div>
+
       </div>
       
     </div>
@@ -190,8 +189,7 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
-        <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -206,55 +204,55 @@
         </div>
         <article role="main">
           <section id="module-narrow_down.data_types">
-<span id="narrow-down-data-types-module"></span><h1>narrow_down.data_types module<a class="headerlink" href="#module-narrow_down.data_types" title="Permalink to this headline">¶</a></h1>
+<span id="narrow-down-data-types-module"></span><h1>narrow_down.data_types module<a class="headerlink" href="#module-narrow_down.data_types" title="Permalink to this headline">#</a></h1>
 <p>Type definitions of pure data classes and abstract types.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="narrow_down.data_types.TooLowStorageLevel">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">TooLowStorageLevel</span></span><a class="reference internal" href="../_modules/narrow_down/data_types.html#TooLowStorageLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.TooLowStorageLevel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">TooLowStorageLevel</span></span><a class="reference internal" href="../_modules/narrow_down/data_types.html#TooLowStorageLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.TooLowStorageLevel" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Raised if a feature is used for which a higher storage level is needed.</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="narrow_down.data_types.AlreadyInitialized">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">AlreadyInitialized</span></span><a class="reference internal" href="../_modules/narrow_down/data_types.html#AlreadyInitialized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.AlreadyInitialized" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">AlreadyInitialized</span></span><a class="reference internal" href="../_modules/narrow_down/data_types.html#AlreadyInitialized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.AlreadyInitialized" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Raised when initializing storage twice or changing immutable settings.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="narrow_down.data_types.StorageLevel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">StorageLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StorageLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StorageLevel" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">StorageLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StorageLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StorageLevel" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Flag" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Flag</span></code></a></p>
 <p>Detail level of document persistence.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StorageLevel.Minimal">
-<span class="sig-name descname"><span class="pre">Minimal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Minimal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Minimal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Minimal" title="Permalink to this definition">#</a></dt>
 <dd><p>Minimal storage level. Only store the necessary data to perform the search.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StorageLevel.Fingerprint">
-<span class="sig-name descname"><span class="pre">Fingerprint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Fingerprint" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Fingerprint</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Fingerprint" title="Permalink to this definition">#</a></dt>
 <dd><p>In addition to Minimal, also store the fingerprint, e.g. the Minhashes</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StorageLevel.Document">
-<span class="sig-name descname"><span class="pre">Document</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Document" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Document</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Document" title="Permalink to this definition">#</a></dt>
 <dd><p>Store the whole inserted document internally.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StorageLevel.Full">
-<span class="sig-name descname"><span class="pre">Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Full" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Full</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#narrow_down.data_types.StorageLevel.Full" title="Permalink to this definition">#</a></dt>
 <dd><p>Store everything.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="narrow_down.data_types.Fingerprint">
-<span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">Fingerprint</span></span><a class="headerlink" href="#narrow_down.data_types.Fingerprint" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">Fingerprint</span></span><a class="headerlink" href="#narrow_down.data_types.Fingerprint" title="Permalink to this definition">#</a></dt>
 <dd><p>Type representing the result of a minhashing operation</p>
 <p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.dtype</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.uint32</span></code>]]</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">StoredDocument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fingerprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">narrow_down.data_types.</span></span><span class="sig-name descname"><span class="pre">StoredDocument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fingerprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Data object combining all possible fields of a document stored.</p>
 <dl class="field-list simple">
@@ -273,32 +271,32 @@
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.id_">
-<span class="sig-name descname"><span class="pre">id_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.id_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">id_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.id_" title="Permalink to this definition">#</a></dt>
 <dd><p>Identifier used to distinguish the document from an identical one.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.document">
-<span class="sig-name descname"><span class="pre">document</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.document" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">document</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.document" title="Permalink to this definition">#</a></dt>
 <dd><p>The actual content to use for fuzzy matching, e.g. a full unprocessed sentence.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.exact_part">
-<span class="sig-name descname"><span class="pre">exact_part</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.exact_part" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">exact_part</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.exact_part" title="Permalink to this definition">#</a></dt>
 <dd><p>A string which should be matched exactly.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.fingerprint">
-<span class="sig-name descname"><span class="pre">fingerprint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Fingerprint</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.fingerprint" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fingerprint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Fingerprint</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.fingerprint" title="Permalink to this definition">#</a></dt>
 <dd><p>A fuzzy fingerprint of the document, e.g. a Minhash.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.data">
-<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#narrow_down.data_types.StoredDocument.data" title="Permalink to this definition">#</a></dt>
 <dd><p>Payload to persist together with the document in the internal data structures.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.serialize">
-<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.serialize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.serialize" title="Permalink to this definition">#</a></dt>
 <dd><p>Serialize a document to bytes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,7 +309,7 @@
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.deserialize">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.deserialize" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.deserialize" title="Permalink to this definition">#</a></dt>
 <dd><p>Deserialize a document from bytes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -327,7 +325,7 @@
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="narrow_down.data_types.StoredDocument.without">
-<span class="sig-name descname"><span class="pre">without</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">attributes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.without"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.without" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">without</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">attributes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/narrow_down/data_types.html#StoredDocument.without"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#narrow_down.data_types.StoredDocument.without" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a copy with the specified attributes left out.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -371,15 +369,21 @@ So they will have their default value (None).</p>
               </div>
             </a>
         </div>
-
-        <div class="related-information">
-              Copyright &#169; 2022, Christian Krudewig |
-          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            | <a class="muted-link" href="../_sources/apidoc/narrow_down.data_types.rst.txt"
-               rel="nofollow">
-              Show Source
-            </a>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Christian Krudewig
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
         </div>
         
       </footer>

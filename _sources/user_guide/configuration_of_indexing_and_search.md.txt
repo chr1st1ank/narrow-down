@@ -1,0 +1,151 @@
+# Configuration of Indexing and Search
+
+## Tokenization
+
+The input strings given to the insert and query functions are tokenized before they can be processed further. Depending on the type of documents to handle, different methods of tokenization can be more or less beneficial.
+
+Available options are:
+
+| Tokenize function | Description                                                |
+|-------------------|------------------------------------------------------------|
+| word_ngrams(n)    | Word n-grams of length n                                   |
+| char_ngrams(n)    | Character n-grams of length n                              |
+| char_ngrams(n, c) | Character n-grams of length n with a padding character "c" |
+| custom            | A custom function                                          |
+
+Let's look at the example sentence and apply a couple of tokenize functions to demonstrate the differences:
+
+> Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn’t fuzzy, was he?
+
+### Word n-grams
+
+
+```python
+from narrow_down._tokenize import char_ngrams, word_ngrams
+
+
+def show_first(collection):
+    print(list(collection)[:6] + ["..."])
+
+
+example = "Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn’t fuzzy, was he?"
+
+print("word_ngrams(2):")
+show_first(word_ngrams(example, 2))
+```
+
+    word_ngrams(2):
+    ['hair. Fuzzy', 'wasn’t fuzzy,', 'had no', 'Fuzzy Wuzzy', 'Wuzzy had', 'Wuzzy was', '...']
+
+
+
+```python
+print("word_ngrams(4):")
+show_first(word_ngrams(example, 4))
+```
+
+    word_ngrams(4):
+    ['no hair. Fuzzy Wuzzy', 'a bear. Fuzzy Wuzzy', 'Fuzzy Wuzzy wasn’t fuzzy,', 'wasn’t fuzzy, was he?', 'bear. Fuzzy Wuzzy had', 'Wuzzy wasn’t fuzzy, was', '...']
+
+
+### Character n-grams
+
+With padding character "$" (default):
+
+
+```python
+print("char_ngrams(3):")
+show_first(char_ngrams(example, 3))
+```
+
+    char_ngrams(3):
+    ['n’t', '$Fu', ' no', 'air', ' fu', '?$$', '...']
+
+
+
+```python
+print("char_ngrams(5):")
+show_first(char_ngrams(example, 5))
+```
+
+    char_ngrams(5):
+    ['uzzy ', 'n’t f', 'zzy w', '. Fuz', '$$$$F', 'y had', '...']
+
+
+Without a padding character:
+
+
+```python
+print("char_ngrams(3, ''):")
+show_first(char_ngrams(example, 3, ""))
+```
+
+    char_ngrams(3, ''):
+    ['n’t', ' no', 'air', ' fu', 'asn', '’t ', '...']
+
+
+
+```python
+print("char_ngrams(5, ''):")
+show_first(char_ngrams(example, 5, ""))
+```
+
+    char_ngrams(5, ''):
+    ['uzzy ', 'n’t f', 'zzy w', '. Fuz', 'y had', 's he?', '...']
+
+
+### Choosing the right tokenization function
+
+In general on a large dataset n-grams with higher value of n produce a higher cardinality. Documents in their set representation are more likely to be unique and harder to be matched with similar documents. On the other hand, low values of n may produce a lot false positives in the sense that documents are matched which have actually not match in common. In the extreme case of character 1-grams, almost all documents may have some frequent characters like "e" or "n" in common, also they are semantically different.
+
+Some default choices of tokenization functions are:
+- word_ngram(5) for longer text documents like webpages or newspaper articles
+- word_ngram(3) for shorter text documents
+- char_ngram(3) for short text documents which don't contain full sentences like addresses or names
+
+The following final example shows how to configure SimilarityStore with a tokenizer:
+
+
+```python
+from narrow_down.similarity_store import SimilarityStore
+
+similarity_store = await SimilarityStore.create(
+    tokenize="char_ngrams(3)",
+)
+```
+
+### Custom tokenizer function
+
+It is also possible to pass a custom function as tokenizer:
+
+
+```python
+def tokenizer(raw_string):
+    """Splits a string at every comma."""
+    return set(raw_string.split(","))
+
+
+similarity_store = await SimilarityStore.create(
+    tokenize=tokenizer,
+)
+```
+
+## Precision settings
+
+Narrow-Down is based on Minhash Locality Sensitive Hashing as described in 
+[Leskovec, Rajaraman and Ullman: “Mining of Massive Datasets”, Chapter 3.](http://infolab.stanford.edu/~ullman/mmds/book0n.pdf).
+
+It is a heuristic method to search a body of sets to find the ones with a minimum Jaccard similarity to a given input set. Approximation happens on two levels:
+1. To estimate the similarity between a pair of sets by calculating a number of hash functions (the Minhash algorithm)
+2. To store the minhashes in a condensed way such that one can find items which share a number of common hashes (the LSH algorithm)
+
+The algorithms can be tuned with a number of parameters which are based on the following configuration options:
+
+
+| Parameter                | Default | Effect                                                                                                          |
+|--------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
+| similarity_threshold     | 0.75    | The minimum Jaccard similarity every search result should have.                                                 |
+| max_false_negative_proba | 0.05    | Probability of false negatives, i.e. that a result is not found although the similarity is above the threshold. |
+| max_false_positive_proba | 0.05    | Probability of false positives, i.e. that a result is returned although the similarity is below the threshold.  |
+
+Narrow-down automatically tries to set the internal algorithm parameters (e.g. number of hash permutations, number of rows and bands of the LSH) in a way that the given target probabilities can be reached with minimum CPU and memory consumption.

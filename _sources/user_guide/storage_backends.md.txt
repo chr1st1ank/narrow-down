@@ -1,0 +1,266 @@
+# Storage Backends
+
+Narrow-down is based on a flexible storage abstraction. The common interface is the abstract class [StorageBackend](narrow_down.storage.StorageBackend). Per default, a new [SimilarityStore](narrow_down.similarity_store.SimilarityStore) object starts with an empty index and uses in-memory storage. The lifetime of the index is bound to the lifetime of the SimilarityStore object in this case. This can be changed by explicitly specifying a storage backend.
+
+
+The following backends are built in:
+
+- [InMemoryStore](#inmemorystore)
+- [ScyllaDBStore](#scylladb-or-cassandra) (for ScyllaDB or Cassandra)
+- [SQLiteStore](#sqlite)
+
+
+## Using storage backends
+
+
+### Explicitly specifying a storage backend
+
+A storage backend can be explicitly defined and handed over to a SimilarityStore object. For this it can be specified as argument to the [create](narrow_down.similarity_store.SimilarityStore.create) method. It takes care of initializing the backend, e.g. by creating the necessary database tables:
+
+
+```python
+from narrow_down.similarity_store import SimilarityStore
+from narrow_down.storage import InMemoryStore
+
+storage_backend = InMemoryStore()
+
+similarity_store = await SimilarityStore.create(storage=storage_backend)
+```
+
+### Loading SimilarityStore from storage
+
+All the settings of a `SimilarityStore` object are also persisted in the storage backend. Therefore one can re-create a `SimilarityStore` from the storage:
+
+
+```python
+similarity_store = await SimilarityStore.load_from_storage(storage=storage_backend)
+```
+
+### StoredDocument
+The documents are represented in storage as [StoredDocument](narrow_down.data_types.StoredDocument)
+objects. This is a simple dataclass with the following attributes:
+    
+
+|      |                                                      |             
+|:-----------|:--------------------------------------------------|              
+| id_          | Unique identifier                                     |              
+| document     | The actual text to use for fuzzy matching             |                     
+| exact_part   | An optional string which should be matched exactly    |                     
+| data         | Payload to persist together with the document         |                     
+| fingerprint  | A fuzzy fingerprint of the document, e.g. a Minhash   |                                                  
+`
+The `id_` can be either generated or specified by the user. The attributes `document`, `exact_part` and `data` are user specified input. Only the first two are used for searching, the `data` is some optional payload that can be stored together with the rest.
+`fingerprint` finally, is mostly of internal value. This is calculated from the input data on indexing.
+
+A `StoredDocument` is also the kind of object which is returned as search result.
+
+### Storage levels
+Depending on the usecase, different levels of persistence may be preferable. Sometimes it is enough to only store just enough to be able to get the IDs of matching documents. In other cases, it can be better to store the whole documents or some additional data in the index. This way it is not necessary to have a second database for this data.
+
+The available storage levels as defined in the enum [StorageLevel](narrow_down.data_types.StorageLevel) are:
+
+| Storage level | Effect                                                                                                                      |
+|:--------------|:----------------------------------------------------------------------------------------------------------------------------|
+|    Minimal    | Minimal storage level.<br>Only store the necessary data to perform the search, namely only the "id" and (if given) the "data". |
+|  Fingerprint  | Store in addition to "Minimal" also the "fingerprint" attribute.                                                            |
+|    Document   | Store in addition to "Minimal" also the "document" and the "exact_part" attributes.                                         |
+|      Full     | Stores all attributes of the "StoredDocument".                                                                              |
+
+The example below shows how to set and use the storage levels with a SimilarityStore.
+
+With "Minimal" (the default value), we only get the id and data out as query result. All other attributes are `None`:
+
+
+```python
+storage_backend = InMemoryStore()
+
+similarity_store = await SimilarityStore.create(storage=storage_backend)
+
+await similarity_store.insert(
+    document="the document text", exact_part="the exact part", data="additional data"
+)
+result = await similarity_store.query(document="the document text", exact_part="the exact part")
+result[0]
+```
+
+
+
+
+    StoredDocument(id_=1, document=None, exact_part=None, fingerprint=None, data='additional data')
+
+
+
+If we use the storage level "Document" instead, also the document and exact_part attributes are stored and retrieved:
+
+
+```python
+from narrow_down.data_types import StorageLevel
+
+storage_backend = InMemoryStore()
+
+similarity_store = await SimilarityStore.create(
+    storage=storage_backend, storage_level=StorageLevel.Document
+)
+
+await similarity_store.insert(
+    document="the document text", exact_part="the exact part", data="additional data"
+)
+result = await similarity_store.query(document="the document text", exact_part="the exact part")
+result[0]
+```
+
+
+
+
+    StoredDocument(id_=1, document='the document text', exact_part='the exact part', fingerprint=None, data='additional data')
+
+
+
+*Note: The storage level needs to be defined when creating a `SimilarityStore` and cannot be changed later*
+
+## InMemoryStore
+
+The simplest backend and also the fastest both for indexing and querying is 
+[InMemoryStore](narrow_down.storage.InMemoryStore). It stores all data in in-memory data structures. Therefore it is only accessible within the process which holds the memory. But it also offers a way to persist the data to disk. It can be serialized into a file in efficient binary MessagePack format.
+
+Advantages:
+- Fastest backend
+- Easy setup
+
+Disadvantages:
+- Data size is limited by the physical memory
+- Only one process can access the data for writing at the same time
+
+
+```python
+# Initialize and use:
+storage_backend = InMemoryStore()
+similarity_store = await SimilarityStore.create(
+    storage=storage_backend, storage_level=StorageLevel.Document
+)
+await similarity_store.insert(
+    document="the document text", exact_part="the exact part", data="additional data"
+)
+
+# Store to a file:
+storage_backend.to_file("/tmp/storage-backend.msgpack")
+
+# Load again:
+storage_backend = InMemoryStore.from_file("/tmp/storage-backend.msgpack")
+similarity_store = await SimilarityStore.load_from_storage(storage=storage_backend)
+
+result = await similarity_store.query(document="the document text", exact_part="the exact part")
+result[0]
+```
+
+
+
+
+    StoredDocument(id_=1, document='the document text', exact_part='the exact part', fingerprint=None, data='additional data')
+
+
+
+## ScyllaDB or Cassandra
+
+With access to [Apache Cassandra](https://cassandra.apache.org) or [ScyllaDB](https://www.scylladb.com/) (a reimplementation of Cassandra in C++), it is possible to use Narrow-down in a distributed system and beyond the boundaries of a single system's memory.
+
+See the API documentation of [ScyllaDBStore](narrow_down.scylladb.ScyllaDBStore) for more details.
+
+Advantages:
+- Can be used across multiple processes or services
+- Low memory footprint for the application
+- Asynchronous implementation allows concurrent usage
+
+Disadvantages:
+- Database server needed
+- Slower than in-memory storage
+
+
+
+```python
+import cassandra
+
+from narrow_down.scylladb import ScyllaDBStore
+
+cassandra_cluster = cassandra.cluster.Cluster(contact_points=["localhost"], port=9042)
+session = cassandra_cluster.connect()
+session.execute(
+    "CREATE KEYSPACE IF NOT EXISTS test_ks "
+    "WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1} "
+    "AND durable_writes = False"
+)
+
+cassandra_storage = ScyllaDBStore(session, keyspace="test_ks")
+
+similarity_store = await SimilarityStore.create(storage=cassandra_storage)
+```
+
+So the actual connection is created and managed outside of narrow_down and is passed to it.
+After first initialization of the database one should not use the `create()` method anymore, but rather the `load_from_storage()` method:
+
+
+```python
+similarity_store = await SimilarityStore.load_from_storage(storage=cassandra_storage)
+```
+
+## SQLite
+
+Narrow-Down also supports using a local [SQLite](https://www.sqlite.org) database as storage backend. This offers a simple setup for an amount of data which exceeds memory limit. It is fairly fast on Linux, leveraging the file system's write cache. On Windows indexing is very slow, because every commit operation is directly flushed to disk.
+
+Configuration options are documentend in the API documentation of [SQLiteStore](narrow_down.sqlite.SQLiteStore).
+
+Advantages:
+- Low memory footprint for the application
+- Easy setup without external dependencies
+
+Disadvantages:
+- Slow indexing, especially on Windows
+
+
+Usage example:
+
+
+```python
+from narrow_down.sqlite import SQLiteStore
+
+# Initialize and use:
+storage_backend = SQLiteStore("/tmp/storage-backend.sqlite")
+similarity_store = await SimilarityStore.create(
+    storage=storage_backend, storage_level=StorageLevel.Document
+)
+await similarity_store.insert(
+    document="the document text", exact_part="the exact part", data="additional data"
+)
+
+# Reopen and continue later:
+storage_backend = SQLiteStore("/tmp/storage-backend.sqlite")
+similarity_store = await SimilarityStore.load_from_storage(storage=storage_backend)
+
+result = await similarity_store.query(document="the document text", exact_part="the exact part")
+result[0]
+```
+
+
+
+
+    StoredDocument(id_=1, document='the document text', exact_part='the exact part', fingerprint=None, data='additional data')
+
+
+
+## Custom backend
+
+Narrow-down is designed to make it easy to implement storage backend. This allows to plug-in a custom backend which for example use a database which is not supported out-of-the-box.
+
+In order to do so, create a class which inherits from the abstract [StorageBackend](narrow_down.storage.StorageBackend) class and implement the methods. The implementation of the built-in backends can serve as examples.
+
+Advantages:
+- Also unsupported databases can be used
+
+Disadvantages:
+- Some implementation effort (typically 100-200 lines of code)
+
+
+
+```python
+
+```
