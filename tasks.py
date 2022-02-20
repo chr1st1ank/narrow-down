@@ -184,11 +184,26 @@ def mypy(c):
 
 
 @task()
+def doctest(c):
+    # type: (Context) -> None
+    """Run tests."""
+    pytest_options = [
+        "--xdoctest",
+        "--nbmake",
+        "docs/user_guide",
+        "--benchmark-disable",
+    ]
+    _run(c, f"pytest {' '.join(pytest_options)}")
+
+
+@task()
 def tests(c):
     # type: (Context) -> None
     """Run tests."""
     pytest_options = [
         "--xdoctest",
+        "--nbmake",
+        "docs/user_guide",
         "--cov",
         "--cov-report=",
         "--cov-fail-under=0",
@@ -226,7 +241,7 @@ def coverage(c, fmt="report", open_browser=False):
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
 
-@task(pre=[hooks, mypy, docs, safety, tests, coverage])
+@task(pre=[hooks, mypy, docs, safety, tests, coverage, doctest])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""

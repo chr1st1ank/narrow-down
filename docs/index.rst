@@ -16,7 +16,7 @@
    :caption: User Guide
    :hidden:
 
-   user_guide/similarity_store
+   user_guide/basic_usage
    user_guide/configuration_of_indexing_and_search
    user_guide/storage_backends
 

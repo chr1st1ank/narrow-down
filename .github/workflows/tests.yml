@@ -95,6 +95,11 @@ jobs:
       - name: Run safety check
         if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
         shell: bash
+        run: inv doctest
+
+      - name: Run safety check
+        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
+        shell: bash
         run: nox --force-color -s safety
 
       - name: Upload coverage data
