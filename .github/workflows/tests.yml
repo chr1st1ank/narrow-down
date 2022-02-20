@@ -72,7 +72,6 @@ jobs:
 
   tests:
     # Tests are run on all platform/python combinations for which numpy wheels exist.
-    needs: linting
     name: ${{ matrix.os }} / ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
