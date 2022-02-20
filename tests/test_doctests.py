@@ -37,7 +37,7 @@ def test_package_doctest(module):
 
 
 @pytest.fixture(
-    params=REPOSITORY_ROOT.glob("docs/user_guide/*.md"),
+    params=REPOSITORY_ROOT.glob("docs/user_guide/*.rst"),
     ids=lambda p: str(p.relative_to(REPOSITORY_ROOT)),
 )
 def docfile(request):

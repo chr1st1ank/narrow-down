@@ -33,11 +33,18 @@ release = narrow_down.__version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "myst_parser",
 ]
+
+# Make sure the targets are unique
+autosectionlabel_prefix_document = True
+
+# Generate anchors for markdown heading levels h1-h3
+myst_heading_anchors = 3
 
 autodoc_mock_imports = ["cassandra"]
 
