@@ -31,9 +31,47 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
+  doctests:
+    name: Doctest
+    runs-on: ubuntu-latest
+    services:
+      scylladb:
+        image: scylladb/scylla:4.5.0
+        ports:
+          - 9042:9042
+        options: --health-cmd "nodetool status |grep UN" --health-interval 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-doctest-${{ hashFiles('**/pyproject.toml', '**/.pre-commit-config.yaml') }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-doctest-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Intall pip maturin invoke
+        run: |
+          python3 -m pip install --upgrade pip maturin invoke
+
+      - name: Install project
+        run: |
+          pip install -e .[scylladb,docs,dev]
+
+      - name: Run Jupyter notebook tests
+        shell: bash
+        run: inv doctest
+
   tests:
     # Tests are run on all platform/python combinations for which numpy wheels exist.
-    needs: linting
     name: ${{ matrix.os }} / ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:

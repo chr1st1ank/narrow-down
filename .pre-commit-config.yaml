@@ -52,3 +52,8 @@ repos:
         - --
         - -D
         - warnings
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.2.3
+  hooks:
+    - id: nbqa-isort
+    - id: nbqa-black

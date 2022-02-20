@@ -15,9 +15,10 @@
    :maxdepth: 6
    :caption: User Guide
    :hidden:
-   :glob:
 
-   user_guide/*
+   user_guide/basic_usage
+   user_guide/configuration_of_indexing_and_search
+   user_guide/storage_backends
 
 .. toctree::
    :maxdepth: 6

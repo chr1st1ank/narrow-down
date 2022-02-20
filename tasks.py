@@ -107,6 +107,11 @@ def docs(c, serve=False, open_browser=False):
     """Build documentation."""
     _run(
         c,
+        "jupyter-nbconvert -TagRemovePreprocessor.remove_cell_tags remove_cell "
+        "--to markdown docs/user_guide/*.ipynb",
+    )
+    _run(
+        c,
         f"sphinx-apidoc --module-first -d 1 --no-toc --separate -o {DOCS_DIR}/apidoc {SOURCE_DIR}",
     )
     build_docs = f"sphinx-build -b html {DOCS_DIR} {DOCS_BUILD_DIR}"
@@ -179,6 +184,19 @@ def mypy(c):
 
 
 @task()
+def doctest(c):
+    # type: (Context) -> None
+    """Run tests."""
+    pytest_options = [
+        "--xdoctest",
+        "--nbmake",
+        "docs/user_guide",
+        "--benchmark-disable",
+    ]
+    _run(c, f"pytest {' '.join(pytest_options)}")
+
+
+@task()
 def tests(c):
     # type: (Context) -> None
     """Run tests."""
@@ -221,7 +239,7 @@ def coverage(c, fmt="report", open_browser=False):
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
 
-@task(pre=[hooks, mypy, docs, safety, tests, coverage])
+@task(pre=[hooks, mypy, docs, safety, tests, coverage, doctest])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""
