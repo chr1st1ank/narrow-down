@@ -35,11 +35,11 @@ jobs:
     name: Doctest
     runs-on: ubuntu-latest
     services:
-      cassandra:
-        image: cassandra
+      scylladb:
+        image: scylladb/scylla:4.5.0
         ports:
           - 9042:9042
-        options: --health-cmd "cqlsh --debug" --health-interval 5s --health-retries 10
+        options: --health-cmd "nodetool status |grep UN" --health-interval 5s --health-retries 20
     steps:
       - uses: actions/checkout@v2.4.0
 
