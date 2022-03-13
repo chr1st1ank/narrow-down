@@ -7,6 +7,7 @@ import collections
 import collections.abc
 import dataclasses
 import json
+import typing
 import warnings
 from dataclasses import dataclass
 from typing import Collection, Optional
@@ -199,7 +200,7 @@ class LSH:
             tasks.append(
                 self._storage.query_ids_from_bucket(bucket_id=band_number, document_hash=h)
             )
-        candidates: collections.Counter[int] = collections.Counter()
+        candidates: typing.Counter[int] = collections.Counter()
         for new_candidates in await asyncio.gather(*tasks):
             candidates.update(new_candidates)
         return await asyncio.gather(
