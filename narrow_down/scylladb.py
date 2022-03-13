@@ -95,9 +95,6 @@ class ScyllaDBStore(StorageBackend):
 
         Returns:
             self
-
-        Raises:
-            AlreadyInitialized: If the database file is already initialized
         """
         # Note: CQL does not know unsigned integers.
         #  So we need to take the 64bit (signed) bigint to hold a 32bit unsigned int safely.

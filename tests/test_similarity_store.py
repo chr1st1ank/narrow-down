@@ -1,10 +1,10 @@
 """Tests for `narrow_down.similarity_store`."""
 import pytest
 
-import narrow_down.data_types
-from narrow_down.data_types import StorageLevel, StoredDocument
+import narrow_down.storage
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
+from narrow_down.storage import StorageLevel, StoredDocument
 
 
 @pytest.mark.asyncio
@@ -303,7 +303,7 @@ async def test_similarity_store__remove_by_id__error_storage_level():
     sample_doc = "Some example document"
 
     doc_id = await simstore.insert(sample_doc)
-    with pytest.raises(narrow_down.data_types.TooLowStorageLevel):
+    with pytest.raises(narrow_down.storage.TooLowStorageLevel):
         await simstore.remove_by_id(doc_id)
     results = await simstore.query(sample_doc)
 

@@ -52,8 +52,9 @@ async def test_sqlite_store__insert_query_document__close_and_reopen(tmp_path):
 async def test_sqlite_store__init__already_exists(tmp_path):
     dbfile = str(tmp_path / "test.db")
     await narrow_down.sqlite.SQLiteStore(dbfile).initialize()
-    with pytest.raises(narrow_down.data_types.AlreadyInitialized):
-        await narrow_down.sqlite.SQLiteStore(dbfile).initialize()
+    ims = await narrow_down.sqlite.SQLiteStore(dbfile).initialize()
+    await ims.insert_setting(key="k", value="155")
+    assert await ims.query_setting("k") == "155"
 
 
 @pytest.mark.asyncio

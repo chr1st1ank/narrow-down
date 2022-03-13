@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from narrow_down import _minhash, data_types, storage
-from narrow_down.data_types import StorageLevel, TooLowStorageLevel
+from narrow_down import _minhash, storage
+from narrow_down.storage import StorageLevel, StoredDocument, TooLowStorageLevel
 
 
 def test_minhash_lsh_config__json():
@@ -37,11 +37,11 @@ def test_minhash_benchmark(benchmark, sample_byte_strings):
 @pytest.mark.asyncio
 async def test_lsh__basic_lookup_without_exact_part():
     """Minimal check if an LSH can be constructed."""
-    test_doc = data_types.StoredDocument(
+    test_doc = StoredDocument(
         # document="abc def",
         exact_part="exact:part",
         # data="some custom payload",
-        fingerprint=data_types.Fingerprint(np.array([2, 4, 6])),
+        fingerprint=storage.Fingerprint(np.array([2, 4, 6])),
     )
     lsh = _minhash.LSH(
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
@@ -57,11 +57,11 @@ async def test_lsh__basic_lookup_without_exact_part():
 @pytest.mark.asyncio
 async def test_lsh__basic_lookup_with_exact_part():
     """Minimal check if an LSH can be constructed."""
-    test_doc = data_types.StoredDocument(
+    test_doc = StoredDocument(
         # document="abc def",
         exact_part="exact:part",
         # data="some custom payload",
-        fingerprint=data_types.Fingerprint(np.array([2, 4, 6])),
+        fingerprint=storage.Fingerprint(np.array([2, 4, 6])),
     )
     lsh = _minhash.LSH(
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
@@ -83,39 +83,31 @@ async def test_lsh__top_n():
         storage=await storage.InMemoryStore().initialize(),
     )
     await lsh.insert(
-        data_types.StoredDocument(
-            document="1", fingerprint=data_types.Fingerprint(np.array([2, 4, 6]))
-        ),
+        StoredDocument(document="1", fingerprint=storage.Fingerprint(np.array([2, 4, 6]))),
     )
     await lsh.insert(
-        data_types.StoredDocument(
-            document="2", fingerprint=data_types.Fingerprint(np.array([2, 4, 7]))
-        ),
+        StoredDocument(document="2", fingerprint=storage.Fingerprint(np.array([2, 4, 7]))),
     )
     await lsh.insert(
-        data_types.StoredDocument(
-            document="3", fingerprint=data_types.Fingerprint(np.array([2, 5, 7]))
-        ),
+        StoredDocument(document="3", fingerprint=storage.Fingerprint(np.array([2, 5, 7]))),
     )
     await lsh.insert(
-        data_types.StoredDocument(
-            document="4", fingerprint=data_types.Fingerprint(np.array([3, 5, 7]))
-        ),
+        StoredDocument(document="4", fingerprint=storage.Fingerprint(np.array([3, 5, 7]))),
     )
 
-    result = await lsh.query_top_n(n=1, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    result = await lsh.query_top_n(n=1, fingerprint=storage.Fingerprint(np.array([2, 4, 6])))
     print(result)
     assert sorted([r.document for r in result]) == ["1"]
 
-    result = await lsh.query_top_n(n=2, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    result = await lsh.query_top_n(n=2, fingerprint=storage.Fingerprint(np.array([2, 4, 6])))
     print(result)
     assert sorted([r.document for r in result]) == ["1", "2"]
 
-    result = await lsh.query_top_n(n=3, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    result = await lsh.query_top_n(n=3, fingerprint=storage.Fingerprint(np.array([2, 4, 6])))
     print(result)
     assert sorted([r.document for r in result]) == ["1", "2", "3"]
 
-    result = await lsh.query_top_n(n=4, fingerprint=data_types.Fingerprint(np.array([2, 4, 6])))
+    result = await lsh.query_top_n(n=4, fingerprint=storage.Fingerprint(np.array([2, 4, 6])))
     print(result)
     assert sorted([r.document for r in result]) == ["1", "2", "3"]
 
@@ -125,14 +117,14 @@ async def test_lsh__insert_invalid_document():
     """Test error handling of insert()."""
     lsh = _minhash.LSH(_minhash.MinhashLshConfig(1, 1, 1), None)
     with pytest.raises(ValueError):
-        await lsh.insert(data_types.StoredDocument())
+        await lsh.insert(StoredDocument())
 
 
 @pytest.mark.asyncio
 async def test_lsh__remove_by_id():
     """Try to remove a document from the index."""
-    f = data_types.Fingerprint(np.array([2, 4, 6]))
-    test_doc = data_types.StoredDocument(fingerprint=f)
+    f = storage.Fingerprint(np.array([2, 4, 6]))
+    test_doc = StoredDocument(fingerprint=f)
     lsh = _minhash.LSH(
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
         storage=await storage.InMemoryStore().initialize(),
@@ -145,8 +137,8 @@ async def test_lsh__remove_by_id():
 @pytest.mark.asyncio
 async def test_lsh__remove_by_id__missing_fingerprint():
     """Try to remove a document from the index when the storage level is too low."""
-    f = data_types.Fingerprint(np.array([2, 4, 6]))
-    test_doc = data_types.StoredDocument(fingerprint=f)
+    f = storage.Fingerprint(np.array([2, 4, 6]))
+    test_doc = StoredDocument(fingerprint=f)
     lsh = _minhash.LSH(
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
         storage=await storage.InMemoryStore().initialize(),

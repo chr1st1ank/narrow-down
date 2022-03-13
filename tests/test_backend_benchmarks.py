@@ -17,11 +17,10 @@ import os
 import cassandra.cluster  # type: ignore
 import pytest
 
-from narrow_down.data_types import StorageLevel
 from narrow_down.scylladb import ScyllaDBStore
 from narrow_down.similarity_store import SimilarityStore
 from narrow_down.sqlite import SQLiteStore
-from narrow_down.storage import InMemoryStore
+from narrow_down.storage import InMemoryStore, StorageLevel
 
 
 @pytest.mark.parametrize(

@@ -5,8 +5,13 @@ from typing import Callable, Collection, Iterable, List, Union
 
 from narrow_down import _minhash, _tokenize
 from narrow_down._minhash import MinhashLshConfig
-from narrow_down.data_types import StorageLevel, StoredDocument, TooLowStorageLevel
-from narrow_down.storage import InMemoryStore, StorageBackend
+from narrow_down.storage import (
+    InMemoryStore,
+    StorageBackend,
+    StorageLevel,
+    StoredDocument,
+    TooLowStorageLevel,
+)
 
 
 class SimilarityStore:
@@ -281,7 +286,7 @@ class SimilarityStore:
                 validation is done if the data is available, otherwise not.
 
         Returns:
-            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with all elements
+            A List of :obj:`~narrow_down.storage.StoredDocument` objects with all elements
             which are estimated to be above the similarity threshold.
         """
         tokens = self._tokenize_callable(document)
@@ -305,7 +310,7 @@ class SimilarityStore:
                 validation is done if the data is available, otherwise not.
 
         Returns:
-            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with the n
+            A List of :obj:`~narrow_down.storage.StoredDocument` objects with the n
             elements which are most likely above the similarity threshold.
 
         Note that the results are probabilistic. The documents are assumed to be the most likely
