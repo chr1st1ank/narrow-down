@@ -13,7 +13,7 @@ jobs:
     name: Linting
     runs-on: ubuntu-latest
     steps:            
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
       
       - uses: actions/cache@v2
         with:
@@ -41,7 +41,7 @@ jobs:
           - 9042:9042
         options: --health-cmd "nodetool status |grep UN" --health-interval 5s --health-retries 20
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
       - uses: actions/cache@v2
         with:
@@ -96,7 +96,7 @@ jobs:
             pip-cache-path: ~\AppData\Local\pip\Cache
       fail-fast: true
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
       
       - uses: actions/cache@v2
         with:
@@ -146,7 +146,7 @@ jobs:
     needs: tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
       
       - name: Set up Python 3.9
         uses: actions/setup-python@v3
