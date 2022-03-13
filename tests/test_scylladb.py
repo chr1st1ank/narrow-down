@@ -209,6 +209,12 @@ async def test_scylladb_store__check_keyspace():
 
 
 @pytest.mark.asyncio
+async def test_scylladb_store__check_table_prefix():
+    with pytest.raises(ValueError):
+        narrow_down.scylladb.ScyllaDBStore(None, "keyspace", "; DROP KEYSPACE x;")
+
+
+@pytest.mark.asyncio
 async def test_scylladb_store__handle_query_error(monkeypatch, session_mock):
     from cassandra.cluster import OperationTimedOut
 
