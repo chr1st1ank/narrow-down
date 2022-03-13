@@ -39,20 +39,25 @@ class SessionMock:
             self.query_string = query
             self.is_idempotent = False
 
-    def __init__(self, real_session=None, keyspace=""):
+    def __init__(self, real_session=None, keyspace="", table_prefix=None):
         """Create a new Session object."""
         self.test_keyspace = keyspace
+        self.table_prefix = table_prefix or ""
         self._real_session: cassandra.cluster.Session = real_session
         self._query_responses: Dict[str, Union[List[NamedTuple], Exception]] = {}
         self._shutdown = False
 
     def add_mock_response(self, request: str, response: Union[List[NamedTuple], Exception]):
         """Add an expected query with response list."""
-        self._query_responses[request.replace("<keyspace>", self.test_keyspace)] = response
+        query = request.replace("<keyspace>", self.test_keyspace)
+        query = query.replace("<table_prefix>", self.table_prefix)
+        self._query_responses[query] = response
 
     def del_mock_response(self, request: str):
         """Remove one of the stored expected queries."""
-        del self._query_responses[request.replace("<keyspace>", self.test_keyspace)]
+        query = request.replace("<keyspace>", self.test_keyspace)
+        query = query.replace("<table_prefix>", self.table_prefix)
+        del self._query_responses[query]
 
     def prepare(self, query):
         """Create a prepared statement."""
@@ -140,29 +145,39 @@ def recreate_keyspace(cluster, name):
         )
 
 
+@pytest.fixture(scope="function", params=[None, "abc_d_"])
+def table_prefix(request):
+    return request.param
+
+
 @pytest.fixture(scope="function")
-def session_mock(request, scylladb_cluster):
+def session_mock(request, scylladb_cluster, table_prefix):
     keyspace_name = (
-        request.node.name[-20:]
+        request.node.name[-20 : request.node.name.find("[")]
         + "_"
         + hashlib.md5(request.node.name.encode("utf-8")).hexdigest()[-4:]
     ).lstrip("_")
     if scylladb_cluster:
         print("USING KEYSPACE", keyspace_name)
         recreate_keyspace(scylladb_cluster, keyspace_name)
-        session_mock = SessionMock(scylladb_cluster.connect(), keyspace=keyspace_name)
+        session_mock = SessionMock(
+            scylladb_cluster.connect(), keyspace=keyspace_name, table_prefix=table_prefix
+        )
     else:
-        session_mock = SessionMock(keyspace=keyspace_name)
+        session_mock = SessionMock(keyspace=keyspace_name, table_prefix=table_prefix)
+
     session_mock.add_mock_response(
-        "CREATE TABLE IF NOT EXISTS <keyspace>.settings ( key TEXT, value TEXT, PRIMARY KEY(key));",
+        "CREATE TABLE IF NOT EXISTS <keyspace>.<table_prefix>"
+        "settings ( key TEXT, value TEXT, PRIMARY KEY(key));",
         [],
     )
     session_mock.add_mock_response(
-        "CREATE TABLE IF NOT EXISTS <keyspace>.documents ( id bigint, doc blob, PRIMARY KEY(id));",
+        "CREATE TABLE IF NOT EXISTS <keyspace>.<table_prefix>"
+        "documents ( id bigint, doc blob, PRIMARY KEY(id));",
         [],
     )
     session_mock.add_mock_response(
-        "CREATE TABLE IF NOT EXISTS <keyspace>.buckets "
+        "CREATE TABLE IF NOT EXISTS <keyspace>.<table_prefix>buckets "
         "( bucket bigint, hash bigint, doc_id bigint, PRIMARY KEY((bucket, hash), doc_id));",
         [],
     )
@@ -173,16 +188,17 @@ def session_mock(request, scylladb_cluster):
 async def test_scylladb_store__initialize_cluster(monkeypatch, session_mock):
     monkeypatch.setattr(cassandra.cluster.Cluster, "__init__", lambda self: None)
     monkeypatch.setattr(cassandra.cluster.Cluster, "connect", lambda self: session_mock)
-
     storage = narrow_down.scylladb.ScyllaDBStore(
-        cassandra.cluster.Cluster(), session_mock.test_keyspace
+        cassandra.cluster.Cluster(), session_mock.test_keyspace, session_mock.table_prefix
     )
     await storage.initialize()
 
 
 @pytest.mark.asyncio
 async def test_scylladb_store__initialize_session(session_mock):
-    storage = narrow_down.scylladb.ScyllaDBStore(session_mock, session_mock.test_keyspace)
+    storage = narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
+    )
     await storage.initialize()
 
 
@@ -200,10 +216,10 @@ async def test_scylladb_store__handle_query_error(monkeypatch, session_mock):
         future._set_final_exception(OperationTimedOut("Timeout for testing"))
 
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.settings(key,value) VALUES (k,155);",
+        "INSERT INTO <keyspace>.<table_prefix>settings(key,value) VALUES (k,155);",
         OperationTimedOut("Timeout for testing"),
     )
     monkeypatch.setattr("cassandra.cluster.ResponseFuture.send_request", raise_error)
@@ -214,13 +230,15 @@ async def test_scylladb_store__handle_query_error(monkeypatch, session_mock):
 
 @pytest.mark.asyncio
 async def test_scylladb_store__insert_query_setting(session_mock):
-    session_mock.add_mock_response("INSERT INTO <keyspace>.settings(key,value) VALUES (k,155);", [])
     session_mock.add_mock_response(
-        "SELECT value FROM <keyspace>.settings WHERE key=k;",
+        "INSERT INTO <keyspace>.<table_prefix>settings(key,value) VALUES (k,155);", []
+    )
+    session_mock.add_mock_response(
+        "SELECT value FROM <keyspace>.<table_prefix>settings WHERE key=k;",
         [collections.namedtuple("Row", "value")("155")],
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     await storage.insert_setting(key="k", value="155")
     assert await storage.query_setting("k") == "155"
@@ -228,24 +246,30 @@ async def test_scylladb_store__insert_query_setting(session_mock):
 
 @pytest.mark.asyncio
 async def test_scylladb_store__query_missing_setting(session_mock):
-    session_mock.add_mock_response("SELECT value FROM <keyspace>.settings WHERE key=y;", [])
+    session_mock.add_mock_response(
+        "SELECT value FROM <keyspace>.<table_prefix>settings WHERE key=y;", []
+    )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     assert await storage.query_setting("y") is None
 
 
 @pytest.mark.asyncio
 async def test_scylladb_store__query_setting__uninitialized(session_mock):
-    storage = narrow_down.scylladb.ScyllaDBStore(session_mock, session_mock.test_keyspace)
+    storage = narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
+    )
     assert await storage.query_setting("k") is None
 
 
 @pytest.mark.asyncio
 async def test_scylladb_store__query_setting__not_in(session_mock):
-    session_mock.add_mock_response("SELECT value FROM <keyspace>.settings WHERE key=k;", [])
+    session_mock.add_mock_response(
+        "SELECT value FROM <keyspace>.<table_prefix>settings WHERE key=k;", []
+    )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     assert await storage.query_setting("k") is None
 
@@ -253,14 +277,18 @@ async def test_scylladb_store__query_setting__not_in(session_mock):
 @pytest.mark.asyncio
 async def test_scylladb_store__insert_query_document__overwrite(session_mock):
     """Adding a duplicate before to see if that's also handled."""
-    session_mock.add_mock_response("INSERT INTO <keyspace>.settings(key,value) VALUES (k,155);", [])
-    session_mock.add_mock_response("INSERT INTO <keyspace>.settings(key,value) VALUES (k,268);", [])
     session_mock.add_mock_response(
-        "SELECT value FROM <keyspace>.settings WHERE key=k;",
+        "INSERT INTO <keyspace>.<table_prefix>settings(key,value) VALUES (k,155);", []
+    )
+    session_mock.add_mock_response(
+        "INSERT INTO <keyspace>.<table_prefix>settings(key,value) VALUES (k,268);", []
+    )
+    session_mock.add_mock_response(
+        "SELECT value FROM <keyspace>.<table_prefix>settings WHERE key=k;",
         [collections.namedtuple("Row", "value")("268")],
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     await storage.insert_setting(key="k", value="155")
     await storage.insert_setting(key="k", value="268")
@@ -271,14 +299,15 @@ async def test_scylladb_store__insert_query_document__overwrite(session_mock):
 async def test_scylladb_store__insert_query_document__no_id(monkeypatch, session_mock):
     monkeypatch.setattr("random.randint", lambda **kwargs: 5)
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (5,b'abcd efgh') IF NOT EXISTS;",
+        "INSERT INTO <keyspace>.<table_prefix>"
+        "documents(id,doc) VALUES (5,b'abcd efgh') IF NOT EXISTS;",
         [row(applied=True, id=None, doc=None)],
     )
     session_mock.add_mock_response(
-        "SELECT doc FROM <keyspace>.documents WHERE id=5;", [row(doc=b"abcd efgh")]
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=5;", [row(doc=b"abcd efgh")]
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     id_out = await storage.insert_document(document=b"abcd efgh")
     assert await storage.query_document(id_out) == b"abcd efgh"
@@ -295,7 +324,7 @@ async def test_scylladb_store__insert_query_document__no_id_found(monkeypatch, s
         return [row(applied=False, id=4, doc=b"abcd efgh")]
 
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
 
     monkeypatch.setattr("random.randint", lambda **kwargs: 5)
@@ -310,20 +339,22 @@ async def test_scylladb_store__insert_query_document__duplicate_doc(monkeypatch,
     """Adding a duplicate before to see if that's also handled."""
     monkeypatch.setattr("random.randint", lambda **kwargs: 6)
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (6,b'abcd efgh') IF NOT EXISTS;",
+        "INSERT INTO <keyspace>.<table_prefix>"
+        "documents(id,doc) VALUES (6,b'abcd efgh') IF NOT EXISTS;",
         [row(applied=True, id=None, doc=None)],
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     await storage.insert_document(document=b"abcd efgh")
 
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (6,b'abcd efgh') IF NOT EXISTS;",
+        "INSERT INTO <keyspace>.<table_prefix>"
+        "documents(id,doc) VALUES (6,b'abcd efgh') IF NOT EXISTS;",
         [row(applied=False, id=6, doc=b"abcd efgh")],
     )
     session_mock.add_mock_response(
-        "SELECT doc FROM <keyspace>.documents WHERE id=6;", [row(doc=b"abcd efgh")]
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=6;", [row(doc=b"abcd efgh")]
     )
     id_out = await storage.insert_document(document=b"abcd efgh")
     assert id_out == 6
@@ -333,13 +364,13 @@ async def test_scylladb_store__insert_query_document__duplicate_doc(monkeypatch,
 @pytest.mark.asyncio
 async def test_scylladb_store__insert_query_document__given_id(session_mock):
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (1234,b'abcd efgh');", []
+        "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) VALUES (1234,b'abcd efgh');", []
     )
     session_mock.add_mock_response(
-        "SELECT doc FROM <keyspace>.documents WHERE id=1234;", [row(doc=b"abcd efgh")]
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=1234;", [row(doc=b"abcd efgh")]
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     id_out = await storage.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
@@ -350,13 +381,13 @@ async def test_scylladb_store__insert_query_document__given_id(session_mock):
 async def test_scylladb_store__insert_query_document__given_id_duplicate(session_mock):
     """Adding a duplicate before to see if that's also handled."""
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (1234,b'abcd efgh');", []
+        "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) VALUES (1234,b'abcd efgh');", []
     )
     session_mock.add_mock_response(
-        "SELECT doc FROM <keyspace>.documents WHERE id=1234;", [row(doc=b"abcd efgh")]
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=1234;", [row(doc=b"abcd efgh")]
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     id_out = await storage.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
@@ -368,24 +399,24 @@ async def test_scylladb_store__insert_query_document__given_id_duplicate(session
 @pytest.mark.asyncio
 async def test_scylladb_store__add_documents_to_bucket_and_query(session_mock):
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.buckets(bucket,hash,doc_id) VALUES (1,10,10);", []
+        "INSERT INTO <keyspace>.<table_prefix>buckets(bucket,hash,doc_id) VALUES (1,10,10);", []
     )
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.buckets(bucket,hash,doc_id) VALUES (1,20,20);", []
+        "INSERT INTO <keyspace>.<table_prefix>buckets(bucket,hash,doc_id) VALUES (1,20,20);", []
     )
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.buckets(bucket,hash,doc_id) VALUES (1,20,21);", []
+        "INSERT INTO <keyspace>.<table_prefix>buckets(bucket,hash,doc_id) VALUES (1,20,21);", []
     )
     session_mock.add_mock_response(
-        "SELECT doc_id FROM to_bucket_and_query_e9fe.buckets WHERE bucket=1 AND hash=10;",
+        "SELECT doc_id FROM <keyspace>.<table_prefix>buckets WHERE bucket=1 AND hash=10;",
         [row(doc_id=10)],
     )
     session_mock.add_mock_response(
-        "SELECT doc_id FROM to_bucket_and_query_e9fe.buckets WHERE bucket=1 AND hash=20;",
+        "SELECT doc_id FROM <keyspace>.<table_prefix>buckets WHERE bucket=1 AND hash=20;",
         [row(doc_id=20), row(doc_id=21)],
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     await storage.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
     await storage.add_document_to_bucket(bucket_id=1, document_hash=20, document_id=20)
@@ -397,19 +428,23 @@ async def test_scylladb_store__add_documents_to_bucket_and_query(session_mock):
 @pytest.mark.asyncio
 async def test_scylladb_store__remove_document__given_id(session_mock):
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.documents(id,doc) VALUES (1234,b'abcd efgh');", []
+        "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) VALUES (1234,b'abcd efgh');", []
     )
     session_mock.add_mock_response(
-        "SELECT doc FROM <keyspace>.documents WHERE id=1234;", [row(doc=b"abcd efgh")]
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=1234;", [row(doc=b"abcd efgh")]
     )
-    session_mock.add_mock_response("DELETE FROM <keyspace>.documents WHERE id=1234;", [])
+    session_mock.add_mock_response(
+        "DELETE FROM <keyspace>.<table_prefix>documents WHERE id=1234;", []
+    )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     id_out = await storage.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
     assert await storage.query_document(id_out) == b"abcd efgh"
-    session_mock.add_mock_response("SELECT doc FROM <keyspace>.documents WHERE id=1234;", [])
+    session_mock.add_mock_response(
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=1234;", []
+    )
     await storage.remove_document(id_out)
     with pytest.raises(KeyError):
         await storage.query_document(id_out)
@@ -418,27 +453,28 @@ async def test_scylladb_store__remove_document__given_id(session_mock):
 @pytest.mark.asyncio
 async def test_scylladb_store__remove_documents_to_bucket_and_query(session_mock):
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.buckets(bucket,hash,doc_id) VALUES (1,10,10);", []
+        "INSERT INTO <keyspace>.<table_prefix>buckets(bucket,hash,doc_id) VALUES (1,10,10);", []
     )
     session_mock.add_mock_response(
-        "INSERT INTO <keyspace>.buckets(bucket,hash,doc_id) VALUES (1,10,20);", []
+        "INSERT INTO <keyspace>.<table_prefix>buckets(bucket,hash,doc_id) VALUES (1,10,20);", []
     )
     session_mock.add_mock_response(
-        "SELECT doc_id FROM <keyspace>.buckets WHERE bucket=1 AND hash=10;",
+        "SELECT doc_id FROM <keyspace>.<table_prefix>buckets WHERE bucket=1 AND hash=10;",
         [row(doc_id=10), row(doc_id=20)],
     )
     storage = await narrow_down.scylladb.ScyllaDBStore(
-        session_mock, session_mock.test_keyspace
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
     await storage.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=10)
     await storage.add_document_to_bucket(bucket_id=1, document_hash=10, document_id=20)
     assert list(await storage.query_ids_from_bucket(bucket_id=1, document_hash=10)) == [10, 20]
 
     session_mock.add_mock_response(
-        "DELETE FROM <keyspace>.buckets WHERE bucket=1 AND hash=10 AND doc_id=10;", []
+        "DELETE FROM <keyspace>.<table_prefix>buckets WHERE bucket=1 AND hash=10 AND doc_id=10;", []
     )
     session_mock.add_mock_response(
-        "SELECT doc_id FROM <keyspace>.buckets WHERE bucket=1 AND hash=10;", [row(doc_id=20)]
+        "SELECT doc_id FROM <keyspace>.<table_prefix>buckets WHERE bucket=1 AND hash=10;",
+        [row(doc_id=20)],
     )
     await storage.remove_id_from_bucket(bucket_id=1, document_hash=10, document_id=10)
     assert list(await storage.query_ids_from_bucket(bucket_id=1, document_hash=10)) == [20]
