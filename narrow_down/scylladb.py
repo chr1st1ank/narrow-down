@@ -47,18 +47,22 @@ class ScyllaDBStore(StorageBackend):
         self,
         cluster_or_session: Union[cassandra.cluster.Cluster, cassandra.cluster.Session],
         keyspace: str,
+        table_prefix: str = None,
     ) -> None:
         """Create a new empty or connect to an existing SQLite database.
 
         Args:
             cluster_or_session: Can be a cassandra cluster or a session object.
             keyspace: Name of the keyspace to use.
+            table_prefix: A prefix to use for all table names in the database.
 
         Raises:
             ValueError: When the keyspace name is invalid.
         """
         if not re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*$", keyspace):
             raise ValueError(f"Invalid keyspace name: {keyspace}")
+        if table_prefix and not re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*$", table_prefix):
+            raise ValueError(f"Invalid table_prefix: {table_prefix}")
         if isinstance(cluster_or_session, cassandra.cluster.Cluster):
             self._scylla_cluster = cluster_or_session
             self._scylla_session = None
@@ -66,6 +70,7 @@ class ScyllaDBStore(StorageBackend):
             self._scylla_cluster = None
             self._scylla_session = cluster_or_session
         self._keyspace = keyspace
+        self._table_prefix = table_prefix or ""
         self._prepared_statements: Dict[str, cassandra.query.PreparedStatement] = {}
 
     @contextlib.contextmanager
@@ -98,7 +103,7 @@ class ScyllaDBStore(StorageBackend):
         #  So we need to take the 64bit (signed) bigint to hold a 32bit unsigned int safely.
 
         create_settings = cassandra.query.SimpleStatement(
-            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.settings ("
+            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.{self._table_prefix}settings ("
             "   key TEXT, "
             "   value TEXT, "
             "   PRIMARY KEY(key)"
@@ -106,7 +111,7 @@ class ScyllaDBStore(StorageBackend):
             is_idempotent=True,
         )
         create_documents = cassandra.query.SimpleStatement(
-            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.documents ("
+            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.{self._table_prefix}documents ("
             "   id bigint, "
             "   doc blob, "
             "   PRIMARY KEY(id)"
@@ -114,7 +119,7 @@ class ScyllaDBStore(StorageBackend):
             is_idempotent=True,
         )
         create_buckets = cassandra.query.SimpleStatement(
-            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.buckets ("
+            f"CREATE TABLE IF NOT EXISTS {self._keyspace}.{self._table_prefix}buckets ("
             "   bucket bigint, "
             "   hash bigint, "
             "   doc_id bigint, "
@@ -127,31 +132,36 @@ class ScyllaDBStore(StorageBackend):
             await self._execute(session, create_documents, timeout=30)
             await self._execute(session, create_buckets, timeout=30)
             self._prepared_statements["set_setting"] = session.prepare(
-                f"INSERT INTO {self._keyspace}.settings(key,value) VALUES (?,?);"
+                f"INSERT INTO {self._keyspace}.{self._table_prefix}"
+                "settings(key,value) VALUES (?,?);"
             )
             self._prepared_statements["get_setting"] = session.prepare(
-                f"SELECT value FROM {self._keyspace}.settings WHERE key=?;"
+                f"SELECT value FROM {self._keyspace}.{self._table_prefix}settings WHERE key=?;"
             )
             self._prepared_statements["set_doc"] = session.prepare(
-                f"INSERT INTO {self._keyspace}.documents(id,doc) VALUES (?,?);"
+                f"INSERT INTO {self._keyspace}.{self._table_prefix}documents(id,doc) VALUES (?,?);"
             )
             self._prepared_statements["set_doc_checked"] = session.prepare(
-                f"INSERT INTO {self._keyspace}.documents(id,doc) VALUES (?,?) IF NOT EXISTS;"
+                f"INSERT INTO {self._keyspace}.{self._table_prefix}"
+                "documents(id,doc) VALUES (?,?) IF NOT EXISTS;"
             )
             self._prepared_statements["get_doc"] = session.prepare(
-                f"SELECT doc FROM {self._keyspace}.documents WHERE id=?;"
+                f"SELECT doc FROM {self._keyspace}.{self._table_prefix}documents WHERE id=?;"
             )
             self._prepared_statements["del_doc"] = session.prepare(
-                f"DELETE FROM {self._keyspace}.documents WHERE id=?;"
+                f"DELETE FROM {self._keyspace}.{self._table_prefix}documents WHERE id=?;"
             )
             self._prepared_statements["add_doc_to_bucket"] = session.prepare(
-                f"INSERT INTO {self._keyspace}.buckets(bucket,hash,doc_id) VALUES (?,?,?);"
+                f"INSERT INTO {self._keyspace}.{self._table_prefix}"
+                "buckets(bucket,hash,doc_id) VALUES (?,?,?);"
             )
             self._prepared_statements["get_docs_from_bucket"] = session.prepare(
-                f"SELECT doc_id FROM {self._keyspace}.buckets WHERE bucket=? AND hash=?;"
+                f"SELECT doc_id FROM {self._keyspace}.{self._table_prefix}"
+                "buckets WHERE bucket=? AND hash=?;"
             )
             self._prepared_statements["del_doc_from_bucket"] = session.prepare(
-                f"DELETE FROM {self._keyspace}.buckets WHERE bucket=? AND hash=? AND doc_id=?;"
+                f"DELETE FROM {self._keyspace}.{self._table_prefix}"
+                "buckets WHERE bucket=? AND hash=? AND doc_id=?;"
             )
         for statement in self._prepared_statements.values():
             statement.is_idempotent = True
