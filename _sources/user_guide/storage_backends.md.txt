@@ -37,7 +37,7 @@ similarity_store = await SimilarityStore.load_from_storage(storage=storage_backe
 ```
 
 ### StoredDocument
-The documents are represented in storage as [StoredDocument](narrow_down.data_types.StoredDocument)
+The documents are represented in storage as [StoredDocument](narrow_down.storage.StoredDocument)
 objects. This is a simple dataclass with the following attributes:
     
 
@@ -57,7 +57,7 @@ A `StoredDocument` is also the kind of object which is returned as search result
 ### Storage levels
 Depending on the usecase, different levels of persistence may be preferable. Sometimes it is enough to only store just enough to be able to get the IDs of matching documents. In other cases, it can be better to store the whole documents or some additional data in the index. This way it is not necessary to have a second database for this data.
 
-The available storage levels as defined in the enum [StorageLevel](narrow_down.data_types.StorageLevel) are:
+The available storage levels as defined in the enum [StorageLevel](narrow_down.storage.StorageLevel) are:
 
 | Storage level | Effect                                                                                                                      |
 |:--------------|:----------------------------------------------------------------------------------------------------------------------------|
@@ -94,7 +94,7 @@ If we use the storage level "Document" instead, also the document and exact_part
 
 
 ```python
-from narrow_down.data_types import StorageLevel
+from narrow_down.storage import StorageLevel
 
 storage_backend = InMemoryStore()
 

@@ -165,7 +165,6 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../narrow_down.html">narrow_down package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidoc/narrow_down.data_types.html">narrow_down.data_types module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/narrow_down.hash.html">narrow_down.hash module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/narrow_down.similarity_store.html">narrow_down.similarity_store module</a></li>
@@ -218,8 +217,13 @@
 
 <span class="kn">from</span> <span class="nn">narrow_down</span> <span class="kn">import</span> <span class="n">_minhash</span><span class="p">,</span> <span class="n">_tokenize</span>
 <span class="kn">from</span> <span class="nn">narrow_down._minhash</span> <span class="kn">import</span> <span class="n">MinhashLshConfig</span>
-<span class="kn">from</span> <span class="nn">narrow_down.data_types</span> <span class="kn">import</span> <span class="n">StorageLevel</span><span class="p">,</span> <span class="n">StoredDocument</span><span class="p">,</span> <span class="n">TooLowStorageLevel</span>
-<span class="kn">from</span> <span class="nn">narrow_down.storage</span> <span class="kn">import</span> <span class="n">InMemoryStore</span><span class="p">,</span> <span class="n">StorageBackend</span>
+<span class="kn">from</span> <span class="nn">narrow_down.storage</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InMemoryStore</span><span class="p">,</span>
+    <span class="n">StorageBackend</span><span class="p">,</span>
+    <span class="n">StorageLevel</span><span class="p">,</span>
+    <span class="n">StoredDocument</span><span class="p">,</span>
+    <span class="n">TooLowStorageLevel</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="SimilarityStore"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore">[docs]</a><span class="k">class</span> <span class="nc">SimilarityStore</span><span class="p">:</span>
@@ -494,7 +498,7 @@
 <span class="sd">                validation is done if the data is available, otherwise not.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with all elements</span>
+<span class="sd">            A List of :obj:`~narrow_down.storage.StoredDocument` objects with all elements</span>
 <span class="sd">            which are estimated to be above the similarity threshold.</span>
 <span class="sd">        """</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
@@ -518,7 +522,7 @@
 <span class="sd">                validation is done if the data is available, otherwise not.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A List of :obj:`~narrow_down.data_types.StoredDocument` objects with the n</span>
+<span class="sd">            A List of :obj:`~narrow_down.storage.StoredDocument` objects with the n</span>
 <span class="sd">            elements which are most likely above the similarity threshold.</span>
 
 <span class="sd">        Note that the results are probabilistic. The documents are assumed to be the most likely</span>

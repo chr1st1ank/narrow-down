@@ -166,7 +166,6 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../narrow_down.html">narrow_down package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.data_types.html">narrow_down.data_types module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.hash.html">narrow_down.hash module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.similarity_store.html">narrow_down.similarity_store module</a></li>
@@ -243,7 +242,7 @@
 </section>
 <section id="storeddocument">
 <h3>StoredDocument<a class="headerlink" href="#storeddocument" title="Permalink to this headline">#</a></h3>
-<p>The documents are represented in storage as <a class="reference internal" href="../apidoc/narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument"><span class="xref myst py py-class">StoredDocument</span></a>
+<p>The documents are represented in storage as <a class="reference internal" href="../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument" title="narrow_down.storage.StoredDocument"><span class="xref myst py py-class">StoredDocument</span></a>
 objects. This is a simple dataclass with the following attributes:</p>
 <div class="table-wrapper"><table class="colwidths-auto docutils align-default">
 <thead>
@@ -283,7 +282,7 @@ objects. This is a simple dataclass with the following attributes:</p>
 <section id="storage-levels">
 <h3>Storage levels<a class="headerlink" href="#storage-levels" title="Permalink to this headline">#</a></h3>
 <p>Depending on the usecase, different levels of persistence may be preferable. Sometimes it is enough to only store just enough to be able to get the IDs of matching documents. In other cases, it can be better to store the whole documents or some additional data in the index. This way it is not necessary to have a second database for this data.</p>
-<p>The available storage levels as defined in the enum <a class="reference internal" href="../apidoc/narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><span class="xref myst py py-class">StorageLevel</span></a> are:</p>
+<p>The available storage levels as defined in the enum <a class="reference internal" href="../apidoc/narrow_down.storage.html#narrow_down.storage.StorageLevel" title="narrow_down.storage.StorageLevel"><span class="xref myst py py-class">StorageLevel</span></a> are:</p>
 <div class="table-wrapper"><table class="colwidths-auto docutils align-default">
 <thead>
 <tr class="row-odd"><th class="text-left head"><p>Storage level</p></th>
@@ -322,7 +321,7 @@ objects. This is a simple dataclass with the following attributes:</p>
 </pre></div>
 </div>
 <p>If we use the storage level “Document” instead, also the document and exact_part attributes are stored and retrieved:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">narrow_down.data_types</span> <span class="kn">import</span> <span class="n">StorageLevel</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">narrow_down.storage</span> <span class="kn">import</span> <span class="n">StorageLevel</span>
 
 <span class="n">storage_backend</span> <span class="o">=</span> <span class="n">InMemoryStore</span><span class="p">()</span>
 

@@ -166,7 +166,6 @@
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">API Documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../narrow_down.html">narrow_down package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="narrow_down.data_types.html">narrow_down.data_types module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="narrow_down.hash.html">narrow_down.hash module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">narrow_down.similarity_store module</a></li>
@@ -228,7 +227,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><em>narrow_down.storage.StorageBackend</em></a><em>]</em>) – Storage backend to use for persisting the data. Per default this is an
 in-memory backend.</p></li>
-<li><p><strong>storage_level</strong> (<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><em>narrow_down.data_types.StorageLevel</em></a>) – The granularity of the internal storage mechanism. Per default nothing
+<li><p><strong>storage_level</strong> (<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StorageLevel" title="narrow_down.storage.StorageLevel"><em>narrow_down.storage.StorageLevel</em></a>) – The granularity of the internal storage mechanism. Per default nothing
 than the document IDs are stored.</p></li>
 <li><p><strong>tokenize</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em><em>]</em><em>]</em>) – <p>The tokenization function to use to split the documents into smaller parts.
 E.g. the document may be split into words or into character n-grams. Per default
@@ -329,7 +328,7 @@ in the storage.</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If no document with the given ID is stored.</p></li>
-<li><p><a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.TooLowStorageLevel" title="narrow_down.data_types.TooLowStorageLevel"><strong>TooLowStorageLevel</strong></a> – If the storage level is too low and fingerprints are not available.</p></li>
+<li><p><a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.TooLowStorageLevel" title="narrow_down.storage.TooLowStorageLevel"><strong>TooLowStorageLevel</strong></a> – If the storage level is too low and fingerprints are not available.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -354,11 +353,11 @@ validation is done if the data is available, otherwise not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A List of <a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredDocument</span></code></a> objects with all elements
+<dd class="field-even"><p>A List of <a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StoredDocument" title="narrow_down.storage.StoredDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredDocument</span></code></a> objects with all elements
 which are estimated to be above the similarity threshold.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument">narrow_down.data_types.StoredDocument</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StoredDocument" title="narrow_down.storage.StoredDocument">narrow_down.storage.StoredDocument</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -378,11 +377,11 @@ validation is done if the data is available, otherwise not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A List of <a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredDocument</span></code></a> objects with the n
+<dd class="field-even"><p>A List of <a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StoredDocument" title="narrow_down.storage.StoredDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredDocument</span></code></a> objects with the n
 elements which are most likely above the similarity threshold.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.data_types.html#narrow_down.data_types.StoredDocument" title="narrow_down.data_types.StoredDocument">narrow_down.data_types.StoredDocument</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.10)"><em>Collection</em></a>[<a class="reference internal" href="narrow_down.storage.html#narrow_down.storage.StoredDocument" title="narrow_down.storage.StoredDocument">narrow_down.storage.StoredDocument</a>]</p>
 </dd>
 </dl>
 <p>Note that the results are probabilistic. The documents are assumed to be the most likely

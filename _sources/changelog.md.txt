@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - ScyllaDBStore now accepts a `table_prefix` setting.
 
+### Changed
+- The classes in narrow_down.data_types were moved to narrow_down.storage.
+- The `initialize()` method of the storage backends can now be called multiple times without issues.
+
 ### Fixed
 - A use of collections.Counter as typehint broke mypy checks.  
 

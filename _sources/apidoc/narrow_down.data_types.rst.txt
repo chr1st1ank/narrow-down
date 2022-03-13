@@ -1,7 +1,0 @@
-narrow\_down.data\_types module
-===============================
-
-.. automodule:: narrow_down.data_types
-   :members:
-   :undoc-members:
-   :show-inheritance:

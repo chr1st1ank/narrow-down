@@ -166,7 +166,6 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../narrow_down.html">narrow_down package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.data_types.html">narrow_down.data_types module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.hash.html">narrow_down.hash module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.scylladb.html">narrow_down.scylladb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/narrow_down.similarity_store.html">narrow_down.similarity_store module</a></li>
@@ -218,12 +217,12 @@
 <section id="indexing">
 <h2>Indexing<a class="headerlink" href="#indexing" title="Permalink to this headline">#</a></h2>
 <p>The code block below shows how to create and configure a SimilarityStore() object.</p>
-<p>Here we choose the <a class="reference internal" href="../apidoc/narrow_down.data_types.html#narrow_down.data_types.StorageLevel" title="narrow_down.data_types.StorageLevel"><span class="xref myst py py-class">StorageLevel</span></a> <code class="docutils literal notranslate"><span class="pre">Document</span></code>, so that the whole document is stored in the <code class="docutils literal notranslate"><span class="pre">SimilarityStore</span></code> and can be returned from it. A target similarity threshold of 75% is defined, which means that we want to search for documents which have a Jaccard similarity of at least 75% with the input document. To calculate the similarity, the document is first preprocessed by a tokenizer function. Here we choose the character 3-grams of a document for this.</p>
+<p>Here we choose the <a class="reference internal" href="../apidoc/narrow_down.storage.html#narrow_down.storage.StorageLevel" title="narrow_down.storage.StorageLevel"><span class="xref myst py py-class">StorageLevel</span></a> <code class="docutils literal notranslate"><span class="pre">Document</span></code>, so that the whole document is stored in the <code class="docutils literal notranslate"><span class="pre">SimilarityStore</span></code> and can be returned from it. A target similarity threshold of 75% is defined, which means that we want to search for documents which have a Jaccard similarity of at least 75% with the input document. To calculate the similarity, the document is first preprocessed by a tokenizer function. Here we choose the character 3-grams of a document for this.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">narrow_down</span> <span class="k">as</span> <span class="nn">nd</span>
-<span class="kn">from</span> <span class="nn">narrow_down.data_types</span> <span class="kn">import</span> <span class="n">StoredDocument</span>
+<span class="kn">from</span> <span class="nn">narrow_down.storage</span> <span class="kn">import</span> <span class="n">StorageLevel</span><span class="p">,</span> <span class="n">StoredDocument</span>
 
 <span class="n">similarity_store</span> <span class="o">=</span> <span class="k">await</span> <span class="n">nd</span><span class="o">.</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">SimilarityStore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="n">storage_level</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">data_types</span><span class="o">.</span><span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">,</span>
+    <span class="n">storage_level</span><span class="o">=</span><span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">,</span>
     <span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
     <span class="n">tokenize</span><span class="o">=</span><span class="s2">"char_ngrams(3)"</span><span class="p">,</span>
 <span class="p">)</span>
@@ -309,6 +308,9 @@
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>42
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </section>

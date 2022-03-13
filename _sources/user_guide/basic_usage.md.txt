@@ -7,15 +7,15 @@ The API is fully asynchronous. That means all relevant methods can directly call
 ## Indexing
 The code block below shows how to create and configure a SimilarityStore() object. 
 
-Here we choose the [StorageLevel](narrow_down.data_types.StorageLevel) `Document`, so that the whole document is stored in the `SimilarityStore` and can be returned from it. A target similarity threshold of 75% is defined, which means that we want to search for documents which have a Jaccard similarity of at least 75% with the input document. To calculate the similarity, the document is first preprocessed by a tokenizer function. Here we choose the character 3-grams of a document for this.
+Here we choose the [StorageLevel](narrow_down.storage.StorageLevel) `Document`, so that the whole document is stored in the `SimilarityStore` and can be returned from it. A target similarity threshold of 75% is defined, which means that we want to search for documents which have a Jaccard similarity of at least 75% with the input document. To calculate the similarity, the document is first preprocessed by a tokenizer function. Here we choose the character 3-grams of a document for this.
 
 
 ```python
 import narrow_down as nd
-from narrow_down.data_types import StoredDocument
+from narrow_down.storage import StorageLevel, StoredDocument
 
 similarity_store = await nd.similarity_store.SimilarityStore.create(
-    storage_level=nd.data_types.StorageLevel.Document,
+    storage_level=StorageLevel.Document,
     similarity_threshold=0.75,
     tokenize="char_ngrams(3)",
 )
@@ -135,3 +135,8 @@ await similarity_store.insert("Good cookie", document_id=42)
     42
 
 
+
+
+```python
+
+```
