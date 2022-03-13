@@ -17,8 +17,7 @@ import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
 from . import _rust, hash
-from .data_types import Fingerprint, StorageLevel, StoredDocument, TooLowStorageLevel
-from .storage import StorageBackend
+from .storage import Fingerprint, StorageBackend, StorageLevel, StoredDocument, TooLowStorageLevel
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
 
