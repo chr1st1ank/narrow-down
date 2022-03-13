@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.02.23"/>
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
         <title>narrow_down.scylladb - narrow-down 0.8.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=3c656993158f05539f962c5cea52a5e6c184bb8c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -19,16 +19,18 @@
   --color-code-foreground: black;
   
   }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
+  @media not print {
+    body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
     }
   }
 </style></head>
@@ -258,18 +260,22 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cluster_or_session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Session</span><span class="p">],</span>
         <span class="n">keyspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">table_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""Create a new empty or connect to an existing SQLite database.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            cluster_or_session: Can be a cassandra cluster or a session object.</span>
 <span class="sd">            keyspace: Name of the keyspace to use.</span>
+<span class="sd">            table_prefix: A prefix to use for all table names in the database.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: When the keyspace name is invalid.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z_][a-zA-Z0-9_]*$"</span><span class="p">,</span> <span class="n">keyspace</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid keyspace name: </span><span class="si">{</span><span class="n">keyspace</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">table_prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z_][a-zA-Z0-9_]*$"</span><span class="p">,</span> <span class="n">table_prefix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid table_prefix: </span><span class="si">{</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cluster_or_session</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Cluster</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span> <span class="o">=</span> <span class="n">cluster_or_session</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="kc">None</span>
@@ -277,6 +283,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="n">cluster_or_session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span> <span class="o">=</span> <span class="n">keyspace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span> <span class="o">=</span> <span class="n">table_prefix</span> <span class="ow">or</span> <span class="s2">""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">PreparedStatement</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
@@ -309,7 +316,7 @@
         <span class="c1">#  So we need to take the 64bit (signed) bigint to hold a 32bit unsigned int safely.</span>
 
         <span class="n">create_settings</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.settings ("</span>
+            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings ("</span>
             <span class="s2">"   key TEXT, "</span>
             <span class="s2">"   value TEXT, "</span>
             <span class="s2">"   PRIMARY KEY(key)"</span>
@@ -317,7 +324,7 @@
             <span class="n">is_idempotent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">create_documents</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.documents ("</span>
+            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents ("</span>
             <span class="s2">"   id bigint, "</span>
             <span class="s2">"   doc blob, "</span>
             <span class="s2">"   PRIMARY KEY(id)"</span>
@@ -325,7 +332,7 @@
             <span class="n">is_idempotent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">create_buckets</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.buckets ("</span>
+            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">buckets ("</span>
             <span class="s2">"   bucket bigint, "</span>
             <span class="s2">"   hash bigint, "</span>
             <span class="s2">"   doc_id bigint, "</span>
@@ -338,31 +345,36 @@
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">create_documents</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">create_buckets</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_setting"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.settings(key,value) VALUES (?,?);"</span>
+                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
+                <span class="s2">"settings(key,value) VALUES (?,?);"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_setting"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT value FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.settings WHERE key=?;"</span>
+                <span class="sa">f</span><span class="s2">"SELECT value FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings WHERE key=?;"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.documents(id,doc) VALUES (?,?);"</span>
+                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents(id,doc) VALUES (?,?);"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc_checked"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.documents(id,doc) VALUES (?,?) IF NOT EXISTS;"</span>
+                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
+                <span class="s2">"documents(id,doc) VALUES (?,?) IF NOT EXISTS;"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT doc FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.documents WHERE id=?;"</span>
+                <span class="sa">f</span><span class="s2">"SELECT doc FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.documents WHERE id=?;"</span>
+                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"add_doc_to_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.buckets(bucket,hash,doc_id) VALUES (?,?,?);"</span>
+                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
+                <span class="s2">"buckets(bucket,hash,doc_id) VALUES (?,?,?);"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_docs_from_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT doc_id FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.buckets WHERE bucket=? AND hash=?;"</span>
+                <span class="sa">f</span><span class="s2">"SELECT doc_id FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
+                <span class="s2">"buckets WHERE bucket=? AND hash=?;"</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc_from_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.buckets WHERE bucket=? AND hash=? AND doc_id=?;"</span>
+                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
+                <span class="s2">"buckets WHERE bucket=? AND hash=? AND doc_id=?;"</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">statement</span><span class="o">.</span><span class="n">is_idempotent</span> <span class="o">=</span> <span class="kc">True</span>

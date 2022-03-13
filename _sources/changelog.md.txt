@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- ScyllaDBStore now accepts a `table_prefix` setting.
+
+### Fixed
+- A use of collections.Counter as typehint broke mypy checks.  
 
 ## [0.8.0] - 2022-02-23
 ### Added
