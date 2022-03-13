@@ -15,8 +15,6 @@ class StorageBackend(ABC):
 
         Returns:
             self
-
-        Implementations may raise an error if the backend is already initialized.
         """
         return self
 

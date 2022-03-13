@@ -15,10 +15,6 @@ class TooLowStorageLevel(Exception):
     """Raised if a feature is used for which a higher storage level is needed."""
 
 
-class AlreadyInitialized(Exception):
-    """Raised when initializing storage twice or changing immutable settings."""
-
-
 class StorageLevel(enum.Flag):
     """Detail level of document persistence."""
 

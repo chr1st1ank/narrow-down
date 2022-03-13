@@ -2,7 +2,6 @@
 import sqlite3
 from typing import Iterable, Optional
 
-from narrow_down.data_types import AlreadyInitialized
 from narrow_down.storage import StorageBackend
 
 
@@ -24,27 +23,25 @@ class SQLiteStore(StorageBackend):
 
         Returns:
             self
-
-        Raises:
-            AlreadyInitialized: If the database file is already initialized
         """
-        try:
-            with self._connection as conn:
-                conn.execute("CREATE TABLE settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)")
-                conn.execute("CREATE TABLE documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)")
-                for i in range(self.partitions):
-                    conn.execute(
-                        f"CREATE TABLE buckets_{i} ("
-                        "bucket INTEGER NOT NULL, "
-                        "hash INTEGER NOT NULL, "
-                        "doc_id INTEGER NOT NULL"
-                        ")"
-                    )
-                conn.execute("PRAGMA synchronous = OFF")
-                conn.execute("PRAGMA journal_mode = MEMORY")
-                conn.commit()
-        except sqlite3.OperationalError as e:
-            raise AlreadyInitialized from e
+        with self._connection as conn:
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)"
+            )
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)"
+            )
+            for i in range(self.partitions):
+                conn.execute(
+                    f"CREATE TABLE IF NOT EXISTS buckets_{i} ("
+                    "bucket INTEGER NOT NULL, "
+                    "hash INTEGER NOT NULL, "
+                    "doc_id INTEGER NOT NULL"
+                    ")"
+                )
+            conn.execute("PRAGMA synchronous = OFF")
+            conn.execute("PRAGMA journal_mode = MEMORY")
+            conn.commit()
 
         await self.insert_setting("__sqlite_partitions", str(self.partitions))
 
