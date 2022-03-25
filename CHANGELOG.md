@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- Minimum number of hash permutations for Minhash LSH set to 16 to avoid artifacts as described
+  in #61.
 
 ## [0.9.0] - 2022-03-13
 ### Added

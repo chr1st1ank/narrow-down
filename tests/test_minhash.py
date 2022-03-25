@@ -152,8 +152,7 @@ async def test_lsh__remove_by_id__missing_fingerprint():
     "j, fn, fp, expected",
     [
         (0.5, 0.05, 0.05, _minhash.MinhashLshConfig(n_hashes=128, n_bands=22, rows_per_band=5)),
-        (0.5, 1, 0.1, _minhash.MinhashLshConfig(n_hashes=2, n_bands=1, rows_per_band=2)),
-        (0.5, 0.1, 1, _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1)),
+        (0.5, 1, 0.1, _minhash.MinhashLshConfig(n_hashes=16, n_bands=1, rows_per_band=16)),
         (
             0.5,
             -1,

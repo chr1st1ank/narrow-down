@@ -213,12 +213,10 @@ class LSH:
 
 
 def find_optimal_config(
-    jaccard_threshold: float,
-    max_false_negative_proba: float,
-    max_false_positive_proba: float,
+    jaccard_threshold: float, max_false_negative_proba: float, max_false_positive_proba: float
 ) -> MinhashLshConfig:
     """Find the optimal configuration given the provided target parameters."""
-    num_perm = 2
+    num_perm = 16
     b, r = _params_given_false_negative_proba(jaccard_threshold, num_perm, max_false_negative_proba)
     while _false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
         if num_perm >= 16384:
