@@ -480,10 +480,15 @@
         <span class="n">true_jaccards</span> <span class="o">=</span> <span class="p">[</span><span class="n">_jaccard_similarity</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">ct</span><span class="p">)</span> <span class="k">for</span> <span class="n">ct</span> <span class="ow">in</span> <span class="n">candidate_tokens</span><span class="p">]</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">c</span>
-            <span class="k">for</span> <span class="n">jaccard</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">true_jaccards</span><span class="p">,</span> <span class="n">candidates</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">jaccard</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_similarity_threshold</span>
+            <span class="k">for</span> <span class="n">jaccard</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="nb">filter</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_similarity_threshold</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">true_jaccards</span><span class="p">,</span> <span class="n">candidates</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id_</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="p">]</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">candidates</span>
 
 <div class="viewcode-block" id="SimilarityStore.query"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.query">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
