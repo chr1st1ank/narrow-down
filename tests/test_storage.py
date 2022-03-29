@@ -49,6 +49,15 @@ def test_stored_document_without():
     assert document.without() is not document
 
 
+def test_stored_document_eq():
+    document1 = StoredDocument(id_=5, document="abcd")
+    document2 = StoredDocument(id_=5, document="abcd")
+    document3 = StoredDocument(id_=5, document="abcd", exact_part="abcd")
+    assert document1 == document2
+    assert document1 != document3
+    assert document2 != document3
+
+
 @pytest.mark.asyncio
 async def test_in_memory_store__insert_query_setting():
     ims = InMemoryStore()

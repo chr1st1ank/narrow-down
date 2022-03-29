@@ -268,10 +268,15 @@ class SimilarityStore:
         true_jaccards = [_jaccard_similarity(tokens, ct) for ct in candidate_tokens]
         candidates = [
             c
-            for jaccard, c in sorted(zip(true_jaccards, candidates), reverse=True)
-            if jaccard >= self._similarity_threshold
+            for jaccard, c in sorted(
+                filter(
+                    lambda t: t[0] >= self._similarity_threshold, zip(true_jaccards, candidates)
+                ),
+                key=lambda t: (t[0], t[1].id_ or 0),
+                reverse=True,
+            )
         ]
-        return list(candidates)
+        return candidates
 
     async def query(
         self, document: str, *, exact_part=None, validate: bool = None

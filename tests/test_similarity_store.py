@@ -72,6 +72,7 @@ async def test_similarity_store__query_with_validation(monkeypatch, storage_leve
         StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
         StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
         StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
+        StoredDocument(id_=6, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
     ]
 
     async def fake_query(*args, **kwargs):
@@ -87,6 +88,7 @@ async def test_similarity_store__query_with_validation(monkeypatch, storage_leve
     print(results)
     if validate is not False and (storage_level & StorageLevel.Document):
         assert results == [
+            StoredDocument(id_=6, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
             StoredDocument(id_=5, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ", exact_part="A"),
             StoredDocument(id_=3, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ1", exact_part="A"),
             StoredDocument(id_=4, document="ABCDEFGHIJKLMNOPQRSTUVWXYZ12", exact_part="A"),
