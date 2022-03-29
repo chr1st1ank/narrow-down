@@ -64,7 +64,7 @@ dev = [
     "flake8-bandit",
     "darglint~=1.8",
     "isort",
-    "black~=21.9b0",
+    "black~=22.3.0",
     "safety",
     "jupyter",
     "nbqa",
