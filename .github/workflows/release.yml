@@ -17,7 +17,7 @@ jobs:
       matrix:
         target: [x86_64, i686]
     steps:
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/bin/
@@ -45,7 +45,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/bin/
@@ -79,7 +79,7 @@ jobs:
   build-macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/bin/
