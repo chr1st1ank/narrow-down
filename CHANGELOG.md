@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Fixed
+- Fixes #62 which led to TypeErrors in case of multiple identical results.
 
 ## [0.9.1] - 2022-03-25
 ### Changed

@@ -23,9 +23,6 @@ Narrow Down offers a flexible but easy-to-use Python API to finding duplicates o
 * GitHub repo: <https://github.com/chr1st1ank/narrow-down.git>
 * Documentation: <https://chr1st1ank.github.io/narrow-down>
 
- 
-**Status**: Prototype. Solid and fast production quality, but _API changes are still possible until version 1.0 is reached_.
-
 
 ## Features
 
