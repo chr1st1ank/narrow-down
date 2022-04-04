@@ -336,4 +336,7 @@ def _jaccard_similarity(s1: Iterable, s2: Iterable):
         s1 = set(s1)
     if not isinstance(s2, set):
         s2 = set(s2)
-    return len(s1.intersection(s2)) / len(s1.union(s2))
+    union = s1.union(s2)
+    if not union:
+        return 1.0 if len(s1) == len(s2) == 0 else 0.0
+    return len(s1.intersection(s2)) / len(union)

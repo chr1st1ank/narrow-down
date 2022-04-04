@@ -110,7 +110,7 @@ async def test_similarity_store__query_empty_result_with_validation(monkeypatch)
     monkeypatch.setattr(simstore._lsh, "query", fake_query)
 
     results = await simstore.query(document="", validate=True)
-    assert results == []
+    assert results == [StoredDocument(id_=1, document="")]
 
 
 @pytest.mark.asyncio
