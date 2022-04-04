@@ -98,6 +98,22 @@ async def test_similarity_store__query_with_validation(monkeypatch, storage_leve
 
 
 @pytest.mark.asyncio
+async def test_similarity_store__query_empty_result_with_validation(monkeypatch):
+    async def fake_query(*args, **kwargs):
+        return [
+            StoredDocument(id_=1, document=""),
+        ]
+
+    simstore = await SimilarityStore.create(
+        storage_level=StorageLevel.Document, tokenize="char_ngrams(1)"
+    )
+    monkeypatch.setattr(simstore._lsh, "query", fake_query)
+
+    results = await simstore.query(document="", validate=True)
+    assert results == []
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "validate",
     [True, False, None],
