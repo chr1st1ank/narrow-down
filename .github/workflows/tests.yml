@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-
+      - main
 jobs:
   linting:
     # Static code analysis. Running on lowest supported Python version to catch use of new syntax.
@@ -173,3 +173,50 @@ jobs:
         uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration_tests:
+    name: "Integration test"
+    runs-on: "ubuntu-latest"
+    services:
+      postgres:
+        image: scylladb/scylla:4.5.0
+        ports:
+          - 9042:9042
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ubuntu-latest-3.9-pip-${{ hashFiles('**/pyproject.toml') }}
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ubuntu-latest-3.9-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install system deps
+        shell: bash
+        run: pip install nox maturin
+
+      - name: Run tests with nox
+        shell: bash
+        env:
+          TEST_WITH_DB: true
+        run: nox --verbose --force-color -s tests-3.9
+
+      - name: Run benchmarks with nox
+        shell: bash
+        env:
+          TEST_WITH_DB: true
+        run: nox --verbose --force-color -s benchmarks-3.9
