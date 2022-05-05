@@ -4,7 +4,7 @@ import platform
 import nox
 from nox.sessions import Session
 
-nox.options.sessions = ["tests", "mypy"]
+nox.options.sessions = ["tests", "mypy", "benchmarks"]
 python_versions = ["3.7", "3.8", "3.9", "3.10"]
 
 
@@ -74,3 +74,19 @@ def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     install_with_constraints(session, "invoke", "safety")
     session.run("inv", "safety")
+
+
+@nox.session(python=python_versions)
+def benchmarks(session: Session) -> None:
+    """Produce the coverage report."""
+    install_with_constraints(
+        session,
+        "invoke",
+        "pytest",
+        "xdoctest",
+        "coverage[toml]",
+        "pytest-asyncio",
+        "pytest-benchmark",
+        "pytest-cov",
+    )
+    session.run("inv", "benchmarks")
