@@ -217,4 +217,6 @@ jobs:
 
       - name: Run benchmarks with nox
         shell: bash
+        env:
+          TEST_WITH_DB: true
         run: nox --verbose --force-color -s benchmarks-3.9
