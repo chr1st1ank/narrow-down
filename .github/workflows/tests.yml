@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload coverage data
         if: ${{ matrix.publish-results && always() }}
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-data
           path: ".coverage.*"
