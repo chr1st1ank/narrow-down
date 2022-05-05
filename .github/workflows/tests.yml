@@ -160,7 +160,7 @@ jobs:
           pip install maturin
 
       - name: Download coverage data
-        uses: actions/download-artifact@v2.1.0
+        uses: actions/download-artifact@v3
         with:
           name: coverage-data
 
