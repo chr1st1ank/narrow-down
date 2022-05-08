@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2022-05-08
+### Changed
+- Improved performance of SimilarityStore.query_top_n() 
+
 ## [0.9.3] - 2022-04-05
 ### Fixed
 - Fixes #63 which led to Exceptions in case of empty documents.
@@ -113,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.0...v0.9.1
