@@ -327,7 +327,9 @@ class SimilarityStore:
         fingerprint = self._minhasher.minhash(tokens)
         if (self._storage_level & StorageLevel.Document) and validate is not False:
             # Query 4x the desired number to have some buffer for filtering
-            candidates = await self._lsh.query_top_n(n=n*4, fingerprint=fingerprint, exact_part=exact_part)
+            candidates = await self._lsh.query_top_n(
+                n=n * 4, fingerprint=fingerprint, exact_part=exact_part
+            )
             candidates = self._filter_candidates(candidates, tokens, exact_part)
             return candidates[:n]  # type: ignore
         return await self._lsh.query_top_n(n=n, fingerprint=fingerprint, exact_part=exact_part)
