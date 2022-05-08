@@ -323,11 +323,13 @@ class SimilarityStore:
         documents themselves might differ. However, if `validate` is `True` the ordering of the
         results is correct, because the actual documents are compared with each other.
         """
-        if (self._storage_level & StorageLevel.Document) and validate is not False:
-            candidates = await self.query(document=document, exact_part=exact_part, validate=True)
-            return candidates[:n]  # type: ignore
         tokens = self._tokenize_callable(document)
         fingerprint = self._minhasher.minhash(tokens)
+        if (self._storage_level & StorageLevel.Document) and validate is not False:
+            # Query 4x the desired number to have some buffer for filtering
+            candidates = await self._lsh.query_top_n(n=n*4, fingerprint=fingerprint, exact_part=exact_part)
+            candidates = self._filter_candidates(candidates, tokens, exact_part)
+            return candidates[:n]  # type: ignore
         return await self._lsh.query_top_n(n=n, fingerprint=fingerprint, exact_part=exact_part)
 
 
