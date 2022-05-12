@@ -7,7 +7,7 @@ import asyncio
 import contextlib
 import random
 import re
-from typing import Dict, Iterable, Optional, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 import cassandra.cluster  # type: ignore
 import cassandra.query  # type: ignore
@@ -241,6 +241,31 @@ class ScyllaDBStore(StorageBackend):
         if not docs:
             raise KeyError(f"No document with id {document_id}")
         return docs[0].doc
+
+    async def query_documents(self, document_ids: List[int]) -> List[bytes]:
+        """Get the data belonging to multiple documents.
+
+        Args:
+            document_ids: Key under which the data is stored.
+
+        Returns:
+            The documents stored under the key `document_id` as bytes object.
+
+        Raises:
+            KeyError: If no document was found for at least one of the ids.
+        """
+        docs = {}
+        with self._session() as session:
+            for i in range(0, len(document_ids), 50):
+                doc_id_batch = document_ids[i : i + 50]
+                doc_ids_str = ",".join(map(str, map(int, doc_id_batch)))
+                query = (
+                    f"select id, doc from {self._keyspace}.{self._table_prefix}documents "
+                    f"where id IN ({doc_ids_str});"
+                )
+                for result in await self._execute(session, query):
+                    docs[result.id] = result.doc
+        return [docs[i] for i in document_ids]
 
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""
