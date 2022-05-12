@@ -114,6 +114,7 @@ def test_similarity_store__query_25_benchmark(
     "storage_backend, storage_level",
     [
         (ScyllaDBStore, StorageLevel.Minimal),
+        (ScyllaDBStore, StorageLevel.Document),
         (SQLiteStore, StorageLevel.Minimal),
     ],
 )
