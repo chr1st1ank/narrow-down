@@ -1,6 +1,6 @@
 """Storage backend based on SQLite."""
 import sqlite3
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional
 
 from narrow_down.storage import StorageBackend
 
@@ -119,6 +119,29 @@ class SQLiteStore(StorageBackend):
         if doc is None:
             raise KeyError(f"No document with id {document_id}")
         return doc[0]
+
+    async def query_documents(self, document_ids: List[int]) -> List[bytes]:
+        """Get the data belonging to multiple documents.
+
+        Args:
+            document_ids: Key under which the data is stored.
+
+        Returns:
+            The documents stored under the key `document_id` as bytes object.
+
+        Raises:
+            KeyError: If no document was found for at least one of the ids.
+        """
+        docs = {}
+        for i in range(0, len(document_ids), 50):
+            doc_id_batch = document_ids[i : i + 50]
+            doc_ids_str = ",".join(map(str, map(int, doc_id_batch)))
+            cursor = self._connection.execute(
+                f"SELECT id, doc FROM documents WHERE id IN ({doc_ids_str})"
+            )
+            for id_, doc in cursor.fetchall():
+                docs[id_] = doc
+        return [docs[i] for i in document_ids]
 
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""
