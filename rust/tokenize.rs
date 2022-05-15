@@ -6,7 +6,10 @@ use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PySet, PyString};
 use pyo3::AsPyPointer;
 
-// Padding. Example for times = 2: "abc" => "$$abc$$"
+/// Return the byte vector with a padding of pad_char, repeated "times" times
+///
+/// # Examples
+/// times = 2: "abc" => "$$abc$$"
 fn pad_both_sides(s: &[u8], pad_char: u8, times: usize) -> Vec<u8> {
     let mut padded = Vec::with_capacity(s.len() + 2 * times);
     for _ in 0..(times) {
@@ -19,6 +22,7 @@ fn pad_both_sides(s: &[u8], pad_char: u8, times: usize) -> Vec<u8> {
     padded
 }
 
+/// Returns all byte n-grams of length n as Python set
 #[pyfunction]
 pub fn char_ngrams_bytes<'py>(
     py: Python<'py>,
@@ -51,6 +55,7 @@ fn byte_ngrams_unpadded<'py>(py: Python, padded: &[u8], n: usize, set: &'py PySe
     set
 }
 
+/// Returns all character n-grams of length n as Python set
 #[pyfunction]
 pub fn char_ngrams_str<'py>(
     py: Python<'py>,
@@ -58,8 +63,10 @@ pub fn char_ngrams_str<'py>(
     n: usize,
     pad_char: Option<&PyString>,
 ) -> PyResult<&'py PySet> {
+    let ngrams = PySet::empty(py).unwrap();
+
     if s.len().unwrap() == 0 {
-        return Ok(PySet::empty(py).unwrap());
+        return Ok(ngrams);
     }
 
     let padded: &PyString = if let Some(c) = pad_char {
@@ -72,14 +79,15 @@ pub fn char_ngrams_str<'py>(
     } else {
         s
     };
-    let set = PySet::empty(py).unwrap();
+
     for i in 0..(padded.len().unwrap() - n + 1) {
         unsafe {
             PySet_Add(
-                set.as_ptr(),
+                ngrams.as_ptr(),
                 PyUnicode_Substring(padded.as_ptr(), i as Py_ssize_t, (i + n) as Py_ssize_t),
             )
         };
     }
-    Ok(set)
+
+    Ok(ngrams)
 }
