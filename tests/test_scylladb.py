@@ -403,6 +403,22 @@ async def test_scylladb_store__insert_query_document__given_id_duplicate(session
 
 
 @pytest.mark.asyncio
+async def test_scylladb_store__insert_query_documents__given_id(session_mock):
+    session_mock.add_mock_response(
+        "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) VALUES (1234,b'abcd efgh');", []
+    )
+    session_mock.add_mock_response(
+        "SELECT doc FROM <keyspace>.<table_prefix>documents WHERE id=1234;", [row(doc=b"abcd efgh")]
+    )
+    storage = await narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
+    ).initialize()
+    id_out = await storage.insert_document(document=b"abcd efgh", document_id=1234)
+    assert id_out == 1234
+    assert await storage.query_documents([id_out]) == [b"abcd efgh"]
+
+
+@pytest.mark.asyncio
 async def test_scylladb_store__query_documents(session_mock):
     """Testing mass querying of documents."""
     doc_ids = list(range(100, 180, 1))
