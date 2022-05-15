@@ -2,7 +2,7 @@
 
 The actual code is in the folder /rust.
 """
-from typing import Iterable, List, Optional, Union
+from typing import Iterable, List, Optional, Set, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -30,3 +30,4 @@ def xxhash_64bit(s: Union[str, bytes]) -> int: ...
 def minhash(
     shingle_list: List[str], a: npt.NDArray[np.uint32], b: npt.NDArray[np.uint32]
 ) -> npt.NDArray[np.uint32]: ...
+def char_ngrams_str(s: str, n: int, pad_char: Optional[str] = "$") -> Set[str]: ...
