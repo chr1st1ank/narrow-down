@@ -103,7 +103,7 @@ class SessionMock:
 
     def _prepare_query_string(self, statement, parameters: Tuple):
         prepared = (
-            re.sub(r"\s+", " ", statement.query_string)
+            re.sub(r"\s+", " ", statement if isinstance(statement, str) else statement.query_string)
             .replace("?", "{}")
             .format(*(parameters or []))
         )
@@ -400,6 +400,37 @@ async def test_scylladb_store__insert_query_document__given_id_duplicate(session
     id_out = await storage.insert_document(document=b"abcd efgh", document_id=1234)
     assert id_out == 1234
     assert await storage.query_document(id_out) == b"abcd efgh"
+
+
+@pytest.mark.asyncio
+async def test_scylladb_store__query_documents(session_mock):
+    """Testing mass querying of documents."""
+    doc_ids = list(range(100, 180, 1))
+    doc_vals = [f"abcd efgh ijkl mnop qrst {doc_id}".encode("utf-8") for doc_id in doc_ids]
+
+    storage = await narrow_down.scylladb.ScyllaDBStore(
+        session_mock, session_mock.test_keyspace, session_mock.table_prefix
+    ).initialize()
+    for doc_id, doc_val in zip(doc_ids, doc_vals):
+        session_mock.add_mock_response(
+            "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) "
+            f"VALUES ({doc_id},{doc_val});",
+            [],
+        )
+        id_out = await storage.insert_document(document=doc_val, document_id=doc_id)
+        assert id_out == doc_id
+    session_mock.add_mock_response(
+        f"select id, doc from <keyspace>.<table_prefix>documents where id IN "
+        f"({','.join(map(str,doc_ids[:50]))});",
+        [row(id=i, doc=doc_val) for i, doc_val in zip(doc_ids[:50], doc_vals[:50])],
+    )
+    session_mock.add_mock_response(
+        f"select id, doc from <keyspace>.<table_prefix>documents where id IN "
+        f"({','.join(map(str,doc_ids[50:100]))});",
+        [row(id=i, doc=doc_val) for i, doc_val in zip(doc_ids[50:100], doc_vals[50:100])],
+    )
+
+    assert await storage.query_documents(doc_ids) == doc_vals
 
 
 @pytest.mark.asyncio
