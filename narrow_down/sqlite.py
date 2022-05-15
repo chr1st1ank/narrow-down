@@ -4,6 +4,8 @@ from typing import Iterable, List, Optional
 
 from narrow_down.storage import StorageBackend
 
+QUERY_BATCH_SIZE = 500
+
 
 class SQLiteStore(StorageBackend):
     """File-based storage backend for a SimilarityStore based on SQLite."""
@@ -133,8 +135,8 @@ class SQLiteStore(StorageBackend):
             KeyError: If no document was found for at least one of the ids.
         """
         docs = {}
-        for i in range(0, len(document_ids), 50):
-            doc_id_batch = document_ids[i : i + 50]
+        for i in range(0, len(document_ids), QUERY_BATCH_SIZE):
+            doc_id_batch = document_ids[i : i + QUERY_BATCH_SIZE]
             doc_ids_str = ",".join(map(str, map(int, doc_id_batch)))
             cursor = self._connection.execute(
                 f"SELECT id, doc FROM documents WHERE id IN ({doc_ids_str})"

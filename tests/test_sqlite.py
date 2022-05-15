@@ -65,6 +65,21 @@ async def test_sqlite_store__insert_query_document__no_id():
 
 
 @pytest.mark.asyncio
+async def test_sqlite_store__insert_query_documents__no_id():
+    ims = await narrow_down.sqlite.SQLiteStore(":memory:").initialize()
+    id_out = await ims.insert_document(document=b"abcd efgh")
+    assert await ims.query_documents([id_out]) == [b"abcd efgh"]
+
+
+@pytest.mark.asyncio
+async def test_sqlite_store__insert_query_multiple_documents__no_id():
+    ims = await narrow_down.sqlite.SQLiteStore(":memory:").initialize()
+    id_out1 = await ims.insert_document(document=b"abcd efgh")
+    id_out2 = await ims.insert_document(document=b"abcd efgh xy")
+    assert await ims.query_documents([id_out2, id_out1]) == [b"abcd efgh xy", b"abcd efgh"]
+
+
+@pytest.mark.asyncio
 async def test_sqlite_store__insert_query_document__reopen(tmp_path):
     dbfile = str(tmp_path / "test.db")
 
