@@ -7,12 +7,14 @@ import asyncio
 import contextlib
 import random
 import re
-from typing import Dict, Iterable, Optional, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 import cassandra.cluster  # type: ignore
 import cassandra.query  # type: ignore
 
 from narrow_down.storage import StorageBackend
+
+QUERY_BATCH_SIZE = 50
 
 
 def _wrap_future(f: cassandra.cluster.ResponseFuture):
@@ -241,6 +243,43 @@ class ScyllaDBStore(StorageBackend):
         if not docs:
             raise KeyError(f"No document with id {document_id}")
         return docs[0].doc
+
+    async def query_documents(self, document_ids: List[int]) -> List[bytes]:
+        """Get the data belonging to multiple documents.
+
+        Args:
+            document_ids: Key under which the data is stored.
+
+        Returns:
+            The documents stored under the key `document_id` as bytes object.
+
+        Raises:
+            KeyError: If no document was found for at least one of the ids.
+        """
+        if len(document_ids) > QUERY_BATCH_SIZE:
+            with self._session() as session:
+                result_doc_dicts = await asyncio.gather(
+                    *[
+                        self._query_document_batch(session, document_ids[i : i + QUERY_BATCH_SIZE])
+                        for i in range(0, len(document_ids), QUERY_BATCH_SIZE)
+                    ]
+                )
+                doc_dicts = {id_: doc for d in result_doc_dicts for id_, doc in d.items()}
+                return [doc_dicts[i] for i in document_ids]
+        else:
+            docs: List[bytes] = await asyncio.gather(
+                *[self.query_document(id_) for id_ in document_ids]
+            )
+            return docs
+
+    async def _query_document_batch(self, session, doc_id_batch):
+        doc_ids_str = ",".join(map(str, map(int, doc_id_batch)))
+        query = (
+            f"select id, doc from {self._keyspace}.{self._table_prefix}documents "
+            f"where id IN ({doc_ids_str});"
+        )
+        result_docs = {r.id: r.doc for r in await self._execute(session, query)}
+        return result_docs
 
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""

@@ -1,10 +1,11 @@
 """Base classes and interfaces for storage."""
+import asyncio
 import dataclasses
 import enum
 import pickle  # noqa
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, NewType, Optional
+from typing import Any, Dict, Iterable, List, NewType, Optional
 
 import numpy as np
 from numpy import typing as npt
@@ -143,10 +144,28 @@ class StorageBackend(ABC):
         Args:
             document_id: Key under which the data is stored.
 
+        Returns:
+            The document value for the given ID.
+
         Raises:
             KeyError: If no document with the given ID is stored.
-        """  # noqa: DAR401
+        """  # noqa: DAR202,DAR401
         raise NotImplementedError
+
+    async def query_documents(self, document_ids: List[int]) -> List[bytes]:
+        """Get the data belonging to multiple documents.
+
+        Args:
+            document_ids: Key under which the data is stored.
+
+        Returns:
+            The list of document values for the given IDs.
+
+        Raises:
+            KeyError: If no document was found for at least one of the ids.
+        """  # noqa: DAR401
+        # Standard implementation of the base class. May be overloaded for specialization.
+        return await asyncio.gather(*[self.query_document(doc_id) for doc_id in document_ids])
 
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""

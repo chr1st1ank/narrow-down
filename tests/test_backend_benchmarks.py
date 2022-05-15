@@ -114,6 +114,7 @@ def test_similarity_store__query_25_benchmark(
     "storage_backend, storage_level",
     [
         (ScyllaDBStore, StorageLevel.Minimal),
+        (ScyllaDBStore, StorageLevel.Document),
         (SQLiteStore, StorageLevel.Minimal),
     ],
 )
@@ -121,7 +122,11 @@ def test_similarity_store__query_25_parallel_benchmark(
     benchmark, tmp_path, sample_sentences_french, storage_backend, storage_level
 ):
     storage = create_storage_for_backend(storage_backend, "query_25_parallel_benchmark", tmp_path)
-    simstore = asyncio.run(SimilarityStore.create(storage=storage, storage_level=storage_level))
+    simstore = asyncio.run(
+        SimilarityStore.create(
+            storage=storage, storage_level=storage_level, similarity_threshold=0.6
+        )
+    )
 
     async def init():
         for doc in sample_sentences_french:

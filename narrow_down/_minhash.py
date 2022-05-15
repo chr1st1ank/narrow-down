@@ -186,7 +186,7 @@ class LSH:
         candidates = set()
         for new_candidates in await asyncio.gather(*tasks):
             candidates.update(new_candidates)
-        return await asyncio.gather(*[self._query_document(c) for c in candidates])
+        return await self._query_documents(list(candidates))
 
     async def query_top_n(
         self, n, fingerprint: Fingerprint, *, exact_part: str = None
@@ -202,14 +202,12 @@ class LSH:
         candidates: typing.Counter[int] = collections.Counter()
         for new_candidates in await asyncio.gather(*tasks):
             candidates.update(new_candidates)
-        return await asyncio.gather(
-            *[self._query_document(c) for c, _ in candidates.most_common(n)]
-        )
+        return await self._query_documents([c for c, _ in candidates.most_common(n)])
 
-    async def _query_document(self, doc_id: int):
+    async def _query_documents(self, doc_ids: typing.List[int]):
         """Fetch a document from the storage and deserialize it."""
-        doc = await self._storage.query_document(doc_id)
-        return StoredDocument.deserialize(doc, doc_id)
+        docs = await self._storage.query_documents(doc_ids)
+        return [StoredDocument.deserialize(doc, doc_id) for doc, doc_id in zip(docs, doc_ids)]
 
 
 def find_optimal_config(

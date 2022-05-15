@@ -50,6 +50,55 @@ def test_word_ngrams__benchmark(benchmark, sample_sentences_french, n):
     # fmt: on
 
 
+@pytest.mark.parametrize("n", [1, 3, 5])
+def test_char_ngrams__str__benchmark(benchmark, sample_sentences_french, n):
+    def f():
+        for s in sample_sentences_french:
+            _tokenize.char_ngrams(s, n)
+        return _tokenize.char_ngrams(
+            "De 1990 à 2000, ce fut Théodore Mel Eg avec deux mandats également.", n
+        )
+
+    tokens = benchmark(f)
+    # fmt: off
+    if n == 1:
+        assert tokens == {
+            '9', 'a', 'T', 'h', 'f', 'u', 'e', 'E', ' ', '1', 'g', '2', 'D', 'm', 's',
+            'M', 'd', 'é', 'v', '0', 't', 'r', 'x', 'n', 'l', 'à', ',', 'o', 'c', '.'
+        }
+    elif n == 3:
+        assert tokens == {
+            'c d', 'gal', 'e M', 'fut', 'De ', ' fu', 'éga', 'ent', ', c', ' Th', 'ave',
+            '90 ', '0, ', 'ats', 'ux ', 'and', 'Eg ', 'e 1', '$De', ' à ', 'e f', 'x m',
+            'nda', '$$D', 'éod', 'ce ', ' ce', ' 20', 't.$', ' 19', '990', 't T', 'nt.',
+            'l E', 'à 2', ' av', ' ég', 'ec ', 'lem', 're ', 'dor', ' ma', ' Eg', 'el ',
+            'g a', 'odo', 'ts ', 'men', 'vec', '200', 'ore', '0 à', ' Me', '000', 'eux',
+            '.$$', 'eme', 's é', '199', '00,', 'ut ', 'deu', 'Thé', 'ale', 'dat', ' de',
+            'héo', 'man', 'Mel'
+        }
+    # fmt: on
+
+
+def test_char_ngrams__bytes__benchmark(benchmark):
+    """Check the results for normal use."""
+    testdata = [
+        (b"a", 1, b"", {b"a"}),
+        (b"abac", 1, b"", {b"a", b"b", b"c"}),
+        (b"abac", 2, b"", {b"ac", b"ab", b"ba"}),
+        (b"a", 1, b"#", {b"a"}),
+        (b"abac", 1, b"#", {b"a", b"b", b"c"}),
+        (b"abac", 2, b"#", {b"ba", b"ab", b"c#", b"#a", b"ac"}),
+    ]
+
+    def f():
+        for s, n, pad_char, _ in testdata:
+            _tokenize.char_ngrams(s, n, pad_char)
+        return _tokenize.char_ngrams(s, n, pad_char)
+
+    tokens = benchmark(f)
+    assert tokens == testdata[-1][-1]
+
+
 @pytest.mark.parametrize("n, pad_char", [(1, None), (2, None), (1, ""), (2, "")])
 def test_char_ngrams__str_empty_string(n, pad_char):
     """For an empty input the output should always be empty."""
