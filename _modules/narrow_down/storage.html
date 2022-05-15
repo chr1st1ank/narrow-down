@@ -213,12 +213,13 @@
         <article role="main">
           <h1>Source code for narrow_down.storage</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Base classes and interfaces for storage."""</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">typing</span> <span class="k">as</span> <span class="n">npt</span>
@@ -357,10 +358,28 @@
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: Key under which the data is stored.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            The document value for the given ID.</span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document with the given ID is stored.</span>
-<span class="sd">        """</span>  <span class="c1"># noqa: DAR401</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: DAR202,DAR401</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="StorageBackend.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+        <span class="sd">"""Get the data belonging to multiple documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            document_ids: Key under which the data is stored.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The list of document values for the given IDs.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
+<span class="sd">        """</span>  <span class="c1"># noqa: DAR401</span>
+        <span class="c1"># Standard implementation of the base class. May be overloaded for specialization.</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">query_document</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="StorageBackend.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">"""Remove a document given by ID from the list of documents."""</span>

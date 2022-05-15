@@ -214,9 +214,11 @@
           <h1>Source code for narrow_down.sqlite</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Storage backend based on SQLite."""</span>
 <span class="kn">import</span> <span class="nn">sqlite3</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">narrow_down.storage</span> <span class="kn">import</span> <span class="n">StorageBackend</span>
+
+<span class="n">QUERY_BATCH_SIZE</span> <span class="o">=</span> <span class="mi">500</span>
 
 
 <div class="viewcode-block" id="SQLiteStore"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore">[docs]</a><span class="k">class</span> <span class="nc">SQLiteStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
@@ -333,6 +335,29 @@
         <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SQLiteStore.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+        <span class="sd">"""Get the data belonging to multiple documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            document_ids: Key under which the data is stored.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The documents stored under the key `document_id` as bytes object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
+<span class="sd">        """</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_ids</span><span class="p">),</span> <span class="n">QUERY_BATCH_SIZE</span><span class="p">):</span>
+            <span class="n">doc_id_batch</span> <span class="o">=</span> <span class="n">document_ids</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">QUERY_BATCH_SIZE</span><span class="p">]</span>
+            <span class="n">doc_ids_str</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">)))</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"SELECT id, doc FROM documents WHERE id IN (</span><span class="si">{</span><span class="n">doc_ids_str</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+                <span class="n">docs</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">docs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">"""Remove a document given by ID from the list of documents."""</span>
