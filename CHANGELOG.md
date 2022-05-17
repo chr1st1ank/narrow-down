@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   querying multiple documents at once.
 
 ### Changed
+- The public interface of the library is declared stable, hence it is ready for version 1.0.
 - char_ngrams() is now fully implemented in Rust, giving a speedup of 2x.
 - minhash LSH uses the new query_documents() of the storage backends instead of running concurrent
   queries.
