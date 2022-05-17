@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [1.0.0] - 2022-05-17
 ### Added
 - The storage backends do have now a method query_documents() to leverage economies of scale when 
   querying multiple documents at once.
@@ -130,7 +132,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...v1.0.0
 [0.10.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.1...v0.9.2
