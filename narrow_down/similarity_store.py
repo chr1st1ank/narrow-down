@@ -192,7 +192,7 @@ class SimilarityStore:
                     pad_char = args[1][1:-1]
                 else:
                     pad_char = args[1]
-            if pad_char:
+            if pad_char is not None:
                 return lambda s: _tokenize.char_ngrams(s, n=n, pad_char=pad_char)
             return lambda s: _tokenize.char_ngrams(s, n=n)
         raise ValueError(f"Tokenization function not found: {tokenize_spec}")
