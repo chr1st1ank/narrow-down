@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - minhash LSH uses the new query_documents() of the storage backends instead of running concurrent
   queries.
 
+### Fixed
+- Wrong operator precedence in minhash implementation, which lead to incorrect results.
+- Incorrect parsing of tokenize argument for SimilarityStore for char_ngrams without padding.
+
 ## [0.10.0] - 2022-05-08
 ### Changed
 - Improved performance of SimilarityStore.query_top_n().

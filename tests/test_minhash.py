@@ -18,7 +18,7 @@ def test_minhash():
 
     assert minhashes.shape == (2,)
     assert minhashes.dtype == np.uint32
-    assert (minhashes == np.array([2439865586, 4085789398], dtype=np.uint32)).all()
+    assert (minhashes == np.array([2048153058, 2194504465], dtype=np.uint32)).all()
 
 
 def test_minhash_benchmark(benchmark, sample_byte_strings):
@@ -38,16 +38,19 @@ def test_minhash_benchmark(benchmark, sample_byte_strings):
 async def test_lsh__basic_lookup_without_exact_part():
     """Minimal check if an LSH can be constructed."""
     test_doc = StoredDocument(
-        # document="abc def",
         exact_part="exact:part",
-        # data="some custom payload",
-        fingerprint=storage.Fingerprint(np.array([2, 4, 6])),
+        fingerprint=storage.Fingerprint(np.array([2 * i for i in range(1, 22)])),
+    )
+    unrelated_doc = StoredDocument(
+        exact_part="exact:part",
+        fingerprint=storage.Fingerprint(np.array([3 * i for i in range(0, 21)])),
     )
     lsh = _minhash.LSH(
         _minhash.MinhashLshConfig(n_hashes=2, n_bands=2, rows_per_band=1),
         storage=await storage.InMemoryStore().initialize(),
     )
     await lsh.insert(test_doc.without("exact_part"))
+    await lsh.insert(unrelated_doc.without("exact_part"))
     result = await lsh.query(test_doc.fingerprint)
     print(result)
     assert len(result) == 1
