@@ -24,14 +24,16 @@ pub fn minhash<'py>(
     let mut minhashes: Vec<u32> = Vec::new();
     let a_slice = a.as_slice()?;
     let b_slice = b.as_slice()?;
+
     for (a_i, b_i) in a_slice.iter().zip(b_slice) {
         let minhash: u32 = murmur_hashes
             .iter()
-            .map(|h| u64::from(*a_i) * h + u64::from(*b_i) % MERSENNE_PRIME)
+            .map(|h| (u64::from(*a_i) * h + u64::from(*b_i)) % MERSENNE_PRIME)
             .min()
             .unwrap_or(MERSENNE_PRIME) as u32;
         minhashes.push(minhash);
     }
+
     Ok(minhashes)
 }
 
