@@ -97,11 +97,17 @@ class SQLiteStore(StorageBackend):
                 return document_id
             else:
                 cursor = conn.execute(
-                    "INSERT INTO documents(doc) VALUES (:doc) "
-                    "ON CONFLICT(id) DO UPDATE SET doc=:doc",
+                    "INSERT INTO documents(doc) VALUES (:doc)",
                     dict(doc=document),
                 )
-                return cursor.lastrowid
+                if cursor.lastrowid:
+                    return cursor.lastrowid
+                else:
+                    cursor.execute(
+                        "SELECT max(id) FROM documents WHERE doc = :doc",
+                        dict(doc=document),
+                    )
+                    return cursor.fetchone()[0]
 
     async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
