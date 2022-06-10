@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Configuration of Indexing and Search" href="configuration_of_indexing_and_search.html" /><link rel="prev" title="Narrow Down - Efficient near-duplicate search" href="../index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>Basic Usage - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -198,7 +198,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -213,11 +214,11 @@
         </div>
         <article role="main">
           <section id="basic-usage">
-<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">#</a></h1>
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h1>
 <p>The class <a class="reference internal" href="../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore" title="narrow_down.similarity_store.SimilarityStore"><span class="xref myst py py-class">SimilarityStore</span></a> allows to incrementally index and search documents. Both is demonstrated in the sections below.</p>
 <p>The API is fully asynchronous. That means all relevant methods can directly called with <code class="docutils literal notranslate"><span class="pre">await</span></code> from coroutine functions. But it can also be called from synchronous code with <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.run" title="(in Python v3.10)"><span class="xref myst">asyncio.run()</span></a>. This creates a little overhead to establish an event loop. So it is better to call <code class="docutils literal notranslate"><span class="pre">run()</span></code> not to often but rather on a higher level in the call chain.</p>
 <section id="indexing">
-<h2>Indexing<a class="headerlink" href="#indexing" title="Permalink to this headline">#</a></h2>
+<h2>Indexing<a class="headerlink" href="#indexing" title="Permalink to this heading">#</a></h2>
 <p>The code block below shows how to create and configure a SimilarityStore() object.</p>
 <p>Here we choose the <a class="reference internal" href="../apidoc/narrow_down.storage.html#narrow_down.storage.StorageLevel" title="narrow_down.storage.StorageLevel"><span class="xref myst py py-class">StorageLevel</span></a> <code class="docutils literal notranslate"><span class="pre">Document</span></code>, so that the whole document is stored in the <code class="docutils literal notranslate"><span class="pre">SimilarityStore</span></code> and can be returned from it. A target similarity threshold of 75% is defined, which means that we want to search for documents which have a Jaccard similarity of at least 75% with the input document. To calculate the similarity, the document is first preprocessed by a tokenizer function. Here we choose the character 3-grams of a document for this.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">narrow_down</span> <span class="k">as</span> <span class="nn">nd</span>
@@ -226,43 +227,43 @@
 <span class="n">similarity_store</span> <span class="o">=</span> <span class="k">await</span> <span class="n">nd</span><span class="o">.</span><span class="n">similarity_store</span><span class="o">.</span><span class="n">SimilarityStore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
     <span class="n">storage_level</span><span class="o">=</span><span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">,</span>
     <span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
-    <span class="n">tokenize</span><span class="o">=</span><span class="s2">"char_ngrams(3)"</span><span class="p">,</span>
+    <span class="n">tokenize</span><span class="o">=</span><span class="s2">&quot;char_ngrams(3)&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Now the object can be filled with documents. As example reviews of a popular oatmeal cookie are used:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strings_to_index</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">"Delicious!"</span><span class="p">,</span>
-    <span class="s2">"Great Anytime of Day!"</span><span class="p">,</span>
-    <span class="s2">"Very good!"</span><span class="p">,</span>
-    <span class="s2">"Quick, simple HEALTHY snack for the kiddos!!!"</span><span class="p">,</span>
-    <span class="s2">"Quaker Soft Baked Oatmeal Cookies"</span><span class="p">,</span>
-    <span class="s2">"Yummy"</span><span class="p">,</span>
-    <span class="s2">"Wow!!!!!"</span><span class="p">,</span>
-    <span class="s2">"soft, chewy, yummy!"</span><span class="p">,</span>
-    <span class="s2">"so soft and good"</span><span class="p">,</span>
-    <span class="s2">"Chewy deliciousness"</span><span class="p">,</span>
-    <span class="s2">"the bomb"</span><span class="p">,</span>
-    <span class="s2">"Deliciousness"</span><span class="p">,</span>
-    <span class="s2">"Yummy"</span><span class="p">,</span>
-    <span class="s2">"awesome cookies"</span><span class="p">,</span>
-    <span class="s2">"Home-baked taste without the fuss"</span><span class="p">,</span>
-    <span class="s2">"Yummy Whole Grain Goodness!!!"</span><span class="p">,</span>
-    <span class="s2">"Yummy"</span><span class="p">,</span>
-    <span class="s2">"Amazing Cookies!"</span><span class="p">,</span>
-    <span class="s2">"Good, but not homemade."</span><span class="p">,</span>
-    <span class="s2">"Very Good Oatmeal Cookie"</span><span class="p">,</span>
-    <span class="s2">"Very good cookie"</span><span class="p">,</span>
-    <span class="s2">"Love these cookies especially for the kids"</span><span class="p">,</span>
-    <span class="s2">"My kids loved them."</span><span class="p">,</span>
-    <span class="s2">"Lunchbox or Work Staple"</span><span class="p">,</span>
-    <span class="s2">"So Delious as no other"</span><span class="p">,</span>
-    <span class="s2">"Over-Packaged Product"</span><span class="p">,</span>
-    <span class="s2">"yum"</span><span class="p">,</span>
-    <span class="s2">"Great taste"</span><span class="p">,</span>
-    <span class="s2">"Yummy!!"</span><span class="p">,</span>
-    <span class="s2">"Well, the foil packet is handy..."</span><span class="p">,</span>
-    <span class="s2">"TOTALLY DIFFERENT!"</span><span class="p">,</span>
+    <span class="s2">&quot;Delicious!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Great Anytime of Day!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Very good!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Quick, simple HEALTHY snack for the kiddos!!!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Quaker Soft Baked Oatmeal Cookies&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Yummy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Wow!!!!!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;soft, chewy, yummy!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;so soft and good&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Chewy deliciousness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;the bomb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Deliciousness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Yummy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;awesome cookies&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Home-baked taste without the fuss&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Yummy Whole Grain Goodness!!!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Yummy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Amazing Cookies!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Good, but not homemade.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Very Good Oatmeal Cookie&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Very good cookie&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Love these cookies especially for the kids&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;My kids loved them.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Lunchbox or Work Staple&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;So Delious as no other&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Over-Packaged Product&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;yum&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Great taste&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Yummy!!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Well, the foil packet is handy...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TOTALLY DIFFERENT!&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -272,30 +273,30 @@
 </div>
 </section>
 <section id="querying">
-<h2>Querying<a class="headerlink" href="#querying" title="Permalink to this headline">#</a></h2>
+<h2>Querying<a class="headerlink" href="#querying" title="Permalink to this heading">#</a></h2>
 <p>Now that some data is indexed, the SimilarityStore is ready to execute searches:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Awesome cookies"</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"awesome cookies"</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Awesome cookies&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">&quot;awesome cookies&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"So Delicious as no other"</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"so delious as no other"</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;So Delicious as no other&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">&quot;so delious as no other&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Very, very good cookie"</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">"very good cookie"</span><span class="p">)]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Very, very good cookie&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">search_result</span> <span class="o">==</span> <span class="p">[</span><span class="n">StoredDocument</span><span class="p">(</span><span class="n">id_</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="s2">&quot;very good cookie&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"Loving every bit of it!"</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">search_result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Loving every bit of it!&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 <span class="n">search_result</span> <span class="o">==</span> <span class="p">[]</span>
 </pre></div>
 </div>
@@ -304,9 +305,9 @@
 </div>
 </section>
 <section id="adding-more-documents">
-<h2>Adding more documents<a class="headerlink" href="#adding-more-documents" title="Permalink to this headline">#</a></h2>
+<h2>Adding more documents<a class="headerlink" href="#adding-more-documents" title="Permalink to this heading">#</a></h2>
 <p>There is no split between a training and a prediction phase. More documents can be added at any time:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">"Good cookie"</span><span class="p">,</span> <span class="n">document_id</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">similarity_store</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;Good cookie&quot;</span><span class="p">,</span> <span class="n">document_id</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>42
@@ -393,6 +394,7 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>

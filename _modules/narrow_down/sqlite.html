@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>narrow_down.sqlite - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -197,7 +197,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -212,7 +213,7 @@
         </div>
         <article role="main">
           <h1>Source code for narrow_down.sqlite</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Storage backend based on SQLite."""</span>
+<span></span><span class="sd">&quot;&quot;&quot;Storage backend based on SQLite.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">sqlite3</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
@@ -222,58 +223,58 @@
 
 
 <div class="viewcode-block" id="SQLiteStore"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore">[docs]</a><span class="k">class</span> <span class="nc">SQLiteStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
-    <span class="sd">"""File-based storage backend for a SimilarityStore based on SQLite."""</span>
+    <span class="sd">&quot;&quot;&quot;File-based storage backend for a SimilarityStore based on SQLite.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SQLiteStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Create a new empty or connect to an existing SQLite database."""</span>
+        <span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span> <span class="o">=</span> <span class="n">db_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">"IMMEDIATE"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;IMMEDIATE&quot;</span><span class="p">)</span>
         <span class="c1"># On reopening we can read the number of partitions from the db</span>
-        <span class="n">partitions_from_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_setting_sync</span><span class="p">(</span><span class="s2">"__sqlite_partitions"</span><span class="p">)</span>
+        <span class="n">partitions_from_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_setting_sync</span><span class="p">(</span><span class="s2">&quot;__sqlite_partitions&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">partitions_from_db</span><span class="p">)</span> <span class="k">if</span> <span class="n">partitions_from_db</span> <span class="k">else</span> <span class="n">partitions</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SQLiteStore"</span><span class="p">:</span>
-        <span class="sd">"""Initialize the tables in the SQLite database file.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SQLiteStore&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">"CREATE TABLE IF NOT EXISTS settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)"</span>
+                <span class="s2">&quot;CREATE TABLE IF NOT EXISTS settings (key TEXT NOT NULL PRIMARY KEY, value TEXT)&quot;</span>
             <span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">"CREATE TABLE IF NOT EXISTS documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)"</span>
+                <span class="s2">&quot;CREATE TABLE IF NOT EXISTS documents (id INTEGER NOT NULL PRIMARY KEY, doc BLOB)&quot;</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">):</span>
                 <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS buckets_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> ("</span>
-                    <span class="s2">"bucket INTEGER NOT NULL, "</span>
-                    <span class="s2">"hash INTEGER NOT NULL, "</span>
-                    <span class="s2">"doc_id INTEGER NOT NULL"</span>
-                    <span class="s2">")"</span>
+                    <span class="sa">f</span><span class="s2">&quot;CREATE TABLE IF NOT EXISTS buckets_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (&quot;</span>
+                    <span class="s2">&quot;bucket INTEGER NOT NULL, &quot;</span>
+                    <span class="s2">&quot;hash INTEGER NOT NULL, &quot;</span>
+                    <span class="s2">&quot;doc_id INTEGER NOT NULL&quot;</span>
+                    <span class="s2">&quot;)&quot;</span>
                 <span class="p">)</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"PRAGMA synchronous = OFF"</span><span class="p">)</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"PRAGMA journal_mode = MEMORY"</span><span class="p">)</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA synchronous = OFF&quot;</span><span class="p">)</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;PRAGMA journal_mode = MEMORY&quot;</span><span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">"__sqlite_partitions"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">))</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;__sqlite_partitions&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""Store a setting as key-value pair."""</span>
+        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="s2">"INSERT INTO settings(key,value) VALUES (:key,:value) "</span>
-                <span class="s2">"ON CONFLICT(key) DO UPDATE SET value=:value"</span><span class="p">,</span>
+                <span class="s2">&quot;INSERT INTO settings(key,value) VALUES (:key,:value) &quot;</span>
+                <span class="s2">&quot;ON CONFLICT(key) DO UPDATE SET value=:value&quot;</span><span class="p">,</span>
                 <span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">),</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""Query a setting with the given key.</span>
+        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key: The identifier of the setting</span>
@@ -284,41 +285,40 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            sqlite3.OperationalError: In case the database query fails for any reason.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_setting_sync</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_query_setting_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT value FROM settings WHERE key=?"</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,))</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT value FROM settings WHERE key=?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,))</span>
             <span class="n">setting</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">setting</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">setting</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">OperationalError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">"no such table: settings"</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;no such table: settings&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">raise</span>
 
 <div class="viewcode-block" id="SQLiteStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""Add the data of a document to the storage and return its ID."""</span>
+        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">document_id</span><span class="p">:</span>
                 <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="s2">"INSERT INTO documents(id,doc) VALUES (:id,:doc) "</span>
-                    <span class="s2">"ON CONFLICT(id) DO UPDATE SET doc=:doc"</span><span class="p">,</span>
+                    <span class="s2">&quot;INSERT INTO documents(id,doc) VALUES (:id,:doc) &quot;</span>
+                    <span class="s2">&quot;ON CONFLICT(id) DO UPDATE SET doc=:doc&quot;</span><span class="p">,</span>
                     <span class="nb">dict</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">document_id</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">document</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="n">document_id</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                    <span class="s2">"INSERT INTO documents(doc) VALUES (:doc) "</span>
-                    <span class="s2">"ON CONFLICT(id) DO UPDATE SET doc=:doc"</span><span class="p">,</span>
+                    <span class="s2">&quot;INSERT INTO documents(doc) VALUES (:doc)&quot;</span><span class="p">,</span>
                     <span class="nb">dict</span><span class="p">(</span><span class="n">doc</span><span class="o">=</span><span class="n">document</span><span class="p">),</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span></div>
+                <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span>  <span class="c1"># type: ignore  # (this always works if the insert works)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Get the data belonging to a document.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: The id of the document. This ID is created and returned by the</span>
@@ -329,15 +329,15 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If the document is not stored.</span>
-<span class="sd">        """</span>
-        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT doc FROM documents WHERE id=?"</span><span class="p">,</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT doc FROM documents WHERE id=?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span>
         <span class="n">doc</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">"""Get the data belonging to multiple documents.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_ids: Key under which the data is stored.</span>
@@ -347,48 +347,48 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">docs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_ids</span><span class="p">),</span> <span class="n">QUERY_BATCH_SIZE</span><span class="p">):</span>
             <span class="n">doc_id_batch</span> <span class="o">=</span> <span class="n">document_ids</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">QUERY_BATCH_SIZE</span><span class="p">]</span>
-            <span class="n">doc_ids_str</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">)))</span>
+            <span class="n">doc_ids_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">)))</span>
             <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT id, doc FROM documents WHERE id IN (</span><span class="si">{</span><span class="n">doc_ids_str</span><span class="si">}</span><span class="s2">)"</span>
+                <span class="sa">f</span><span class="s2">&quot;SELECT id, doc FROM documents WHERE id IN (</span><span class="si">{</span><span class="n">doc_ids_str</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
                 <span class="n">docs</span><span class="p">[</span><span class="n">id_</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">docs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document given by ID from the list of documents."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
-            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"DELETE FROM documents WHERE id=?"</span><span class="p">,</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
+            <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM documents WHERE id=?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Link a document to a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2">(bucket,hash,doc_id) VALUES (?,?,?)"</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2">(bucket,hash,doc_id) VALUES (?,?,?)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">"""Get all document IDs stored in a bucket for a certain hash value."""</span>
+        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"SELECT doc_id FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> WHERE bucket=? AND hash=?"</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
+            <span class="sa">f</span><span class="s2">&quot;SELECT doc_id FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> WHERE bucket=? AND hash=?&quot;</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
             <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document from a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DELETE FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> "</span>  <span class="c1"># noqa: S608</span>
-                <span class="s2">"WHERE bucket=? AND hash=? AND doc_id=?"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;DELETE FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> &quot;</span>  <span class="c1"># noqa: S608</span>
+                <span class="s2">&quot;WHERE bucket=? AND hash=? AND doc_id=?&quot;</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div></div>
 </pre></div>
@@ -428,6 +428,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     </body>

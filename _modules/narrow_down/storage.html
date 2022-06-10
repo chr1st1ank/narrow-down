@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>narrow_down.storage - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -197,7 +197,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -212,7 +213,7 @@
         </div>
         <article role="main">
           <h1>Source code for narrow_down.storage</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Base classes and interfaces for storage."""</span>
+<span></span><span class="sd">&quot;&quot;&quot;Base classes and interfaces for storage.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">import</span> <span class="nn">enum</span>
@@ -230,47 +231,47 @@
 
 
 <div class="viewcode-block" id="TooLowStorageLevel"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.TooLowStorageLevel">[docs]</a><span class="k">class</span> <span class="nc">TooLowStorageLevel</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">"""Raised if a feature is used for which a higher storage level is needed."""</span></div>
+    <span class="sd">&quot;&quot;&quot;Raised if a feature is used for which a higher storage level is needed.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="StorageLevel"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageLevel">[docs]</a><span class="k">class</span> <span class="nc">StorageLevel</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Flag</span><span class="p">):</span>
-    <span class="sd">"""Detail level of document persistence."""</span>
+    <span class="sd">&quot;&quot;&quot;Detail level of document persistence.&quot;&quot;&quot;</span>
 
     <span class="n">Minimal</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
-    <span class="sd">"""Minimal storage level. Only store the necessary data to perform the search."""</span>
+    <span class="sd">&quot;&quot;&quot;Minimal storage level. Only store the necessary data to perform the search.&quot;&quot;&quot;</span>
     <span class="n">Fingerprint</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
-    <span class="sd">"""In addition to Minimal, also store the fingerprint, e.g. the Minhashes"""</span>
+    <span class="sd">&quot;&quot;&quot;In addition to Minimal, also store the fingerprint, e.g. the Minhashes&quot;&quot;&quot;</span>
     <span class="n">Document</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
-    <span class="sd">"""Store the whole inserted document internally."""</span>
+    <span class="sd">&quot;&quot;&quot;Store the whole inserted document internally.&quot;&quot;&quot;</span>
     <span class="n">Full</span> <span class="o">=</span> <span class="n">Minimal</span> <span class="o">|</span> <span class="n">Fingerprint</span> <span class="o">|</span> <span class="n">Document</span>
-    <span class="sd">"""Store everything."""</span></div>
+    <span class="sd">&quot;&quot;&quot;Store everything.&quot;&quot;&quot;</span></div>
 
 
-<span class="n">Fingerprint</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"Fingerprint"</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">])</span>
-<span class="sd">"""Type representing the result of a minhashing operation"""</span>
+<span class="n">Fingerprint</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;Fingerprint&quot;</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;Type representing the result of a minhashing operation&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="StoredDocument"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">StoredDocument</span><span class="p">:</span>
-    <span class="sd">"""Data object combining all possible fields of a document stored."""</span>
+    <span class="sd">&quot;&quot;&quot;Data object combining all possible fields of a document stored.&quot;&quot;&quot;</span>
 
     <span class="n">id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="sd">"""Identifier used to distinguish the document from an identical one."""</span>
+    <span class="sd">&quot;&quot;&quot;Identifier used to distinguish the document from an identical one.&quot;&quot;&quot;</span>
 
     <span class="n">document</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="sd">"""The actual content to use for fuzzy matching, e.g. a full unprocessed sentence."""</span>
+    <span class="sd">&quot;&quot;&quot;The actual content to use for fuzzy matching, e.g. a full unprocessed sentence.&quot;&quot;&quot;</span>
 
     <span class="n">exact_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="sd">"""A string which should be matched exactly."""</span>
+    <span class="sd">&quot;&quot;&quot;A string which should be matched exactly.&quot;&quot;&quot;</span>
 
     <span class="n">fingerprint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Fingerprint</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="sd">"""A fuzzy fingerprint of the document, e.g. a Minhash."""</span>
+    <span class="sd">&quot;&quot;&quot;A fuzzy fingerprint of the document, e.g. a Minhash.&quot;&quot;&quot;</span>
 
     <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="sd">"""Payload to persist together with the document in the internal data structures."""</span>
+    <span class="sd">&quot;&quot;&quot;Payload to persist together with the document in the internal data structures.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StoredDocument.serialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">:</span> <span class="n">StorageLevel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Serialize a document to bytes."""</span>
+        <span class="sd">&quot;&quot;&quot;Serialize a document to bytes.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">StoredDocumentProto</span><span class="p">(</span>
             <span class="n">fingerprint</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">storage_level</span> <span class="o">&amp;</span> <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Fingerprint</span>
@@ -279,24 +280,24 @@
         <span class="p">)</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="StoredDocument.deserialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument.deserialize">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">doc</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"StoredDocument"</span><span class="p">:</span>
-        <span class="sd">"""Deserialize a document from bytes."""</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">doc</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">id_</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StoredDocument&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Deserialize a document from bytes.&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">StoredDocumentProto</span><span class="o">.</span><span class="n">FromString</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="n">args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">id_</span><span class="o">=</span><span class="n">id_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">"document"</span><span class="p">):</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">"document"</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">document</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">"exact_part"</span><span class="p">):</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">"exact_part"</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">exact_part</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;document&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">document</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;exact_part&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;exact_part&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">exact_part</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">:</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">"fingerprint"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Fingerprint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">"data"</span><span class="p">):</span>
-            <span class="n">args</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Fingerprint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">data</span>
         <span class="k">return</span> <span class="n">StoredDocument</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StoredDocument.without"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument.without">[docs]</a>    <span class="k">def</span> <span class="nf">without</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">attributes</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"StoredDocument"</span><span class="p">:</span>
-        <span class="sd">"""Create a copy with the specified attributes left out.</span>
+<div class="viewcode-block" id="StoredDocument.without"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StoredDocument.without">[docs]</a>    <span class="k">def</span> <span class="nf">without</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">attributes</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StoredDocument&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create a copy with the specified attributes left out.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            attributes: The names of the attributes to leave empty</span>
@@ -304,40 +305,40 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A copy of the StoredDocument with all the attributes specified in attributes left out.</span>
 <span class="sd">            So they will have their default value (None).</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">StoredDocument</span><span class="p">(</span>
             <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">}</span>
         <span class="p">)</span></div></div>
 
 
 <span class="n">_FIELDS_FOR_STORAGE_LEVEL</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Minimal</span><span class="p">:</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">},</span>
-    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">:</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">,</span> <span class="s2">"document"</span><span class="p">,</span> <span class="s2">"exact_part"</span><span class="p">},</span>
-    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Fingerprint</span><span class="p">:</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">,</span> <span class="s2">"exact_part"</span><span class="p">},</span>
-    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">,</span> <span class="s2">"document"</span><span class="p">,</span> <span class="s2">"exact_part"</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Minimal</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Document</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;exact_part&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Fingerprint</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;exact_part&quot;</span><span class="p">},</span>
+    <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Full</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> <span class="s2">&quot;exact_part&quot;</span><span class="p">},</span>
 <span class="p">}</span>
-<span class="sd">"""Fields of StoredDocument which need to be serialized to reach a certain storage level."""</span>
+<span class="sd">&quot;&quot;&quot;Fields of StoredDocument which need to be serialized to reach a certain storage level.&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="StorageBackend"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend">[docs]</a><span class="k">class</span> <span class="nc">StorageBackend</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">"""Storage backend for a SimilarityStore."""</span>
+    <span class="sd">&quot;&quot;&quot;Storage backend for a SimilarityStore.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StorageBackend.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"StorageBackend"</span><span class="p">:</span>
-        <span class="sd">"""Initialize the database.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StorageBackend&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the database.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="StorageBackend.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""Store a setting as key-value pair."""</span>
+        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""Query a setting with the given key.</span>
+        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key: The identifier of the setting</span>
@@ -345,15 +346,15 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A string with the value. If the key does not exist or the storage is uninitialized</span>
 <span class="sd">            None is returned.</span>
-<span class="sd">        """</span>  <span class="c1"># noqa: DAR202,DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR202,DAR401</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""Add the data of a document to the storage and return its ID."""</span>
+        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="StorageBackend.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Get the data belonging to a document.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: Key under which the data is stored.</span>
@@ -363,11 +364,11 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document with the given ID is stored.</span>
-<span class="sd">        """</span>  <span class="c1"># noqa: DAR202,DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR202,DAR401</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">"""Get the data belonging to multiple documents.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_ids: Key under which the data is stored.</span>
@@ -377,70 +378,70 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
-<span class="sd">        """</span>  <span class="c1"># noqa: DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR401</span>
         <span class="c1"># Standard implementation of the base class. May be overloaded for specialization.</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">query_document</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="StorageBackend.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document given by ID from the list of documents."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="StorageBackend.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Link a document to a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="StorageBackend.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">"""Get all document IDs stored in a bucket for a certain hash value."""</span>
+        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document from a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
 <div class="viewcode-block" id="InMemoryStore"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore">[docs]</a><span class="k">class</span> <span class="nc">InMemoryStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
-    <span class="sd">"""Rust implementation of InMemoryStore."""</span>
+    <span class="sd">&quot;&quot;&quot;Rust implementation of InMemoryStore.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="InMemoryStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""Create a new RustMemoryStore."""</span>
+        <span class="sd">&quot;&quot;&quot;Create a new RustMemoryStore.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span> <span class="o">=</span> <span class="n">RustMemoryStore</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.serialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Serialize the data into a messagepack so that it can be persisted somewhere."""</span>
+        <span class="sd">&quot;&quot;&quot;Serialize the data into a messagepack so that it can be persisted somewhere.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.to_file"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.to_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""Serialize the data into a messagepack file with the given path."""</span>
+        <span class="sd">&quot;&quot;&quot;Serialize the data into a messagepack file with the given path.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.deserialize"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.deserialize">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">msgpack</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InMemoryStore"</span><span class="p">:</span>
-        <span class="sd">"""Deserialize an InMemoryStore object from messagepack."""</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">msgpack</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InMemoryStore&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Deserialize an InMemoryStore object from messagepack.&quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">rms</span> <span class="o">=</span> <span class="n">RustMemoryStore</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">msgpack</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.from_file"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.from_file">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InMemoryStore"</span><span class="p">:</span>
-        <span class="sd">"""Deserialize an InMemoryStore object the given messagepack file."""</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InMemoryStore&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Deserialize an InMemoryStore object the given messagepack file.&quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">rms</span> <span class="o">=</span> <span class="n">RustMemoryStore</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""Store a setting as key-value pair."""</span>
+        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""Query a setting with the given key."""</span>
+        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">query_setting</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""Add the data of a document to the storage and return its ID."""</span>
+        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">insert_document</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">document_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Get the data belonging to a document.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: The id of the document. This ID is created and returned by the</span>
@@ -451,26 +452,26 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If the document is not stored.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">query_document</span><span class="p">(</span><span class="n">document_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">doc</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document given by ID from the list of documents."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">document_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Link a document to a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">add_document_to_bucket</span><span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">"""Get all document IDs stored in a bucket for a certain hash value."""</span>
+        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">query_ids_from_bucket</span><span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InMemoryStore.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.InMemoryStore.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document from a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rms</span><span class="o">.</span><span class="n">remove_id_from_bucket</span><span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">)</span></div></div>
 </pre></div>
         </article>
@@ -509,6 +510,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     </body>

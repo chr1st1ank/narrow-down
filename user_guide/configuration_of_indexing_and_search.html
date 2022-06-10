@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Storage Backends" href="storage_backends.html" /><link rel="prev" title="Basic Usage" href="basic_usage.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>Configuration of Indexing and Search - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -198,7 +198,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -213,12 +214,13 @@
         </div>
         <article role="main">
           <section id="configuration-of-indexing-and-search">
-<h1>Configuration of Indexing and Search<a class="headerlink" href="#configuration-of-indexing-and-search" title="Permalink to this headline">#</a></h1>
+<h1>Configuration of Indexing and Search<a class="headerlink" href="#configuration-of-indexing-and-search" title="Permalink to this heading">#</a></h1>
 <section id="tokenization">
-<h2>Tokenization<a class="headerlink" href="#tokenization" title="Permalink to this headline">#</a></h2>
+<h2>Tokenization<a class="headerlink" href="#tokenization" title="Permalink to this heading">#</a></h2>
 <p>The input strings given to the insert and query functions are tokenized before they can be processed further. Depending on the type of documents to handle, different methods of tokenization can be more or less beneficial.</p>
 <p>Available options are:</p>
-<div class="table-wrapper"><table class="colwidths-auto docutils align-default">
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Tokenize function</p></th>
 <th class="head"><p>Description</p></th>
@@ -238,78 +240,79 @@
 <td><p>A custom function</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <p>Let’s look at the example sentence and apply a couple of tokenize functions to demonstrate the differences:</p>
 <blockquote>
 <div><p>Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn’t fuzzy, was he?</p>
 </div></blockquote>
 <section id="word-n-grams">
-<h3>Word n-grams<a class="headerlink" href="#word-n-grams" title="Permalink to this headline">#</a></h3>
+<h3>Word n-grams<a class="headerlink" href="#word-n-grams" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">narrow_down._tokenize</span> <span class="kn">import</span> <span class="n">char_ngrams</span><span class="p">,</span> <span class="n">word_ngrams</span>
 
 
 <span class="k">def</span> <span class="nf">show_first</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="p">)[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"..."</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="p">)[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">])</span>
 
 
-<span class="n">example</span> <span class="o">=</span> <span class="s2">"Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn’t fuzzy, was he?"</span>
+<span class="n">example</span> <span class="o">=</span> <span class="s2">&quot;Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair. Fuzzy Wuzzy wasn’t fuzzy, was he?&quot;</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"word_ngrams(2):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;word_ngrams(2):&quot;</span><span class="p">)</span>
 <span class="n">show_first</span><span class="p">(</span><span class="n">word_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>word_ngrams(2):
-['hair. Fuzzy', 'wasn’t fuzzy,', 'had no', 'Fuzzy Wuzzy', 'Wuzzy had', 'Wuzzy was', '...']
+[&#39;hair. Fuzzy&#39;, &#39;wasn’t fuzzy,&#39;, &#39;had no&#39;, &#39;Fuzzy Wuzzy&#39;, &#39;Wuzzy had&#39;, &#39;Wuzzy was&#39;, &#39;...&#39;]
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"word_ngrams(4):"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;word_ngrams(4):&quot;</span><span class="p">)</span>
 <span class="n">show_first</span><span class="p">(</span><span class="n">word_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>word_ngrams(4):
-['no hair. Fuzzy Wuzzy', 'a bear. Fuzzy Wuzzy', 'Fuzzy Wuzzy wasn’t fuzzy,', 'wasn’t fuzzy, was he?', 'bear. Fuzzy Wuzzy had', 'Wuzzy wasn’t fuzzy, was', '...']
+[&#39;no hair. Fuzzy Wuzzy&#39;, &#39;a bear. Fuzzy Wuzzy&#39;, &#39;Fuzzy Wuzzy wasn’t fuzzy,&#39;, &#39;wasn’t fuzzy, was he?&#39;, &#39;bear. Fuzzy Wuzzy had&#39;, &#39;Wuzzy wasn’t fuzzy, was&#39;, &#39;...&#39;]
 </pre></div>
 </div>
 </section>
 <section id="character-n-grams">
-<h3>Character n-grams<a class="headerlink" href="#character-n-grams" title="Permalink to this headline">#</a></h3>
+<h3>Character n-grams<a class="headerlink" href="#character-n-grams" title="Permalink to this heading">#</a></h3>
 <p>With padding character “$” (default):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"char_ngrams(3):"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;char_ngrams(3):&quot;</span><span class="p">)</span>
 <span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(3):
-['n’t', '$Fu', ' no', 'air', ' fu', '?$$', '...']
+[&#39;n’t&#39;, &#39;$Fu&#39;, &#39; no&#39;, &#39;air&#39;, &#39; fu&#39;, &#39;?$$&#39;, &#39;...&#39;]
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"char_ngrams(5):"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;char_ngrams(5):&quot;</span><span class="p">)</span>
 <span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(5):
-['uzzy ', 'n’t f', 'zzy w', '. Fuz', '$$$$F', 'y had', '...']
+[&#39;uzzy &#39;, &#39;n’t f&#39;, &#39;zzy w&#39;, &#39;. Fuz&#39;, &#39;$$$$F&#39;, &#39;y had&#39;, &#39;...&#39;]
 </pre></div>
 </div>
 <p>Without a padding character:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"char_ngrams(3, ''):"</span><span class="p">)</span>
-<span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;char_ngrams(3, &#39;&#39;):&quot;</span><span class="p">)</span>
+<span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(3, ''):
-['n’t', ' no', 'air', ' fu', 'asn', '’t ', '...']
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(3, &#39;&#39;):
+[&#39;n’t&#39;, &#39; no&#39;, &#39;air&#39;, &#39; fu&#39;, &#39;asn&#39;, &#39;’t &#39;, &#39;...&#39;]
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"char_ngrams(5, ''):"</span><span class="p">)</span>
-<span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;char_ngrams(5, &#39;&#39;):&quot;</span><span class="p">)</span>
+<span class="n">show_first</span><span class="p">(</span><span class="n">char_ngrams</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(5, ''):
-['uzzy ', 'n’t f', 'zzy w', '. Fuz', 'y had', 's he?', '...']
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char_ngrams(5, &#39;&#39;):
+[&#39;uzzy &#39;, &#39;n’t f&#39;, &#39;zzy w&#39;, &#39;. Fuz&#39;, &#39;y had&#39;, &#39;s he?&#39;, &#39;...&#39;]
 </pre></div>
 </div>
 </section>
 <section id="choosing-the-right-tokenization-function">
-<h3>Choosing the right tokenization function<a class="headerlink" href="#choosing-the-right-tokenization-function" title="Permalink to this headline">#</a></h3>
+<h3>Choosing the right tokenization function<a class="headerlink" href="#choosing-the-right-tokenization-function" title="Permalink to this heading">#</a></h3>
 <p>In general on a large dataset n-grams with higher value of n produce a higher cardinality. Documents in their set representation are more likely to be unique and harder to be matched with similar documents. On the other hand, low values of n may produce a lot false positives in the sense that documents are matched which have actually not match in common. In the extreme case of character 1-grams, almost all documents may have some frequent characters like “e” or “n” in common, also they are semantically different.</p>
 <p>Some default choices of tokenization functions are:</p>
 <ul class="simple">
@@ -321,17 +324,17 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">narrow_down.similarity_store</span> <span class="kn">import</span> <span class="n">SimilarityStore</span>
 
 <span class="n">similarity_store</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SimilarityStore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="n">tokenize</span><span class="o">=</span><span class="s2">"char_ngrams(3)"</span><span class="p">,</span>
+    <span class="n">tokenize</span><span class="o">=</span><span class="s2">&quot;char_ngrams(3)&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="custom-tokenizer-function">
-<h3>Custom tokenizer function<a class="headerlink" href="#custom-tokenizer-function" title="Permalink to this headline">#</a></h3>
+<h3>Custom tokenizer function<a class="headerlink" href="#custom-tokenizer-function" title="Permalink to this heading">#</a></h3>
 <p>It is also possible to pass a custom function as tokenizer:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tokenizer</span><span class="p">(</span><span class="n">raw_string</span><span class="p">):</span>
-    <span class="sd">"""Splits a string at every comma."""</span>
-    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">))</span>
+    <span class="sd">&quot;&quot;&quot;Splits a string at every comma.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">raw_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
 
 
 <span class="n">similarity_store</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SimilarityStore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
@@ -342,7 +345,7 @@
 </section>
 </section>
 <section id="precision-settings">
-<h2>Precision settings<a class="headerlink" href="#precision-settings" title="Permalink to this headline">#</a></h2>
+<h2>Precision settings<a class="headerlink" href="#precision-settings" title="Permalink to this heading">#</a></h2>
 <p>Narrow-Down is based on Minhash Locality Sensitive Hashing as described in
 <a class="reference external" href="http://infolab.stanford.edu/~ullman/mmds/book0n.pdf">Leskovec, Rajaraman and Ullman: “Mining of Massive Datasets”, Chapter 3.</a>.</p>
 <p>It is a heuristic method to search a body of sets to find the ones with a minimum Jaccard similarity to a given input set. Approximation happens on two levels:</p>
@@ -351,7 +354,8 @@
 <li><p>To store the minhashes in a condensed way such that one can find items which share a number of common hashes (the LSH algorithm)</p></li>
 </ol>
 <p>The algorithms can be tuned with a number of parameters which are based on the following configuration options:</p>
-<div class="table-wrapper"><table class="colwidths-auto docutils align-default">
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
 <th class="head"><p>Default</p></th>
@@ -372,7 +376,8 @@
 <td><p>Probability of false positives, i.e. that a result is returned although the similarity is below the threshold.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <p>Narrow-down automatically tries to set the internal algorithm parameters (e.g. number of hash permutations, number of rows and bands of the LSH) in a way that the given target probabilities can be reached with minimum CPU and memory consumption.</p>
 </section>
 </section>
@@ -457,6 +462,7 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>

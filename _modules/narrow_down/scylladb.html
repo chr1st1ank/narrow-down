@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>narrow_down.scylladb - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -197,7 +197,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -212,11 +213,11 @@
         </div>
         <article role="main">
           <h1>Source code for narrow_down.scylladb</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Storage backend based on ScyllaDB.</span>
+<span></span><span class="sd">&quot;&quot;&quot;Storage backend based on ScyllaDB.</span>
 
 <span class="sd">ScyllaDB is a low-latency distributed key-value store, compatible with the Apache Cassandra</span>
 <span class="sd">protocol. For details see _`https://www.scylladb.com/`.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">random</span>
@@ -232,7 +233,7 @@
 
 
 <span class="k">def</span> <span class="nf">_wrap_future</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">ResponseFuture</span><span class="p">):</span>
-    <span class="sd">"""Wrap a cassandra Future into an asyncio.Future object.</span>
+    <span class="sd">&quot;&quot;&quot;Wrap a cassandra Future into an asyncio.Future object.</span>
 
 <span class="sd">    Based on https://stackoverflow.com/questions/49350346/how-to-wrap-custom-future-to-use-with-asyncio-in-python.</span>
 
@@ -241,7 +242,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        And asyncio.Future object which can be awaited.</span>
-<span class="sd">    """</span>  <span class="c1"># noqa: E501</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
     <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
     <span class="n">aio_future</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
 
@@ -257,7 +258,7 @@
 
 
 <div class="viewcode-block" id="ScyllaDBStore"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore">[docs]</a><span class="k">class</span> <span class="nc">ScyllaDBStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
-    <span class="sd">"""Storage backend for a SimilarityStore using ScyllaDB."""</span>
+    <span class="sd">&quot;&quot;&quot;Storage backend for a SimilarityStore using ScyllaDB.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ScyllaDBStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -265,7 +266,7 @@
         <span class="n">keyspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">table_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Create a new empty or connect to an existing SQLite database.</span>
+        <span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            cluster_or_session: Can be a cassandra cluster or a session object.</span>
@@ -274,11 +275,11 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: When the keyspace name is invalid.</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z_][a-zA-Z0-9_]*$"</span><span class="p">,</span> <span class="n">keyspace</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid keyspace name: </span><span class="si">{</span><span class="n">keyspace</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">table_prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z_][a-zA-Z0-9_]*$"</span><span class="p">,</span> <span class="n">table_prefix</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid table_prefix: </span><span class="si">{</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z_][a-zA-Z0-9_]*$&quot;</span><span class="p">,</span> <span class="n">keyspace</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid keyspace name: </span><span class="si">{</span><span class="n">keyspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">table_prefix</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z_][a-zA-Z0-9_]*$&quot;</span><span class="p">,</span> <span class="n">table_prefix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid table_prefix: </span><span class="si">{</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cluster_or_session</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Cluster</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span> <span class="o">=</span> <span class="n">cluster_or_session</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="kc">None</span>
@@ -286,18 +287,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="n">cluster_or_session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span> <span class="o">=</span> <span class="n">keyspace</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span> <span class="o">=</span> <span class="n">table_prefix</span> <span class="ow">or</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span> <span class="o">=</span> <span class="n">table_prefix</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">PreparedStatement</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
-        <span class="sd">"""Get or create a cassandra session."""</span>
+        <span class="sd">&quot;&quot;&quot;Get or create a cassandra session.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""Execute a cassandra query with asyncio."""</span>
+        <span class="sd">&quot;&quot;&quot;Execute a cassandra query with asyncio.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">_wrap_future</span><span class="p">(</span>
             <span class="n">session</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span>
                 <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="ow">or</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">_NOT_SET</span>
@@ -306,75 +307,75 @@
 
 <div class="viewcode-block" id="ScyllaDBStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ScyllaDBStore"</span><span class="p">:</span>
-        <span class="sd">"""Initialize the tables in the SQLite database file.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScyllaDBStore&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Note: CQL does not know unsigned integers.</span>
         <span class="c1">#  So we need to take the 64bit (signed) bigint to hold a 32bit unsigned int safely.</span>
 
         <span class="n">create_settings</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings ("</span>
-            <span class="s2">"   key TEXT, "</span>
-            <span class="s2">"   value TEXT, "</span>
-            <span class="s2">"   PRIMARY KEY(key)"</span>
-            <span class="s2">");"</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings (&quot;</span>
+            <span class="s2">&quot;   key TEXT, &quot;</span>
+            <span class="s2">&quot;   value TEXT, &quot;</span>
+            <span class="s2">&quot;   PRIMARY KEY(key)&quot;</span>
+            <span class="s2">&quot;);&quot;</span><span class="p">,</span>
             <span class="n">is_idempotent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">create_documents</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents ("</span>
-            <span class="s2">"   id bigint, "</span>
-            <span class="s2">"   doc blob, "</span>
-            <span class="s2">"   PRIMARY KEY(id)"</span>
-            <span class="s2">");"</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents (&quot;</span>
+            <span class="s2">&quot;   id bigint, &quot;</span>
+            <span class="s2">&quot;   doc blob, &quot;</span>
+            <span class="s2">&quot;   PRIMARY KEY(id)&quot;</span>
+            <span class="s2">&quot;);&quot;</span><span class="p">,</span>
             <span class="n">is_idempotent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">create_buckets</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">SimpleStatement</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">buckets ("</span>
-            <span class="s2">"   bucket bigint, "</span>
-            <span class="s2">"   hash bigint, "</span>
-            <span class="s2">"   doc_id bigint, "</span>
-            <span class="s2">"   PRIMARY KEY((bucket, hash), doc_id)"</span>
-            <span class="s2">");"</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">buckets (&quot;</span>
+            <span class="s2">&quot;   bucket bigint, &quot;</span>
+            <span class="s2">&quot;   hash bigint, &quot;</span>
+            <span class="s2">&quot;   doc_id bigint, &quot;</span>
+            <span class="s2">&quot;   PRIMARY KEY((bucket, hash), doc_id)&quot;</span>
+            <span class="s2">&quot;);&quot;</span><span class="p">,</span>
             <span class="n">is_idempotent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">create_settings</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">create_documents</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">create_buckets</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_setting"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
-                <span class="s2">"settings(key,value) VALUES (?,?);"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_setting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;settings(key,value) VALUES (?,?);&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_setting"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT value FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings WHERE key=?;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_setting&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SELECT value FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">settings WHERE key=?;&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents(id,doc) VALUES (?,?);"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_doc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents(id,doc) VALUES (?,?);&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc_checked"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
-                <span class="s2">"documents(id,doc) VALUES (?,?) IF NOT EXISTS;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_doc_checked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;documents(id,doc) VALUES (?,?) IF NOT EXISTS;&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT doc FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_doc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SELECT doc FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;del_doc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents WHERE id=?;&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"add_doc_to_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
-                <span class="s2">"buckets(bucket,hash,doc_id) VALUES (?,?,?);"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;add_doc_to_bucket&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;buckets(bucket,hash,doc_id) VALUES (?,?,?);&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_docs_from_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"SELECT doc_id FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
-                <span class="s2">"buckets WHERE bucket=? AND hash=?;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_docs_from_bucket&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SELECT doc_id FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;buckets WHERE bucket=? AND hash=?;&quot;</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc_from_bucket"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">"</span>
-                <span class="s2">"buckets WHERE bucket=? AND hash=? AND doc_id=?;"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;del_doc_from_bucket&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;buckets WHERE bucket=? AND hash=? AND doc_id=?;&quot;</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">statement</span><span class="o">.</span><span class="n">is_idempotent</span> <span class="o">=</span> <span class="kc">True</span>
@@ -382,12 +383,12 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">"""Store a setting as key-value pair."""</span>
+        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_setting"</span><span class="p">],</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_setting&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""Query a setting with the given key.</span>
+        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key: The identifier of the setting</span>
@@ -398,25 +399,25 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            cassandra.DriverException: In case the database query fails for any reason.</span>
-<span class="sd">        """</span>  <span class="c1"># noqa: DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR401</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">result_list</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
-                    <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_setting"</span><span class="p">],</span> <span class="p">(</span><span class="n">key</span><span class="p">,)</span>
+                    <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_setting&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">key</span><span class="p">,)</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">result_list</span> <span class="k">else</span> <span class="n">result_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
             <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s2">"get_setting"</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;get_setting&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>
-                <span class="k">raise</span>  <span class="c1"># Don't swallow unknown errors</span></div>
+                <span class="k">raise</span>  <span class="c1"># Don&#39;t swallow unknown errors</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""Add the data of a document to the storage and return its ID."""</span>
+        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">document_id</span><span class="p">:</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                     <span class="n">session</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc"</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_doc&quot;</span><span class="p">],</span>
                     <span class="p">(</span><span class="n">document_id</span><span class="p">,</span> <span class="n">document</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="n">document_id</span>
@@ -425,7 +426,7 @@
                     <span class="n">doc_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                         <span class="n">session</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"set_doc_checked"</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_doc_checked&quot;</span><span class="p">],</span>
                         <span class="p">(</span><span class="n">doc_id</span><span class="p">,</span> <span class="n">document</span><span class="p">),</span>
                     <span class="p">)</span>
                     <span class="n">inserted_successfully</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">applied</span>
@@ -435,10 +436,10 @@
                         <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">doc</span> <span class="o">==</span> <span class="n">document</span>
                     <span class="p">):</span>
                         <span class="k">return</span> <span class="n">doc_id</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Unable to find an ID for a document. This should never happen."</span><span class="p">)</span></div>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to find an ID for a document. This should never happen.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">"""Get the data belonging to a document.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: The id of the document. This ID is created and returned by the</span>
@@ -449,17 +450,17 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If the document is not stored.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">docs</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
-                <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_doc"</span><span class="p">],</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,)</span>
+                <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_doc&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">docs</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No document with id </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">docs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">doc</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">"""Get the data belonging to multiple documents.</span>
+        <span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_ids: Key under which the data is stored.</span>
@@ -469,7 +470,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">QUERY_BATCH_SIZE</span><span class="p">:</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
                 <span class="n">result_doc_dicts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
@@ -487,44 +488,44 @@
             <span class="k">return</span> <span class="n">docs</span></div>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_query_document_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">):</span>
-        <span class="n">doc_ids_str</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">)))</span>
+        <span class="n">doc_ids_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">doc_id_batch</span><span class="p">)))</span>
         <span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"select id, doc from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents "</span>
-            <span class="sa">f</span><span class="s2">"where id IN (</span><span class="si">{</span><span class="n">doc_ids_str</span><span class="si">}</span><span class="s2">);"</span>
+            <span class="sa">f</span><span class="s2">&quot;select id, doc from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_keyspace</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_prefix</span><span class="si">}</span><span class="s2">documents &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;where id IN (</span><span class="si">{</span><span class="n">doc_ids_str</span><span class="si">}</span><span class="s2">);&quot;</span>
         <span class="p">)</span>
         <span class="n">result_docs</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">doc</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">query</span><span class="p">)}</span>
         <span class="k">return</span> <span class="n">result_docs</span>
 
 <div class="viewcode-block" id="ScyllaDBStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document given by ID from the list of documents."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc"</span><span class="p">],</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;del_doc&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Link a document to a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"add_doc_to_bucket"</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;add_doc_to_bucket&quot;</span><span class="p">],</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">"""Get all document IDs stored in a bucket for a certain hash value."""</span>
+        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"get_docs_from_bucket"</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;get_docs_from_bucket&quot;</span><span class="p">],</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">doc_id</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">"""Remove a document from a bucket."""</span>
+        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">"del_doc_from_bucket"</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;del_doc_from_bucket&quot;</span><span class="p">],</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div></div>
 </pre></div>
@@ -564,6 +565,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     </body>

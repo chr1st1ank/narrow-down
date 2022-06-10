@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Apache Software License 2.0" href="license.html" /><link rel="prev" title="narrow_down.storage module" href="apidoc/narrow_down.storage.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>Changelog - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -198,7 +198,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -213,24 +214,24 @@
         </div>
         <article role="main">
           <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">#</a></h1>
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading">#</a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a class="reference external" href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <section id="unreleased">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="id1">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...v1.0.0">1.0.0</a> - 2022-05-17<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...v1.0.0">1.0.0</a> - 2022-05-17<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <section id="added">
-<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#added" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The storage backends do have now a method query_documents() to leverage economies of scale when
 querying multiple documents at once.</p></li>
 </ul>
 </section>
 <section id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The public interface of the library is declared stable, hence it is ready for version 1.0.</p></li>
 <li><p>char_ngrams() is now fully implemented in Rust, giving a speedup of 2x.</p></li>
@@ -239,7 +240,7 @@ queries.</p></li>
 </ul>
 </section>
 <section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Wrong operator precedence in minhash implementation, which lead to incorrect results.</p></li>
 <li><p>Incorrect parsing of tokenize argument for SimilarityStore for char_ngrams without padding.</p></li>
@@ -247,36 +248,36 @@ queries.</p></li>
 </section>
 </section>
 <section id="id2">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0">0.10.0</a> - 2022-05-08<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0">0.10.0</a> - 2022-05-08<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <section id="id3">
-<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Improved performance of SimilarityStore.query_top_n().</p></li>
 </ul>
 </section>
 </section>
 <section id="id4">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.2...v0.9.3">0.9.3</a> - 2022-04-05<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.2...v0.9.3">0.9.3</a> - 2022-04-05<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
 <section id="id5">
-<h3>Fixed<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Fixes #63 which led to Exceptions in case of empty documents.</p></li>
 </ul>
 </section>
 </section>
 <section id="id6">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.1...v0.9.2">0.9.2</a> - 2022-03-29<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.1...v0.9.2">0.9.2</a> - 2022-03-29<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
 <section id="id7">
-<h3>Fixed<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Fixes #62 which led to TypeErrors in case of multiple identical results.</p></li>
 </ul>
 </section>
 </section>
 <section id="id8">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.0...v0.9.1">0.9.1</a> - 2022-03-25<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.9.0...v0.9.1">0.9.1</a> - 2022-03-25<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
 <section id="id9">
-<h3>Changed<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Minimum number of hash permutations for Minhash LSH set to 16 to avoid artifacts as described
 in #61.</p></li>
@@ -284,31 +285,31 @@ in #61.</p></li>
 </section>
 </section>
 <section id="id10">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.8.0...v0.9.0">0.9.0</a> - 2022-03-13<a class="headerlink" href="#id10" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.8.0...v0.9.0">0.9.0</a> - 2022-03-13<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
 <section id="id11">
-<h3>Added<a class="headerlink" href="#id11" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ScyllaDBStore now accepts a <code class="docutils literal notranslate"><span class="pre">table_prefix</span></code> setting.</p></li>
 </ul>
 </section>
 <section id="id12">
-<h3>Changed<a class="headerlink" href="#id12" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The classes in narrow_down.data_types were moved to narrow_down.storage.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">initialize()</span></code> method of the storage backends can now be called multiple times without issues.</p></li>
 </ul>
 </section>
 <section id="id13">
-<h3>Fixed<a class="headerlink" href="#id13" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>A use of collections.Counter as typehint broke mypy checks.</p></li>
 </ul>
 </section>
 </section>
 <section id="id14">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.7.0...v0.8.0">0.8.0</a> - 2022-02-23<a class="headerlink" href="#id14" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.7.0...v0.8.0">0.8.0</a> - 2022-02-23<a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h2>
 <section id="id15">
-<h3>Added<a class="headerlink" href="#id15" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Direct InMemoryStore file serialization in the Rust backend.
 This avoids a memory peak and also improves the performance of the operation compared to
@@ -317,9 +318,9 @@ This avoids a memory peak and also improves the performance of the operation com
 </section>
 </section>
 <section id="id16">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.6.0...v0.7.0">0.7.0</a> - 2022-02-06<a class="headerlink" href="#id16" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.6.0...v0.7.0">0.7.0</a> - 2022-02-06<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h2>
 <section id="id17">
-<h3>Added<a class="headerlink" href="#id17" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>InMemoryStore can be serialized to and deserialized from MessagePack.</p></li>
 <li><p>SimilarityStore.top_n_query() now allows to find a limited number of most similar documents.</p></li>
@@ -328,7 +329,7 @@ to avoid false positives.</p></li>
 </ul>
 </section>
 <section id="id18">
-<h3>Changed<a class="headerlink" href="#id18" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id18" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>SimilarityStore objects can now be created by a factory coroutine <code class="docutils literal notranslate"><span class="pre">create()</span></code> instead of
 calling first <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> and then <code class="docutils literal notranslate"><span class="pre">initialize()</span></code>. This makes the usage of the class more
@@ -339,7 +340,7 @@ extension to reduce the memory footprint by a lot.</p></li>
 </ul>
 </section>
 <section id="id19">
-<h3>Fixed<a class="headerlink" href="#id19" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id19" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The number of partitions is now stored in the database for the SQLite backend. This way the DB
 is self-contained and the user doesn’t have to keep the number elsewhere.</p></li>
@@ -347,15 +348,15 @@ is self-contained and the user doesn’t have to keep the number elsewhere.</p><
 </section>
 </section>
 <section id="id20">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.5.0...v0.6.0">0.6.0</a> - 2022-01-29<a class="headerlink" href="#id20" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.5.0...v0.6.0">0.6.0</a> - 2022-01-29<a class="headerlink" href="#id20" title="Permalink to this heading">#</a></h2>
 <section id="id21">
-<h3>Added<a class="headerlink" href="#id21" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id21" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Storage backend for ScyllaDB, a cassandra-like distributed key-value store.</p></li>
 </ul>
 </section>
 <section id="id22">
-<h3>Changed<a class="headerlink" href="#id22" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id22" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>StoredDocument objects are now serialized with protobuf to increase speed and reduce storage
 consumption.</p></li>
@@ -364,7 +365,7 @@ consumption.</p></li>
 </ul>
 </section>
 <section id="id23">
-<h3>Fixed<a class="headerlink" href="#id23" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id23" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Integer overflows in the minhash calculation which reduced the quality of the permutations
 (hash functions). Depending on the input effectively max_uint32 was used instead of a prime number
@@ -372,7 +373,7 @@ in the modulo calculation.</p></li>
 </ul>
 </section>
 <section id="removed">
-<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">#</a></h3>
+<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The backend AsyncSQLiteStore is removed, because it turned out that aiosqlite relies on the user
 to guarantee that only one coroutine at a time tries writing. Otherwise, a “Database locked”
@@ -381,9 +382,9 @@ exception is thrown. As the performance was anyway worse than expected it was re
 </section>
 </section>
 <section id="id24">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.4.0...v0.5.0">0.5.0</a> - 2022-01-17<a class="headerlink" href="#id24" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.4.0...v0.5.0">0.5.0</a> - 2022-01-17<a class="headerlink" href="#id24" title="Permalink to this heading">#</a></h2>
 <section id="id25">
-<h3>Changed<a class="headerlink" href="#id25" title="Permalink to this headline">#</a></h3>
+<h3>Changed<a class="headerlink" href="#id25" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The SQLite backends take now an init parameter “partitions” which leads to internally
 partitioned tables. This reduces query time by a lot.</p></li>
@@ -393,9 +394,9 @@ of disk write operations.</p></li>
 </section>
 </section>
 <section id="id26">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.1...v0.4.0">0.4.0</a> - 2022-01-16<a class="headerlink" href="#id26" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.1...v0.4.0">0.4.0</a> - 2022-01-16<a class="headerlink" href="#id26" title="Permalink to this heading">#</a></h2>
 <section id="id27">
-<h3>Added<a class="headerlink" href="#id27" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id27" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Synchronous and Asynchronous SQLite storage backend</p></li>
 <li><p>Settings of SimilarityStore objects are now saved in the storage backend</p></li>
@@ -404,36 +405,36 @@ of disk write operations.</p></li>
 </section>
 </section>
 <section id="id28">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.0...v0.3.1">0.3.1</a> - 2022-01-14<a class="headerlink" href="#id28" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.3.0...v0.3.1">0.3.1</a> - 2022-01-14<a class="headerlink" href="#id28" title="Permalink to this heading">#</a></h2>
 <section id="id29">
-<h3>Fixed<a class="headerlink" href="#id29" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id29" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Wrong order of parameters for Minhash LSH in the SimilarityStore class</p></li>
 </ul>
 </section>
 </section>
 <section id="id30">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.1...v0.3.0">0.3.0</a> - 2022-01-09<a class="headerlink" href="#id30" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.1...v0.3.0">0.3.0</a> - 2022-01-09<a class="headerlink" href="#id30" title="Permalink to this heading">#</a></h2>
 <section id="id31">
-<h3>Added<a class="headerlink" href="#id31" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id31" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Documents can now be removed from the index again with SimilarityStore.remove_by_id()</p></li>
 </ul>
 </section>
 </section>
 <section id="id32">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.0...v0.2.1">0.2.1</a> - 2022-01-09<a class="headerlink" href="#id32" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.2.0...v0.2.1">0.2.1</a> - 2022-01-09<a class="headerlink" href="#id32" title="Permalink to this heading">#</a></h2>
 <section id="id33">
-<h3>Fixed<a class="headerlink" href="#id33" title="Permalink to this headline">#</a></h3>
+<h3>Fixed<a class="headerlink" href="#id33" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>CI only: Wrong URL of test-pypi</p></li>
 </ul>
 </section>
 </section>
 <section id="id34">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...v0.2.0">0.2.0</a> - 2022-01-09<a class="headerlink" href="#id34" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.1...v0.2.0">0.2.0</a> - 2022-01-09<a class="headerlink" href="#id34" title="Permalink to this heading">#</a></h2>
 <section id="id35">
-<h3>Added<a class="headerlink" href="#id35" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id35" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>A rust extension was added and therefore moving the build system to Maturin.</p></li>
 <li><p>A Minhash-LSH data structure was implemented.</p></li>
@@ -442,12 +443,12 @@ of disk write operations.</p></li>
 </section>
 </section>
 <section id="id36">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1">0.1.1</a> - 2021-12-30<a class="headerlink" href="#id36" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/v0.1.0...v0.1.1">0.1.1</a> - 2021-12-30<a class="headerlink" href="#id36" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="id37">
-<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0">0.1.0</a> - 2021-12-30<a class="headerlink" href="#id37" title="Permalink to this headline">#</a></h2>
+<h2><a class="reference external" href="https://github.com/chr1st1ank/narrow-down/compare/releases/tag/v0.1.0">0.1.0</a> - 2021-12-30<a class="headerlink" href="#id37" title="Permalink to this heading">#</a></h2>
 <section id="id38">
-<h3>Added<a class="headerlink" href="#id38" title="Permalink to this headline">#</a></h3>
+<h3>Added<a class="headerlink" href="#id38" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>First release on PyPI.</p></li>
 </ul>
@@ -602,6 +603,7 @@ of disk write operations.</p></li>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>

@@ -1,14 +1,14 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Basic Usage" href="user_guide/basic_usage.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -198,7 +198,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -213,17 +214,17 @@
         </div>
         <article role="main">
           <section id="narrow-down-efficient-near-duplicate-search">
-<h1>Narrow Down - Efficient near-duplicate search<a class="headerlink" href="#narrow-down-efficient-near-duplicate-search" title="Permalink to this headline">#</a></h1>
+<h1>Narrow Down - Efficient near-duplicate search<a class="headerlink" href="#narrow-down-efficient-near-duplicate-search" title="Permalink to this heading">#</a></h1>
 <div align="center">
-<p><a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/narrow-down.svg"/></a>
-<a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/narrow-down.svg"/></a>
-<a class="reference external" href="https://github.com/chr1st1ank/narrow-down/actions?workflow=tests"><img alt="Tests" src="https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg"/></a>
-<a class="reference external" href="https://codecov.io/gh/chr1st1ank/narrow-down"><img alt="Codecov" src="https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg"/></a>
-<a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"/></a></p>
-<p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." src="https://www.repostatus.org/badges/latest/active.svg"/></a>
-<a class="reference external" href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/badge/code%20style-black-000000.svg"/></a>
-<a class="reference external" href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white"/></a>
-<a class="reference external" href="https://www.contributor-covenant.org/version/2/0/code_of_conduct/"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg"/></a></p>
+<p><a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/narrow-down.svg" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/narrow-down"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/narrow-down.svg" /></a>
+<a class="reference external" href="https://github.com/chr1st1ank/narrow-down/actions?workflow=tests"><img alt="Tests" src="https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg" /></a>
+<a class="reference external" href="https://codecov.io/gh/chr1st1ank/narrow-down"><img alt="Codecov" src="https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg" /></a>
+<a class="reference external" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a></p>
+<p><a class="reference external" href="https://www.repostatus.org/#active"><img alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." src="https://www.repostatus.org/badges/latest/active.svg" /></a>
+<a class="reference external" href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a class="reference external" href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white" /></a>
+<a class="reference external" href="https://www.contributor-covenant.org/version/2/0/code_of_conduct/"><img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg" /></a></p>
 </div>
 <p>Narrow Down offers a flexible but easy-to-use Python API to finding duplicates or similar documents also in very large datasets. It reduces the O(n²) problem of comparing all strings with each other to linear scale by using approximation algorithms like Locality Sensitive Hashing.</p>
 <ul class="simple">
@@ -231,7 +232,7 @@
 <li><p>Documentation: <a class="reference external" href="https://chr1st1ank.github.io/narrow-down">https://chr1st1ank.github.io/narrow-down</a></p></li>
 </ul>
 <section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Document indexing and search based on the Minhash LSH algorithm</p></li>
 <li><p>High performance thanks to a native extension module in Rust</p></li>
@@ -248,13 +249,13 @@
 </ul>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>The Python package can be installed with <em>pip</em>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install narrow-down
 </pre></div>
 </div>
 <section id="extras">
-<h3>Extras<a class="headerlink" href="#extras" title="Permalink to this headline">#</a></h3>
+<h3>Extras<a class="headerlink" href="#extras" title="Permalink to this heading">#</a></h3>
 <p>Some of the heavier functionality is available as <em>extra</em>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install narrow-down<span class="o">[</span>scylladb<span class="o">]</span>   <span class="c1"># Cassandra / ScyllaDB storage backend</span>
 </pre></div>
@@ -262,7 +263,7 @@
 </section>
 </section>
 <section id="similar-projects">
-<h2>Similar projects<a class="headerlink" href="#similar-projects" title="Permalink to this headline">#</a></h2>
+<h2>Similar projects<a class="headerlink" href="#similar-projects" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/mattilyra/LSH">pylsh</a> offers a good implementation of the classic Minhash LSH scheme in Python and Cython. If you only need this and you don’t need a database backend it can be a good choice.</p></li>
 <li><p><a class="reference external" href="https://github.com/ekzhu/datasketch">Datasketch</a> implements an interesting collection of different data sketching algorithms for similarity matching, cardinality estimation and k-nearest-neighbour search. The implementation is not highly optimized but very well usable, the documentation rich and multiple database backends can be used for some of the sketches</p></li>
@@ -270,7 +271,7 @@
 </ul>
 </section>
 <section id="credits">
-<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">#</a></h2>
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this heading">#</a></h2>
 <p>This package was created with <a class="reference external" href="https://github.com/cookiecutter/cookiecutter">Cookiecutter</a> and the <a class="reference external" href="https://github.com/fedejaure/cookiecutter-modern-pypackage">fedejaure/cookiecutter-modern-pypackage</a> project template.</p>
 </section>
 </section>
@@ -352,6 +353,7 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
