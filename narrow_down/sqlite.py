@@ -97,11 +97,10 @@ class SQLiteStore(StorageBackend):
                 return document_id
             else:
                 cursor = conn.execute(
-                    "INSERT INTO documents(doc) VALUES (:doc) "
-                    "ON CONFLICT(id) DO UPDATE SET doc=:doc",
+                    "INSERT INTO documents(doc) VALUES (:doc)",
                     dict(doc=document),
                 )
-                return cursor.lastrowid
+                return cursor.lastrowid  # type: ignore  # (this always works if the insert works)
 
     async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
