@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- Update pre-commit hooks and Rust dependencies (numpy 0.15.1 -> 0.17.1, pyo3 0.15.2 -> 0.17.1) 
 
 ## [1.0.0] - 2022-05-17
 ### Added
