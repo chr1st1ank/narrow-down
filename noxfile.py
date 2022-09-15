@@ -65,7 +65,7 @@ def coverage(session: Session) -> None:
 @nox.session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
-    install_with_constraints(session, "invoke", "mypy")
+    install_with_constraints(session, "invoke", "mypy<=0.961")
     session.run("inv", "mypy")
 
 
