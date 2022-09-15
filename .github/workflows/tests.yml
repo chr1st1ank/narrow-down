@@ -8,9 +8,9 @@ on:
     branches:
       - main
 jobs:
-  linting:
+  precommit:
     # Static code analysis. Running on lowest supported Python version to catch use of new syntax.
-    name: Linting
+    name: Pre-Commit
     runs-on: ubuntu-latest
     steps:            
       - uses: actions/checkout@v3

@@ -4,21 +4,18 @@ mod in_memory_store;
 mod minhash;
 mod tokenize;
 
-use hash::*;
-use minhash::*;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
-use tokenize::*;
 
 #[pymodule]
 fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
-    m.add_function(wrap_pyfunction!(murmur3_32bit, m)?)?;
-    m.add_function(wrap_pyfunction!(xxhash_32bit, m)?)?;
-    m.add_function(wrap_pyfunction!(xxhash_64bit, m)?)?;
-    m.add_function(wrap_pyfunction!(minhash, m)?)?;
-    m.add_function(wrap_pyfunction!(char_ngrams_bytes, m)?)?;
-    m.add_function(wrap_pyfunction!(char_ngrams_str, m)?)?;
+    m.add_function(wrap_pyfunction!(hash::murmur3_32bit, m)?)?;
+    m.add_function(wrap_pyfunction!(hash::xxhash_32bit, m)?)?;
+    m.add_function(wrap_pyfunction!(hash::xxhash_64bit, m)?)?;
+    m.add_function(wrap_pyfunction!(minhash::minhash, m)?)?;
+    m.add_function(wrap_pyfunction!(tokenize::char_ngrams_bytes, m)?)?;
+    m.add_function(wrap_pyfunction!(tokenize::char_ngrams_str, m)?)?;
     m.add_class::<in_memory_store::RustMemoryStore>()?;
     Ok(())
 }
