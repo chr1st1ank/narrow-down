@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Changelog" href="../changelog.html" /><link rel="prev" title="narrow_down.sqlite module" href="narrow_down.sqlite.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>narrow_down.storage module - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -134,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -199,7 +199,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -207,7 +208,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -724,10 +725,10 @@ None is returned.</p>
                 </div>
                 <div class="title">Changelog</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="narrow_down.sqlite.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -757,8 +758,75 @@ None is returned.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">narrow_down.storage module</a><ul>
+<li><a class="reference internal" href="#narrow_down.storage.TooLowStorageLevel"><code class="docutils literal notranslate"><span class="pre">TooLowStorageLevel</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageLevel"><code class="docutils literal notranslate"><span class="pre">StorageLevel</span></code></a><ul>
+<li><a class="reference internal" href="#narrow_down.storage.StorageLevel.Minimal"><code class="docutils literal notranslate"><span class="pre">StorageLevel.Minimal</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageLevel.Fingerprint"><code class="docutils literal notranslate"><span class="pre">StorageLevel.Fingerprint</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageLevel.Document"><code class="docutils literal notranslate"><span class="pre">StorageLevel.Document</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageLevel.Full"><code class="docutils literal notranslate"><span class="pre">StorageLevel.Full</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#narrow_down.storage.Fingerprint"><code class="docutils literal notranslate"><span class="pre">Fingerprint</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument"><code class="docutils literal notranslate"><span class="pre">StoredDocument</span></code></a><ul>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.id_"><code class="docutils literal notranslate"><span class="pre">StoredDocument.id_</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.document"><code class="docutils literal notranslate"><span class="pre">StoredDocument.document</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.exact_part"><code class="docutils literal notranslate"><span class="pre">StoredDocument.exact_part</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.fingerprint"><code class="docutils literal notranslate"><span class="pre">StoredDocument.fingerprint</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.data"><code class="docutils literal notranslate"><span class="pre">StoredDocument.data</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.serialize"><code class="docutils literal notranslate"><span class="pre">StoredDocument.serialize()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.deserialize"><code class="docutils literal notranslate"><span class="pre">StoredDocument.deserialize()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StoredDocument.without"><code class="docutils literal notranslate"><span class="pre">StoredDocument.without()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend"><code class="docutils literal notranslate"><span class="pre">StorageBackend</span></code></a><ul>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.initialize"><code class="docutils literal notranslate"><span class="pre">StorageBackend.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.insert_setting"><code class="docutils literal notranslate"><span class="pre">StorageBackend.insert_setting()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.query_setting"><code class="docutils literal notranslate"><span class="pre">StorageBackend.query_setting()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.insert_document"><code class="docutils literal notranslate"><span class="pre">StorageBackend.insert_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.query_document"><code class="docutils literal notranslate"><span class="pre">StorageBackend.query_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.query_documents"><code class="docutils literal notranslate"><span class="pre">StorageBackend.query_documents()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.remove_document"><code class="docutils literal notranslate"><span class="pre">StorageBackend.remove_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.add_document_to_bucket"><code class="docutils literal notranslate"><span class="pre">StorageBackend.add_document_to_bucket()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.query_ids_from_bucket"><code class="docutils literal notranslate"><span class="pre">StorageBackend.query_ids_from_bucket()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.StorageBackend.remove_id_from_bucket"><code class="docutils literal notranslate"><span class="pre">StorageBackend.remove_id_from_bucket()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore"><code class="docutils literal notranslate"><span class="pre">InMemoryStore</span></code></a><ul>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.__init__"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.serialize"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.serialize()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.to_file"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.to_file()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.deserialize"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.deserialize()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.from_file"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.from_file()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.insert_setting"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.insert_setting()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.query_setting"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.query_setting()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.insert_document"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.insert_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.query_document"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.query_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.remove_document"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.remove_document()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.add_document_to_bucket"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.add_document_to_bucket()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.query_ids_from_bucket"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.query_ids_from_bucket()</span></code></a></li>
+<li><a class="reference internal" href="#narrow_down.storage.InMemoryStore.remove_id_from_bucket"><code class="docutils literal notranslate"><span class="pre">InMemoryStore.remove_id_from_bucket()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -768,6 +836,7 @@ None is returned.</p>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>
