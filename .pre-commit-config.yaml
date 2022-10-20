@@ -41,13 +41,6 @@ repos:
           "flake8-docstrings",
           "flake8-bandit",
       ]
-- repo: local
-  hooks:
-  - id: pylint
-    name: PyLint
-    entry: pylint
-    language: system
-    files: \.py$
 - repo: https://github.com/doublify/pre-commit-rust
   rev: v1.0
   hooks:

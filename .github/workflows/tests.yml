@@ -31,6 +31,15 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files
 
+      - name: Intall project
+        run: |
+          python3 -m pip install --upgrade pip maturin invoke
+          pip install -e .[scylladb,docs,dev]
+
+      - name: Pylint
+        run: |
+          pylint
+
   doctests:
     name: Doctest
     runs-on: ubuntu-latest
