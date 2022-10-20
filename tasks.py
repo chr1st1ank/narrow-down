@@ -2,7 +2,7 @@
 
 Execute 'invoke --list' for guidance on using Invoke
 """
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument,import-error
 import platform
 import webbrowser
 from pathlib import Path
@@ -180,7 +180,7 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"mypy  {PYTHON_TARGETS_STR}")
+    _run(c, f"mypy --follow-imports silent {PYTHON_TARGETS_STR}")
 
 
 @task()
