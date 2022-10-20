@@ -324,7 +324,7 @@ async def test_scylladb_store__insert_query_document__no_id_found(monkeypatch, s
     """Check if the driver tries a couple of times before giving up finding a random ID."""
     n_attempts = 0
 
-    async def return_failure(*args, **kwargs):
+    async def return_failure(*args, **kwargs):  # pylint: disable=unused-argument
         nonlocal n_attempts
         n_attempts += 1
         return [row(applied=False, id=4, doc=b"abcd efgh")]

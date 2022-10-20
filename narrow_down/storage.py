@@ -3,7 +3,7 @@ import asyncio
 import dataclasses
 import enum
 import pickle  # noqa
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, Iterable, List, NewType, Optional
 
@@ -28,7 +28,7 @@ class StorageLevel(enum.Flag):
     """In addition to Minimal, also store the fingerprint, e.g. the Minhashes"""
     Document = enum.auto()
     """Store the whole inserted document internally."""
-    Full = Minimal | Fingerprint | Document
+    Full = Minimal | Fingerprint | Document  # pylint: disable=unsupported-binary-operation
     """Store everything."""
 
 
@@ -118,10 +118,12 @@ class StorageBackend(ABC):
         """
         return self
 
+    @abstractmethod
     async def insert_setting(self, key: str, value: str):
         """Store a setting as key-value pair."""
         raise NotImplementedError
 
+    @abstractmethod
     async def query_setting(self, key: str) -> Optional[str]:
         """Query a setting with the given key.
 
@@ -134,10 +136,12 @@ class StorageBackend(ABC):
         """  # noqa: DAR202,DAR401
         raise NotImplementedError
 
+    @abstractmethod
     async def insert_document(self, document: bytes, document_id: int = None) -> int:
         """Add the data of a document to the storage and return its ID."""
         raise NotImplementedError()
 
+    @abstractmethod
     async def query_document(self, document_id: int) -> bytes:
         """Get the data belonging to a document.
 
@@ -167,18 +171,22 @@ class StorageBackend(ABC):
         # Standard implementation of the base class. May be overloaded for specialization.
         return await asyncio.gather(*[self.query_document(doc_id) for doc_id in document_ids])
 
+    @abstractmethod
     async def remove_document(self, document_id: int):
         """Remove a document given by ID from the list of documents."""
         raise NotImplementedError()
 
+    @abstractmethod
     async def add_document_to_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Link a document to a bucket."""
         raise NotImplementedError()
 
+    @abstractmethod
     async def query_ids_from_bucket(self, bucket_id: int, document_hash: int) -> Iterable[int]:
         """Get all document IDs stored in a bucket for a certain hash value."""
         raise NotImplementedError
 
+    @abstractmethod
     async def remove_id_from_bucket(self, bucket_id: int, document_hash: int, document_id: int):
         """Remove a document from a bucket."""
         raise NotImplementedError

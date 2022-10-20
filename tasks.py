@@ -143,12 +143,12 @@ def hooks(c):
 
 
 @task(name="format", help={"check": "Checks if source is formatted without applying changes"})
-def format_(c, check=False):
+def format_(c, check_=False):
     # type: (Context, bool) -> None
     """Format code."""
-    isort_options = ["--check-only", "--diff"] if check else []
+    isort_options = ["--check-only", "--diff"] if check_ else []
     _run(c, f"isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
-    black_options = ["--diff", "--check"] if check else ["--quiet"]
+    black_options = ["--diff", "--check"] if check_ else ["--quiet"]
     _run(c, f"black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
 
 

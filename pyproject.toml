@@ -160,6 +160,9 @@ flake8-pylint-plugin = [
     "-line-too-long", # Checked already by flake8
     "-PLI1101", # c-extension-no-member
     "-PLC0103", # invalid-name
+    "-PLR1705", # no-else-return
+    "-PLC0301", # line-too-long
+    "-PLE0110", # abstract-class-instantiated
 ]
 
 [tool.flakeheaven.exceptions."narrow_down/proto/*.py"]

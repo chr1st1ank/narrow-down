@@ -96,6 +96,7 @@ class SimilarityStore:
           # noqa: DAR101 max_false_positive_proba
           # noqa: DAR101 similarity_threshold
         """
+        # pylint: disable=protected-access
         obj = await cls._create_object_base(storage, storage_level, similarity_threshold, tokenize)
         obj._lsh_config = _minhash.find_optimal_config(
             jaccard_threshold=similarity_threshold,
@@ -125,6 +126,7 @@ class SimilarityStore:
             TypeError: If settings in the storage are missing, corrupt or cannot be deserialized.
             ValueError: If the function specified with ``tokenize`` cannot be found.
         """
+        # pylint: disable=protected-access
         storage_level = StorageLevel(
             # Let it throw TypeError if None:
             int(await storage.query_setting("storage_level"))  # type: ignore
@@ -161,6 +163,7 @@ class SimilarityStore:
         cls, storage, storage_level, similarity_threshold, tokenize
     ) -> "SimilarityStore":
         """Create a new SimilarityStore object with the given attributes."""
+        # pylint: disable=protected-access
         obj = SimilarityStore.__new__(cls)
         obj._storage = storage or InMemoryStore()
         obj._storage_level = storage_level
@@ -279,7 +282,7 @@ class SimilarityStore:
         return candidates
 
     async def query(
-        self, document: str, *, exact_part=None, validate: bool = None
+        self, document: str, *, exact_part: str = None, validate: bool = None
     ) -> Collection[StoredDocument]:
         """Query all similar documents.
 
@@ -302,7 +305,7 @@ class SimilarityStore:
         return candidates
 
     async def query_top_n(
-        self, n: int, document: str, *, exact_part=None, validate: bool = None
+        self, n: int, document: str, *, exact_part: str = None, validate: bool = None
     ) -> Collection[StoredDocument]:
         """Query the top n similar documents.
 
