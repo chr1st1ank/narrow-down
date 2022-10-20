@@ -53,8 +53,8 @@ docs = [
 dev = [
     "pre-commit",
     "invoke",
-    "flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
-    "flakehell",
+    "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
+    "flakeheaven==3.0.0",
     "flake8-builtins",
     "flake8-blind-except",
     "flake8-logging-format",
@@ -117,18 +117,14 @@ show_missing = true
 [tool.coverage.html]
 directory = "htmlcov"
 
-[tool.flakehell]
+[tool.flakeheaven]
 format = "grouped"
 max_line_length = 100
 show_source = true
 docstring-convention = "google"
 extended_default_ignore = []
 
-[tool.flakehell.exceptions."narrow_down/proto/*.py"]
-"flake8-*" = ["-*"]
-pycodestyle = ["-*"]
-
-[tool.flakehell.plugins]
+[tool.flakeheaven.plugins]
 pyflakes = ["+*"]
 mccabe = ["+*"]
 "flake8-*" = [
@@ -155,7 +151,22 @@ pycodestyle = [
     "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
 ]
 
-[tool.flakehell.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
+flake8-pylint-plugin = [
+    "+*",
+    "-invalid-name", # Creates warnings for local single-letter variables
+    "-PLW0511", # fixme; Creates warnings for todo items
+    "-no-else-return", # Creates refactor result for indented else block; which however might be more readable
+    "-duplicate-code", # Unfortunately this gives alerts also for identical function signatures
+    "-line-too-long", # Checked already by flake8
+    "-PLI1101", # c-extension-no-member
+    "-PLC0103", # invalid-name
+]
+
+[tool.flakeheaven.exceptions."narrow_down/proto/*.py"]
+"flake8-*" = ["-*"]
+pycodestyle = ["-*"]
+
+[tool.flakeheaven.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
 flake8 = [
     "-W291"     # Trailing whitespace. Often appears in multiline strings in tests
 ]
@@ -171,13 +182,22 @@ flake8-docstrings = [
     "-D103",    # Missing docstring in public function"
 ]
 
+flake8-pylint-plugin = [
+    "+*",
+    "-PLC*",
+    "-PLI*",
+    "-PLR*",
+    "-PLW0212",  # protected-access
+    "-PLW0621",  # redefined-outer-name
+]
+
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 100
-known_third_party = ["invoke", "nox"]
+known_third_party = ["invoke", "nox", ".nox", ".venv", "local"]
 
 [tool.black]
 line-length = 100
@@ -200,18 +220,11 @@ exclude = '''
 
 [tool.pylint.master]
 reports = false
-msg-template = "{path}:{line}: {msg_id} ({symbol}) {msg} ({obj})"
+extension-pkg-allow-list="cassandra,numpy,narrow_down"
+#unsafe-load-any-extension = true
 load-plugins = [
     "pylint.extensions.docparams", # Find parameters missing in docstrings
     "pylint.extensions.docstyle", # Detect wrong docstring formatting
-]
-disable = [
-    "bad-continuation", # Creates many false positives conflicting with black
-    "invalid-name", # Creates warnings for local single-letter variables
-    "fixme", # Creates warnings for todo items
-    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
-    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
-    "line-too-long", # Checked already by flake8
 ]
 
 [tool.pylint.design]

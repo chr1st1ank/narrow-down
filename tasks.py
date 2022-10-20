@@ -1,8 +1,8 @@
-"""
-Tasks for maintaining the project.
+"""Tasks for maintaining the project.
 
 Execute 'invoke --list' for guidance on using Invoke
 """
+# pylint: disable=unused-argument
 import platform
 import webbrowser
 from pathlib import Path
@@ -156,7 +156,7 @@ def format_(c, check=False):
 def flake8(c):
     # type: (Context) -> None
     """Run flake8."""
-    _run(c, f"flakehell lint {PYTHON_TARGETS_STR}")
+    _run(c, f"flakeheaven lint {PYTHON_TARGETS_STR}")
 
 
 @task()
