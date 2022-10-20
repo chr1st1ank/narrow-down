@@ -27,13 +27,15 @@ class SessionMock:
             return self.content.__iter__()
 
         def all(self):  # noqa: A003  # We cannot choose a different name
-            return [x for x in self]
+            return list(self)
 
         def one(self):
             return self.content[0]
 
     class _PreparedStament:
         """A mock object mimicking a PreparedStatement."""
+
+        # pylint: disable=too-few-public-methods
 
         def __init__(self, query: str):
             self.query_string = query

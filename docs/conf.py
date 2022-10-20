@@ -15,7 +15,7 @@ import narrow_down  # noqa
 
 # General information about the project.
 project = "narrow-down"
-copyright = "2022, Christian Krudewig"  # noqa
+copyright = "2022, Christian Krudewig"  # pylint: disable=redefined-builtin  # noqa
 author = "Christian Krudewig"
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

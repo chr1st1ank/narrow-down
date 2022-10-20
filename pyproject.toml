@@ -82,7 +82,6 @@ dev = [
     "coverage[toml]~=6.0",
     "pytest-cov~=3.0",
     "watchdog[watchmedo]~=2.1",
-    "flake8-pylint~=0.1",
     "protoc-wheel-0",
     "narrow-down[scylladb,docs]"
 ]
@@ -152,20 +151,6 @@ pycodestyle = [
     "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
 ]
 
-flake8-pylint-plugin = [
-    "+*",
-    "-invalid-name", # Creates warnings for local single-letter variables
-    "-PLW0511", # fixme; Creates warnings for todo items
-    "-no-else-return", # Creates refactor result for indented else block; which however might be more readable
-    "-duplicate-code", # Unfortunately this gives alerts also for identical function signatures
-    "-line-too-long", # Checked already by flake8
-    "-PLI1101", # c-extension-no-member
-    "-PLC0103", # invalid-name
-    "-PLR1705", # no-else-return
-    "-PLC0301", # line-too-long
-    "-PLE0110", # abstract-class-instantiated
-]
-
 [tool.flakeheaven.exceptions."narrow_down/proto/*.py"]
 "flake8-*" = ["-*"]
 pycodestyle = ["-*"]
@@ -184,15 +169,6 @@ flake8-bandit = [
 ]
 flake8-docstrings = [
     "-D103",    # Missing docstring in public function"
-]
-
-flake8-pylint-plugin = [
-    "+*",
-    "-PLC*",
-    "-PLI*",
-    "-PLR*",
-    "-PLW0212",  # protected-access
-    "-PLW0621",  # redefined-outer-name
 ]
 
 [tool.isort]
@@ -223,17 +199,54 @@ exclude = '''
 '''
 
 [tool.pylint.master]
+ignore = ["tests"]
 reports = false
 extension-pkg-allow-list="cassandra,numpy,narrow_down"
-#unsafe-load-any-extension = true
 load-plugins = [
     "pylint.extensions.docparams", # Find parameters missing in docstrings
     "pylint.extensions.docstyle", # Detect wrong docstring formatting
+]
+disable = [
+    "invalid-name", # Creates warnings for local single-letter variables
+    "fixme", # fixme; Creates warnings for todo items
+    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
+    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
+    "line-too-long", # Checked already by flake8
+    "c-extension-no-member",
+    "invalid-name",
+    "no-else-return",
+    "line-too-long",
+    "abstract-class-instantiated",
 ]
 
 [tool.pylint.design]
 max-args = 10  # Maximum number of arguments for functions
 max-attributes = 15  # Maximum number of attributes for a class
+
+
+[tool.pylint.TESTING]
+ignore = ["narrow_down"]
+reports = false
+extension-pkg-allow-list="cassandra,numpy,narrow_down"
+load-plugins = [
+    "pylint.extensions.docparams", # Find parameters missing in docstrings
+    "pylint.extensions.docstyle", # Detect wrong docstring formatting
+]
+disable = [
+    "C",
+    "redefined-outer-name",
+    "protected-access",
+    "invalid-name", # Creates warnings for local single-letter variables
+    "fixme", # fixme; Creates warnings for todo items
+    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
+    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
+    "line-too-long", # Checked already by flake8
+    "c-extension-no-member",
+    "invalid-name",
+    "no-else-return",
+    "line-too-long",
+    "abstract-class-instantiated",
+]
 
 [[tool.mypy.overrides]]
 module = [
