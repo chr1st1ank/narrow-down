@@ -4,6 +4,7 @@ Execute 'invoke --list' for guidance on using Invoke
 """
 # pylint: disable=unused-argument,import-error
 import platform
+import sys
 import webbrowser
 from pathlib import Path
 
@@ -35,8 +36,14 @@ def _shorten(long_text: str) -> str:
     return long_text[:97] + "..."
 
 
+def _escape_unicode_on_windows(unicode_text: str):
+    if sys.platform == "win32":
+        return unicode_text.encode(encoding="ascii", errors="?")
+    return unicode_text
+
+
 def _run(c: Context, command: str) -> Result:
-    print("⏳ Running", _shorten(command))
+    print(_escape_unicode_on_windows("⏳"), "Running", _shorten(command))
     return c.run(command, pty=platform.system() != "Windows")
 
 
