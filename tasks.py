@@ -29,7 +29,14 @@ PYTHON_TARGETS = [
 PYTHON_TARGETS_STR = " ".join([str(p) for p in PYTHON_TARGETS])
 
 
+def _shorten(long_text: str) -> str:
+    if len(long_text) <= 100:
+        return long_text
+    return long_text[:97] + "..."
+
+
 def _run(c: Context, command: str) -> Result:
+    print("⏳ Running", _shorten(command))
     return c.run(command, pty=platform.system() != "Windows")
 
 
@@ -184,6 +191,13 @@ def mypy(c):
 
 
 @task()
+def pylint(c):
+    # type: (Context) -> None
+    """Run pylint."""
+    _run(c, f"pylint {PYTHON_TARGETS_STR}")
+
+
+@task()
 def doctest(c):
     # type: (Context) -> None
     """Run tests."""
@@ -239,7 +253,7 @@ def coverage(c, fmt="report", open_browser=False):
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
 
-@task(pre=[hooks, mypy, docs, safety, tests, coverage, doctest])
+@task(pre=[hooks, mypy, pylint, docs, safety, tests, coverage, doctest])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""
