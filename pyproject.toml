@@ -73,6 +73,7 @@ dev = [
     "mypy",
     "mypy-protobuf",
     "nbmake==1.2",
+    "pylint",
     "bump2version~=1.0",
     "pytest~=6.2",
     "pytest-asyncio",
