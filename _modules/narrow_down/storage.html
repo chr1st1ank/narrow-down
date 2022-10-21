@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>narrow_down.storage - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
@@ -217,8 +217,7 @@
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">dataclasses</span>
 <span class="kn">import</span> <span class="nn">enum</span>
-<span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Optional</span>
 
@@ -243,7 +242,7 @@
     <span class="sd">&quot;&quot;&quot;In addition to Minimal, also store the fingerprint, e.g. the Minhashes&quot;&quot;&quot;</span>
     <span class="n">Document</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">auto</span><span class="p">()</span>
     <span class="sd">&quot;&quot;&quot;Store the whole inserted document internally.&quot;&quot;&quot;</span>
-    <span class="n">Full</span> <span class="o">=</span> <span class="n">Minimal</span> <span class="o">|</span> <span class="n">Fingerprint</span> <span class="o">|</span> <span class="n">Document</span>
+    <span class="n">Full</span> <span class="o">=</span> <span class="n">Minimal</span> <span class="o">|</span> <span class="n">Fingerprint</span> <span class="o">|</span> <span class="n">Document</span>  <span class="c1"># pylint: disable=unsupported-binary-operation</span>
     <span class="sd">&quot;&quot;&quot;Store everything.&quot;&quot;&quot;</span></div>
 
 
@@ -333,11 +332,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="StorageBackend.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="StorageBackend.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_setting">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="StorageBackend.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="StorageBackend.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_setting">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
@@ -349,11 +350,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR202,DAR401</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="StorageBackend.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="StorageBackend.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_document">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StorageBackend.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="StorageBackend.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_document">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
@@ -382,19 +385,23 @@
         <span class="c1"># Standard implementation of the base class. May be overloaded for specialization.</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">query_document</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="StorageBackend.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="StorageBackend.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_document">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StorageBackend.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="StorageBackend.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.add_document_to_bucket">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StorageBackend.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="StorageBackend.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_ids_from_bucket">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="StorageBackend.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="StorageBackend.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.remove_id_from_bucket">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 

@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>narrow_down.scylladb - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
@@ -301,7 +301,9 @@
         <span class="sd">&quot;&quot;&quot;Execute a cassandra query with asyncio.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">_wrap_future</span><span class="p">(</span>
             <span class="n">session</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span>
-                <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="ow">or</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">_NOT_SET</span>
+                <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+                <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="ow">or</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">_NOT_SET</span><span class="p">,</span>  <span class="c1"># pylint: disable=protected-access</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -399,7 +401,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            cassandra.DriverException: In case the database query fails for any reason.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR401 # pylint: disable=missing-raises-doc</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">result_list</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
