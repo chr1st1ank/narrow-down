@@ -62,7 +62,7 @@ jobs:
           python3 -m venv ./venv
           source ./venv/bin/activate
           python3 -m pip install --upgrade pip maturin invoke
-          maturin develop
+          maturin develop --release --extras dev,docs,experiments
 
       - name: Pylint
         shell: bash
