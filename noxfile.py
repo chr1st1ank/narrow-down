@@ -4,7 +4,7 @@ import platform
 import nox
 from nox.sessions import Session
 
-nox.options.sessions = ["tests", "mypy", "benchmarks"]
+nox.options.sessions = ["tests", "benchmarks"]
 python_versions = ["3.7", "3.8", "3.9", "3.10"]
 
 
@@ -60,13 +60,6 @@ def coverage(session: Session) -> None:
     args = session.posargs if session.posargs and len(session._runner.manifest) == 1 else []  # noqa
     install_with_constraints(session, "invoke", "coverage[toml]")
     session.run("inv", "coverage", *args)
-
-
-@nox.session(python=python_versions)
-def mypy(session: Session) -> None:
-    """Type-check using mypy."""
-    install_with_constraints(session, "invoke", "mypy")
-    session.run("inv", "mypy")
 
 
 @nox.session(python="3.10")

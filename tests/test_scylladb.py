@@ -27,13 +27,15 @@ class SessionMock:
             return self.content.__iter__()
 
         def all(self):  # noqa: A003  # We cannot choose a different name
-            return [x for x in self]
+            return list(self)
 
         def one(self):
             return self.content[0]
 
     class _PreparedStament:
         """A mock object mimicking a PreparedStatement."""
+
+        # pylint: disable=too-few-public-methods
 
         def __init__(self, query: str):
             self.query_string = query
@@ -324,7 +326,7 @@ async def test_scylladb_store__insert_query_document__no_id_found(monkeypatch, s
     """Check if the driver tries a couple of times before giving up finding a random ID."""
     n_attempts = 0
 
-    async def return_failure(*args, **kwargs):
+    async def return_failure(*args, **kwargs):  # pylint: disable=unused-argument
         nonlocal n_attempts
         n_attempts += 1
         return [row(applied=False, id=4, doc=b"abcd efgh")]

@@ -9,13 +9,13 @@ import pathlib
 import sys
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
-import narrow_down  # noqa: E402
+import narrow_down  # noqa
 
 # -- Project information -----------------------------------------------------
 
 # General information about the project.
 project = "narrow-down"
-copyright = "2022, Christian Krudewig"  # noqa: A001
+copyright = "2022, Christian Krudewig"  # pylint: disable=redefined-builtin  # noqa
 author = "Christian Krudewig"
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

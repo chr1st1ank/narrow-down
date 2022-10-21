@@ -27,7 +27,8 @@ classifiers=[
 ]
 
 dependencies = [
-    "numpy~=1.18",
+    "numpy<1.22; python_version < '3.8'",
+    "numpy; python_version >= '3.8'",
     "scipy",
     "typing_extensions",
     "protobuf~=3.15",  # >= 3.15 to support optional fields
@@ -53,8 +54,8 @@ docs = [
 dev = [
     "pre-commit",
     "invoke",
-    "flake8~=3.9",  # Don't upgrade, because flake8 4.0 is incompatible with flakehell 0.9
-    "flakehell",
+    "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
+    "flakeheaven==3.0.0",
     "flake8-builtins",
     "flake8-blind-except",
     "flake8-logging-format",
@@ -72,6 +73,7 @@ dev = [
     "mypy",
     "mypy-protobuf",
     "nbmake==1.2",
+    "pylint",
     "bump2version~=1.0",
     "pytest~=6.2",
     "pytest-asyncio",
@@ -81,7 +83,6 @@ dev = [
     "coverage[toml]~=6.0",
     "pytest-cov~=3.0",
     "watchdog[watchmedo]~=2.1",
-    "flake8-pylint~=0.1",
     "protoc-wheel-0",
     "narrow-down[scylladb,docs]"
 ]
@@ -117,18 +118,14 @@ show_missing = true
 [tool.coverage.html]
 directory = "htmlcov"
 
-[tool.flakehell]
+[tool.flakeheaven]
 format = "grouped"
 max_line_length = 100
 show_source = true
 docstring-convention = "google"
 extended_default_ignore = []
 
-[tool.flakehell.exceptions."narrow_down/proto/*.py"]
-"flake8-*" = ["-*"]
-pycodestyle = ["-*"]
-
-[tool.flakehell.plugins]
+[tool.flakeheaven.plugins]
 pyflakes = ["+*"]
 mccabe = ["+*"]
 "flake8-*" = [
@@ -155,7 +152,11 @@ pycodestyle = [
     "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
 ]
 
-[tool.flakehell.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
+[tool.flakeheaven.exceptions."narrow_down/proto/*.py"]
+"flake8-*" = ["-*"]
+pycodestyle = ["-*"]
+
+[tool.flakeheaven.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
 flake8 = [
     "-W291"     # Trailing whitespace. Often appears in multiline strings in tests
 ]
@@ -177,7 +178,7 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 100
-known_third_party = ["invoke", "nox"]
+known_third_party = ["invoke", "nox", ".nox", ".venv", "local"]
 
 [tool.black]
 line-length = 100
@@ -199,24 +200,54 @@ exclude = '''
 '''
 
 [tool.pylint.master]
+ignore = ["tests"]
 reports = false
-msg-template = "{path}:{line}: {msg_id} ({symbol}) {msg} ({obj})"
+extension-pkg-allow-list="cassandra,numpy,narrow_down"
 load-plugins = [
     "pylint.extensions.docparams", # Find parameters missing in docstrings
     "pylint.extensions.docstyle", # Detect wrong docstring formatting
 ]
 disable = [
-    "bad-continuation", # Creates many false positives conflicting with black
     "invalid-name", # Creates warnings for local single-letter variables
-    "fixme", # Creates warnings for todo items
+    "fixme", # fixme; Creates warnings for todo items
     "no-else-return", # Creates refactor result for indented else block; which however might be more readable
     "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
     "line-too-long", # Checked already by flake8
+    "c-extension-no-member",
+    "invalid-name",
+    "no-else-return",
+    "line-too-long",
+    "abstract-class-instantiated",
 ]
 
 [tool.pylint.design]
 max-args = 10  # Maximum number of arguments for functions
 max-attributes = 15  # Maximum number of attributes for a class
+
+
+[tool.pylint.TESTING]
+ignore = ["narrow_down"]
+reports = false
+extension-pkg-allow-list="cassandra,numpy,narrow_down"
+load-plugins = [
+    "pylint.extensions.docparams", # Find parameters missing in docstrings
+    "pylint.extensions.docstyle", # Detect wrong docstring formatting
+]
+disable = [
+    "C",
+    "redefined-outer-name",
+    "protected-access",
+    "invalid-name", # Creates warnings for local single-letter variables
+    "fixme", # fixme; Creates warnings for todo items
+    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
+    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
+    "line-too-long", # Checked already by flake8
+    "c-extension-no-member",
+    "invalid-name",
+    "no-else-return",
+    "line-too-long",
+    "abstract-class-instantiated",
+]
 
 [[tool.mypy.overrides]]
 module = [

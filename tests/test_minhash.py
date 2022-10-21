@@ -13,6 +13,7 @@ def test_minhash_lsh_config__json():
 
 def test_minhash():
     """Check minhashing of a document with hand-checked result."""
+    # pylint: disable=no-member
     mh = _minhash.MinHasher(2, 42)
     minhashes = mh.minhash(["abc", "def", "g"])
 
@@ -170,7 +171,7 @@ async def test_lsh__remove_by_id__missing_fingerprint():
         ),
     ],
 )
-def test_find_optimal_config(j, fn, fp, expected) -> None:
+def test_find_optimal_config(j, fn, fp, expected) -> None:  # pylint: disable=missing-type-doc
     """Test the parameter optimization.
 
     Expectations: As long as the proba thresholds can't be reached the number of hashes should be

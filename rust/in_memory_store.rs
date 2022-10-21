@@ -53,7 +53,7 @@ impl RustMemoryStore {
     }
     #[classmethod]
     fn deserialize(_cls: &PyType, msgpack: &[u8]) -> PyResult<RustMemoryStore> {
-        Ok(rmp_serde::from_read_ref(msgpack).unwrap())
+        Ok(rmp_serde::from_slice(msgpack).unwrap())
     }
     #[classmethod]
     fn from_file(_cls: &PyType, file_path: &str) -> PyResult<RustMemoryStore> {

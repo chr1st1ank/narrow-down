@@ -1,9 +1,10 @@
-"""
-Tasks for maintaining the project.
+"""Tasks for maintaining the project.
 
 Execute 'invoke --list' for guidance on using Invoke
 """
+# pylint: disable=unused-argument,import-error
 import platform
+import sys
 import webbrowser
 from pathlib import Path
 
@@ -29,7 +30,20 @@ PYTHON_TARGETS = [
 PYTHON_TARGETS_STR = " ".join([str(p) for p in PYTHON_TARGETS])
 
 
+def _shorten(long_text: str) -> str:
+    if len(long_text) <= 100:
+        return long_text
+    return long_text[:97] + "..."
+
+
+def _escape_unicode_on_windows(unicode_text: str):
+    if sys.platform == "win32":
+        return unicode_text.encode(encoding="ascii", errors="replace")
+    return unicode_text
+
+
 def _run(c: Context, command: str) -> Result:
+    print(_escape_unicode_on_windows("⏳"), "Running", _shorten(command))
     return c.run(command, pty=platform.system() != "Windows")
 
 
@@ -143,12 +157,12 @@ def hooks(c):
 
 
 @task(name="format", help={"check": "Checks if source is formatted without applying changes"})
-def format_(c, check=False):
+def format_(c, check_=False):
     # type: (Context, bool) -> None
     """Format code."""
-    isort_options = ["--check-only", "--diff"] if check else []
+    isort_options = ["--check-only", "--diff"] if check_ else []
     _run(c, f"isort {' '.join(isort_options)} {PYTHON_TARGETS_STR}")
-    black_options = ["--diff", "--check"] if check else ["--quiet"]
+    black_options = ["--diff", "--check"] if check_ else ["--quiet"]
     _run(c, f"black {' '.join(black_options)} {PYTHON_TARGETS_STR}")
 
 
@@ -156,7 +170,7 @@ def format_(c, check=False):
 def flake8(c):
     # type: (Context) -> None
     """Run flake8."""
-    _run(c, f"flakehell lint {PYTHON_TARGETS_STR}")
+    _run(c, f"flakeheaven lint {PYTHON_TARGETS_STR}")
 
 
 @task()
@@ -180,7 +194,14 @@ def lint(c):
 def mypy(c):
     # type: (Context) -> None
     """Run mypy."""
-    _run(c, f"mypy  {PYTHON_TARGETS_STR}")
+    _run(c, f"mypy --follow-imports silent --python-version 3.8 {PYTHON_TARGETS_STR}")
+
+
+@task()
+def pylint(c):
+    # type: (Context) -> None
+    """Run pylint."""
+    _run(c, f"pylint {PYTHON_TARGETS_STR}")
 
 
 @task()
@@ -239,7 +260,7 @@ def coverage(c, fmt="report", open_browser=False):
         webbrowser.open(COVERAGE_REPORT.as_uri())
 
 
-@task(pre=[hooks, mypy, docs, safety, tests, coverage, doctest])
+@task(pre=[hooks, mypy, pylint, docs, safety, tests, coverage, doctest])
 def check(c):
     # type: (Context) -> None
     """Run all checks together."""

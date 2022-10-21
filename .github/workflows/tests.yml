@@ -8,9 +8,9 @@ on:
     branches:
       - main
 jobs:
-  linting:
+  precommit:
     # Static code analysis. Running on lowest supported Python version to catch use of new syntax.
-    name: Linting
+    name: Pre-Commit
     runs-on: ubuntu-latest
     steps:            
       - uses: actions/checkout@v3
@@ -30,6 +30,51 @@ jobs:
         run: |
           pip install pre-commit
           pre-commit run --all-files
+
+  static-code-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ubuntu-latest-3.8-pip-${{ hashFiles('**/pyproject.toml') }}
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ubuntu-latest-3.8-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install project
+        shell: bash
+        run: |
+          python3 -m venv ./venv
+          source ./venv/bin/activate
+          python3 -m pip install --upgrade pip maturin invoke
+          maturin develop --release --extras dev
+
+      - name: Pylint
+        shell: bash
+        run: |
+          source ./venv/bin/activate
+          inv pylint
+
+      - name: Run mypy
+        shell: bash
+        run: |
+          source ./venv/bin/activate
+          inv mypy
 
   doctests:
     name: Doctest
@@ -77,7 +122,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-#        python-version: ["3.7", "3.8", "3.9", "3.10"]
         python-version: ["3.7", "3.10"]
         exclude:
           - os: Windows
@@ -122,10 +166,6 @@ jobs:
         shell: bash
         run: pip install nox maturin
 
-      - name: Run mypy with nox
-        shell: bash
-        run: nox --verbose --force-color -s mypy-${{ matrix.python-version }}
-
       - name: Run tests with nox
         shell: bash
         run: nox --verbose --force-color -s tests-${{ matrix.python-version }}
@@ -156,8 +196,7 @@ jobs:
       - name: Install system deps
         shell: bash
         run: |
-          pip install nox
-          pip install maturin
+          pip install nox maturin
 
       - name: Download coverage data
         uses: actions/download-artifact@v3

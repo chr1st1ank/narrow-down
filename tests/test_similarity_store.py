@@ -1,4 +1,5 @@
 """Tests for `narrow_down.similarity_store`."""
+# pylint: disable=unused-argument
 import pytest
 
 import narrow_down.storage

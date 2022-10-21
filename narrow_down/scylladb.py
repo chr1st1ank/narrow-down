@@ -86,7 +86,9 @@ class ScyllaDBStore(StorageBackend):
         """Execute a cassandra query with asyncio."""
         return await _wrap_future(
             session.execute_async(
-                query=query, parameters=parameters, timeout=timeout or cassandra.cluster._NOT_SET
+                query=query,
+                parameters=parameters,
+                timeout=timeout or cassandra.cluster._NOT_SET,  # pylint: disable=protected-access
             )
         )
 
@@ -184,7 +186,7 @@ class ScyllaDBStore(StorageBackend):
 
         Raises:
             cassandra.DriverException: In case the database query fails for any reason.
-        """  # noqa: DAR401
+        """  # noqa: DAR401 # pylint: disable=missing-raises-doc
         with self._session() as session:
             try:
                 result_list = await self._execute(

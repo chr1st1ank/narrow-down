@@ -16,7 +16,8 @@ import numpy as np
 import numpy.typing as npt
 from scipy.integrate import quad as integrate
 
-from . import _rust, hash
+from . import _rust
+from . import hash as hash_
 from .storage import Fingerprint, StorageBackend, StorageLevel, StoredDocument, TooLowStorageLevel
 
 _MERSENNE_PRIME = np.uint32((1 << 32) - 1)
@@ -47,6 +48,8 @@ class MinhashLshConfig:
 
 class MinHasher:
     """Classic Minhash algorithm."""
+
+    # pylint: disable=too-few-public-methods
 
     def __init__(
         self,
@@ -101,7 +104,7 @@ class LSH:
         self.n_hashes = lsh_config.n_hashes
         self.n_bands = lsh_config.n_bands
         self.rows_per_band = lsh_config.rows_per_band
-        self._hashfunc = hash.murmur3_32bit
+        self._hashfunc = hash_.murmur3_32bit
 
     def _hash(self, arr: npt.NDArray, exact_part: str = None) -> int:
         """Merge multiple hashes together to one hash."""
@@ -259,10 +262,10 @@ def _params_given_false_negative_proba(
 
 
 def _false_positive_probability(threshold: float, b: int, r: int) -> float:
-    a, err = integrate(lambda s: 1 - (1 - s ** float(r)) ** float(b), 0.0, threshold)
+    a, _ = integrate(lambda s: 1 - (1 - s ** float(r)) ** float(b), 0.0, threshold)
     return a
 
 
 def _false_negative_probability(threshold: float, b: int, r: int) -> float:
-    a, err = integrate(lambda s: 1 - (1 - (1 - s ** float(r)) ** float(b)), threshold, 1.0)
+    a, _ = integrate(lambda s: 1 - (1 - (1 - s ** float(r)) ** float(b)), threshold, 1.0)
     return a
