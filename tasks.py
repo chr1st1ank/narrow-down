@@ -38,7 +38,7 @@ def _shorten(long_text: str) -> str:
 
 def _escape_unicode_on_windows(unicode_text: str):
     if sys.platform == "win32":
-        return unicode_text.encode(encoding="ascii", errors="?")
+        return unicode_text.encode(encoding="ascii", errors="replace")
     return unicode_text
 
 
