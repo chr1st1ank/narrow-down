@@ -54,7 +54,7 @@ docs = [
 dev = [
     "pre-commit",
     "invoke",
-    "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
+    "flake8>=4,<6",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
     "flakeheaven==3.0.0",
     "flake8-builtins",
     "flake8-blind-except",
