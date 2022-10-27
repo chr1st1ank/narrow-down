@@ -81,7 +81,7 @@ dev = [
     "pytest-profiling",
     "xdoctest>=0.15,<2.0",
     "coverage[toml]~=6.0",
-    "pytest-cov~=3.0",
+    "pytest-cov>=3,<5",
     "watchdog[watchmedo]~=2.1",
     "protoc-wheel-0",
     "narrow-down[scylladb,docs]"
