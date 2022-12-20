@@ -184,7 +184,7 @@ def safety(c):
     )
 
 
-@task(pre=[flake8, safety, call(format_, check=True)])
+@task(pre=[flake8, safety, call(format_, check_=True)])
 def lint(c):
     # type: (Context) -> None
     """Run all linting."""
