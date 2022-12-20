@@ -56,6 +56,7 @@ jobs:
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
+      id: setup-python
       with:
         python-version: 3.9
         architecture: x64
@@ -69,6 +70,8 @@ jobs:
         default: true
     - name: Build wheels
       uses: messense/maturin-action@v1
+      env:
+        pythonLocation: ${{ steps.setup-python.outputs.python-path }}
       with:
         target: x64
         args: --release --out dist --no-sdist
