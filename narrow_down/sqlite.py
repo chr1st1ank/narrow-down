@@ -85,7 +85,7 @@ class SQLiteStore(StorageBackend):
                 return None
             raise
 
-    async def insert_document(self, document: bytes, document_id: int = None) -> int:
+    async def insert_document(self, document: bytes, document_id: Optional[int] = None) -> int:
         """Add the data of a document to the storage and return its ID."""
         with self._connection as conn:
             if document_id:

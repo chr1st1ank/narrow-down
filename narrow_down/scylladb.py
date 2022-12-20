@@ -49,7 +49,7 @@ class ScyllaDBStore(StorageBackend):
         self,
         cluster_or_session: Union[cassandra.cluster.Cluster, cassandra.cluster.Session],
         keyspace: str,
-        table_prefix: str = None,
+        table_prefix: Optional[str] = None,
     ) -> None:
         """Create a new empty or connect to an existing SQLite database.
 
@@ -198,7 +198,7 @@ class ScyllaDBStore(StorageBackend):
                     return None
                 raise  # Don't swallow unknown errors
 
-    async def insert_document(self, document: bytes, document_id: int = None) -> int:
+    async def insert_document(self, document: bytes, document_id: Optional[int] = None) -> int:
         """Add the data of a document to the storage and return its ID."""
         with self._session() as session:
             if document_id:

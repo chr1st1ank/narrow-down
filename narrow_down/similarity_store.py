@@ -1,7 +1,7 @@
 """High-level API for indexing and retrieval of documents."""
 import re
 import warnings
-from typing import Callable, Collection, Iterable, List, Union
+from typing import Callable, Collection, Iterable, List, Optional, Union
 
 from narrow_down import _minhash, _tokenize
 from narrow_down._minhash import MinhashLshConfig
@@ -47,9 +47,9 @@ class SimilarityStore:
     async def create(
         cls,
         *,
-        storage: StorageBackend = None,
+        storage: Optional[StorageBackend] = None,
         storage_level: StorageLevel = StorageLevel.Minimal,
-        tokenize: Union[str, Callable[[str], Collection[str]]] = None,
+        tokenize: Optional[Union[str, Callable[[str], Collection[str]]]] = None,
         max_false_negative_proba: float = 0.05,
         max_false_positive_proba: float = 0.05,
         similarity_threshold: float = 0.75,
@@ -108,7 +108,9 @@ class SimilarityStore:
 
     @classmethod
     async def load_from_storage(
-        cls, storage: StorageBackend, tokenize: Union[str, Callable[[str], Collection[str]]] = None
+        cls,
+        storage: StorageBackend,
+        tokenize: Optional[Union[str, Callable[[str], Collection[str]]]] = None,
     ) -> "SimilarityStore":
         """Load a SimilarityStore object from already initialized storage.
 
@@ -213,13 +215,18 @@ class SimilarityStore:
         await self._storage.initialize()
         await self._storage.insert_setting("similarity_threshold", str(self._similarity_threshold))
         await self._storage.insert_setting("storage_level", str(self._storage_level.value))
-        await self._storage.insert_setting("tokenize", self._tokenize)
+        await self._storage.insert_setting("tokenize", self._tokenize)  # type: ignore
         await self._storage.insert_setting("lsh_config", self._lsh_config.to_json())
         self._minhasher = _minhash.MinHasher(n_hashes=self._lsh_config.n_hashes)
         self._lsh = _minhash.LSH(self._lsh_config, storage=self._storage)
 
     async def insert(
-        self, document: str, *, document_id: int = None, exact_part: str = None, data: str = None
+        self,
+        document: str,
+        *,
+        document_id: Optional[int] = None,
+        exact_part: Optional[str] = None,
+        data: Optional[str] = None,
     ) -> int:
         """Index a new document.
 
@@ -282,7 +289,7 @@ class SimilarityStore:
         return candidates
 
     async def query(
-        self, document: str, *, exact_part: str = None, validate: bool = None
+        self, document: str, *, exact_part: Optional[str] = None, validate: Optional[bool] = None
     ) -> Collection[StoredDocument]:
         """Query all similar documents.
 
@@ -305,7 +312,12 @@ class SimilarityStore:
         return candidates
 
     async def query_top_n(
-        self, n: int, document: str, *, exact_part: str = None, validate: bool = None
+        self,
+        n: int,
+        document: str,
+        *,
+        exact_part: Optional[str] = None,
+        validate: Optional[bool] = None,
     ) -> Collection[StoredDocument]:
         """Query the top n similar documents.
 

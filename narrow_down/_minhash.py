@@ -106,7 +106,7 @@ class LSH:
         self.rows_per_band = lsh_config.rows_per_band
         self._hashfunc = hash_.murmur3_32bit
 
-    def _hash(self, arr: npt.NDArray, exact_part: str = None) -> int:
+    def _hash(self, arr: npt.NDArray, exact_part: Optional[str] = None) -> int:
         """Merge multiple hashes together to one hash."""
         if arr.dtype != np.uint32:
             # Other data types like the standard int64 have a different binary representation
@@ -176,7 +176,7 @@ class LSH:
         await self._storage.remove_document(document_id=document_id)
 
     async def query(
-        self, fingerprint: Fingerprint, *, exact_part: str = None
+        self, fingerprint: Fingerprint, *, exact_part: Optional[str] = None
     ) -> Collection[StoredDocument]:
         """Find all similar documents."""
         tasks = []
@@ -192,7 +192,7 @@ class LSH:
         return await self._query_documents(list(candidates))
 
     async def query_top_n(
-        self, n, fingerprint: Fingerprint, *, exact_part: str = None
+        self, n, fingerprint: Fingerprint, *, exact_part: Optional[str] = None
     ) -> Collection[StoredDocument]:
         """Find n most similar documents."""
         tasks = []
