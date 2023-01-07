@@ -68,8 +68,6 @@ jobs:
         default: true
     - name: Build wheels
       uses: messense/maturin-action@v1
-      env:
-        pythonLocation: ${{ steps.setup-python.outputs.python-path }}
       with:
         target: x64
         args: --release --out dist --no-sdist --interpreter ${{ steps.setup-python.outputs.python-path }}
