@@ -60,8 +60,6 @@ jobs:
       with:
         python-version: 3.9
         architecture: x64
-    - run: python --version
-    - run: which python
     - name: Install Rust toolchain
       uses: actions-rs/toolchain@v1
       with:
