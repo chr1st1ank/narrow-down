@@ -63,26 +63,26 @@ dev = [
     "flake8-annotations",
     "flake8-docstrings",
     "flake8-bandit",
-    "darglint~=1.8",
+    "darglint",
     "isort",
-    "black~=22.3.0",
+    "black",
     "safety",
     "jupyter",
     "nbqa",
     "nox",
     "mypy",
     "mypy-protobuf",
-    "nbmake==1.2",
+    "nbmake",
     "pylint",
-    "bump2version~=1.0",
-    "pytest~=6.2",
+    "bump2version",
+    "pytest",
     "pytest-asyncio",
     "pytest-benchmark",
     "pytest-profiling",
-    "xdoctest>=0.15,<2.0",
-    "coverage[toml]~=6.0",
-    "pytest-cov~=3.0",
-    "watchdog[watchmedo]~=2.1",
+    "xdoctest",
+    "coverage[toml]",
+    "pytest-cov",
+    "watchdog[watchmedo]",
     "protoc-wheel-0",
     "narrow-down[scylladb,docs]"
 ]
@@ -248,6 +248,12 @@ disable = [
     "line-too-long",
     "abstract-class-instantiated",
 ]
+
+[tool.mypy]
+follow_imports = "silent"
+python_version = "3.8"
+
+check_untyped_defs = true
 
 [[tool.mypy.overrides]]
 module = [
