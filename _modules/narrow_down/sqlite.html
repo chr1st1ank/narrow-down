@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>narrow_down.sqlite - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -148,7 +148,7 @@
   <span class="sidebar-brand-text">narrow-down 1.0.0</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -223,10 +223,10 @@
 
 
 <div class="viewcode-block" id="SQLiteStore"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore">[docs]</a><span class="k">class</span> <span class="nc">SQLiteStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;File-based storage backend for a SimilarityStore based on SQLite.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File-based storage backend for a SimilarityStore based on SQLite.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SQLiteStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span> <span class="o">=</span> <span class="n">db_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;IMMEDIATE&quot;</span><span class="p">)</span>
         <span class="c1"># On reopening we can read the number of partitions from the db</span>
@@ -236,7 +236,7 @@
 <div class="viewcode-block" id="SQLiteStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SQLiteStore&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self</span>
@@ -265,7 +265,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
                 <span class="s2">&quot;INSERT INTO settings(key,value) VALUES (:key,:value) &quot;</span>
@@ -274,7 +274,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key: The identifier of the setting</span>
@@ -300,8 +300,8 @@
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">raise</span>
 
-<div class="viewcode-block" id="SQLiteStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SQLiteStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">document_id</span><span class="p">:</span>
                 <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -318,7 +318,7 @@
                 <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span>  <span class="c1"># type: ignore  # (this always works if the insert works)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: The id of the document. This ID is created and returned by the</span>
@@ -337,7 +337,7 @@
         <span class="k">return</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_ids: Key under which the data is stored.</span>
@@ -360,12 +360,12 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">docs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM documents WHERE id=?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -374,7 +374,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;SELECT doc_id FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> WHERE bucket=? AND hash=?&quot;</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
@@ -383,7 +383,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="SQLiteStore.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.sqlite.html#narrow_down.sqlite.SQLiteStore.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
@@ -411,9 +411,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         

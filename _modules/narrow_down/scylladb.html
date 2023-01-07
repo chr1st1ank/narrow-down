@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>narrow_down.scylladb - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -148,7 +148,7 @@
   <span class="sidebar-brand-text">narrow-down 1.0.0</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -233,7 +233,7 @@
 
 
 <span class="k">def</span> <span class="nf">_wrap_future</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">ResponseFuture</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wrap a cassandra Future into an asyncio.Future object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap a cassandra Future into an asyncio.Future object.</span>
 
 <span class="sd">    Based on https://stackoverflow.com/questions/49350346/how-to-wrap-custom-future-to-use-with-asyncio-in-python.</span>
 
@@ -258,15 +258,15 @@
 
 
 <div class="viewcode-block" id="ScyllaDBStore"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore">[docs]</a><span class="k">class</span> <span class="nc">ScyllaDBStore</span><span class="p">(</span><span class="n">StorageBackend</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Storage backend for a SimilarityStore using ScyllaDB.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Storage backend for a SimilarityStore using ScyllaDB.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ScyllaDBStore.__init__"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cluster_or_session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Cluster</span><span class="p">,</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Session</span><span class="p">],</span>
         <span class="n">keyspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">table_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">table_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new empty or connect to an existing SQLite database.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            cluster_or_session: Can be a cassandra cluster or a session object.</span>
@@ -292,13 +292,13 @@
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get or create a cassandra session.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or create a cassandra session.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_cluster</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
         <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scylla_session</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute a cassandra query with asyncio.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a cassandra query with asyncio.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">_wrap_future</span><span class="p">(</span>
             <span class="n">session</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span>
                 <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
@@ -310,7 +310,7 @@
 <div class="viewcode-block" id="ScyllaDBStore.initialize"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.initialize">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScyllaDBStore&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the tables in the SQLite database file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            self</span>
@@ -385,12 +385,12 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.insert_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.insert_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a setting as key-value pair.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;set_setting&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_setting"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_setting">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_setting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query a setting with the given key.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key: The identifier of the setting</span>
@@ -413,8 +413,8 @@
                     <span class="k">return</span> <span class="kc">None</span>
                 <span class="k">raise</span>  <span class="c1"># Don&#39;t swallow unknown errors</span></div>
 
-<div class="viewcode-block" id="ScyllaDBStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ScyllaDBStore.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.insert_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the data of a document to the storage and return its ID.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">document_id</span><span class="p">:</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
@@ -441,7 +441,7 @@
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to find an ID for a document. This should never happen.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the data belonging to a document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: The id of the document. This ID is created and returned by the</span>
@@ -462,7 +462,7 @@
         <span class="k">return</span> <span class="n">docs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">doc</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the data belonging to multiple documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_ids: Key under which the data is stored.</span>
@@ -499,12 +499,12 @@
         <span class="k">return</span> <span class="n">result_docs</span>
 
 <div class="viewcode-block" id="ScyllaDBStore.remove_document"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.remove_document">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a document given by ID from the list of documents.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_statements</span><span class="p">[</span><span class="s2">&quot;del_doc&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">document_id</span><span class="p">,))</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.add_document_to_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.add_document_to_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_document_to_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Link a document to a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
@@ -513,7 +513,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.query_ids_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.query_ids_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_ids_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
@@ -523,7 +523,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">doc_id</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="ScyllaDBStore.remove_id_from_bucket"><a class="viewcode-back" href="../../apidoc/narrow_down.scylladb.html#narrow_down.scylladb.ScyllaDBStore.remove_id_from_bucket">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_id_from_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a document from a bucket.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span>
                 <span class="n">session</span><span class="p">,</span>
@@ -550,9 +550,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         

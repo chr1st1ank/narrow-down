@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>narrow_down.similarity_store - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -148,7 +148,7 @@
   <span class="sidebar-brand-text">narrow-down 1.0.0</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -216,7 +216,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;High-level API for indexing and retrieval of documents.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">narrow_down</span> <span class="kn">import</span> <span class="n">_minhash</span><span class="p">,</span> <span class="n">_tokenize</span>
 <span class="kn">from</span> <span class="nn">narrow_down._minhash</span> <span class="kn">import</span> <span class="n">MinhashLshConfig</span>
@@ -230,7 +230,7 @@
 
 
 <div class="viewcode-block" id="SimilarityStore"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore">[docs]</a><span class="k">class</span> <span class="nc">SimilarityStore</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Storage class for indexing and fuzzy search of documents.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Storage class for indexing and fuzzy search of documents.&quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;_minhasher&quot;</span><span class="p">,</span>
@@ -262,14 +262,14 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">storage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">StorageBackend</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">storage_level</span><span class="p">:</span> <span class="n">StorageLevel</span> <span class="o">=</span> <span class="n">StorageLevel</span><span class="o">.</span><span class="n">Minimal</span><span class="p">,</span>
-        <span class="n">tokenize</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tokenize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">max_false_negative_proba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">max_false_positive_proba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
         <span class="n">similarity_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.75</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimilarityStore&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a new SimilarityStore object.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new SimilarityStore object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            storage: Storage backend to use for persisting the data. Per default this is an</span>
@@ -323,9 +323,11 @@
 
 <div class="viewcode-block" id="SimilarityStore.load_from_storage"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.load_from_storage">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">load_from_storage</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span><span class="p">,</span> <span class="n">tokenize</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span><span class="p">,</span>
+        <span class="n">tokenize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Collection</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimilarityStore&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Load a SimilarityStore object from already initialized storage.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a SimilarityStore object from already initialized storage.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            storage: A StorageBackend object which must already have been initialized by a</span>
@@ -377,7 +379,7 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_create_object_base</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">storage</span><span class="p">,</span> <span class="n">storage_level</span><span class="p">,</span> <span class="n">similarity_threshold</span><span class="p">,</span> <span class="n">tokenize</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimilarityStore&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Create a new SimilarityStore object with the given attributes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new SimilarityStore object with the given attributes.&quot;&quot;&quot;</span>
         <span class="c1"># pylint: disable=protected-access</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">SimilarityStore</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_storage</span> <span class="o">=</span> <span class="n">storage</span> <span class="ow">or</span> <span class="n">InMemoryStore</span><span class="p">()</span>
@@ -393,7 +395,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_tokenize_callable</span><span class="p">(</span><span class="n">tokenize_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the right python function for the given specification as string.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the right python function for the given specification as string.&quot;&quot;&quot;</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([a-z_]+)\((.+)\)&quot;</span><span class="p">,</span> <span class="n">tokenize_spec</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;word_ngrams&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">_tokenize</span><span class="o">.</span><span class="n">word_ngrams</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
@@ -416,7 +418,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokenization function not found: </span><span class="si">{</span><span class="n">tokenize_spec</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_initialize_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the internal storage.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the internal storage.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AlreadyInitialized: When the object or the underlying storage had already be</span>
@@ -428,15 +430,20 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;similarity_threshold&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_similarity_threshold</span><span class="p">))</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;storage_level&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage_level</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;tokenize&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;tokenize&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">insert_setting</span><span class="p">(</span><span class="s2">&quot;lsh_config&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_minhasher</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">MinHasher</span><span class="p">(</span><span class="n">n_hashes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="o">.</span><span class="n">n_hashes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span> <span class="o">=</span> <span class="n">_minhash</span><span class="o">.</span><span class="n">LSH</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lsh_config</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SimilarityStore.insert"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.insert">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exact_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Index a new document.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Index a new document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document: A document (as string to index).</span>
@@ -459,7 +466,7 @@
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">stored_doc</span><span class="p">,</span> <span class="n">storage_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_storage_level</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SimilarityStore.remove_by_id"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.remove_by_id">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">check_if_exists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Remove the document with the given ID from the internal data structures.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the document with the given ID from the internal data structures.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document_id: ID of the document to remove.</span>
@@ -479,7 +486,7 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lsh</span><span class="o">.</span><span class="n">remove_by_id</span><span class="p">(</span><span class="n">document_id</span><span class="p">,</span> <span class="n">check_if_exists</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_filter_candidates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">StoredDocument</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Filter out candidates below the similarity threshold and sort by similarity.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter out candidates below the similarity threshold and sort by similarity.&quot;&quot;&quot;</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">exact_part</span> <span class="o">==</span> <span class="n">exact_part</span><span class="p">,</span> <span class="n">candidates</span><span class="p">))</span>
         <span class="n">candidate_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_callable</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">document</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">]</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
@@ -497,9 +504,9 @@
         <span class="k">return</span> <span class="n">candidates</span>
 
 <div class="viewcode-block" id="SimilarityStore.query"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.query">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Collection</span><span class="p">[</span><span class="n">StoredDocument</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Query all similar documents.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query all similar documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            document: A document for which to search similar items.</span>
@@ -520,9 +527,14 @@
         <span class="k">return</span> <span class="n">candidates</span></div>
 
 <div class="viewcode-block" id="SimilarityStore.query_top_n"><a class="viewcode-back" href="../../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore.query_top_n">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_top_n</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">exact_part</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">exact_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">validate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Collection</span><span class="p">[</span><span class="n">StoredDocument</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Query the top n similar documents.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query the top n similar documents.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            n: The number of similar documents to retrieve.</span>
@@ -582,9 +594,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
