@@ -74,7 +74,7 @@ jobs:
         pythonLocation: ${{ steps.setup-python.outputs.python-path }}
       with:
         target: x64
-        args: --release --out dist --no-sdist
+        args: --release --out dist --no-sdist --interpreter ${{ steps.setup-python.outputs.python-path }}
     - name: Upload wheels
       uses: actions/upload-artifact@v3
       with:
