@@ -172,6 +172,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install system deps
         shell: bash
         run: pip install nox maturin
@@ -203,6 +208,11 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install system deps
         shell: bash
         run: |
@@ -213,6 +223,7 @@ jobs:
         with:
           name: coverage-data
 
+      # TODO: Use Task directly
       - name: Create coverage report
         shell: bash
         run: |
@@ -253,6 +264,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install system deps
         shell: bash
