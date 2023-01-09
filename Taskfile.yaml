@@ -1,0 +1,205 @@
+# https://taskfile.dev
+
+version: '3'
+silent: true
+
+vars:
+  DOCS_DIR: '{{ print  .ROOT_DIR "/docs" | fromSlash }}'
+  DOCS_BUILD_DIR: '{{ print  .DOCS_DIR "/_build" | fromSlash }}'
+  DOCS_INDEX: '{{ print  .DOCS_BUILD_DIR "/index.html" | fromSlash }}'
+  COVERAGE_FILE: '{{ print  .ROOT_DIR "/.coverage" | fromSlash }}'
+  COVERAGE_DIR: '{{ print  .ROOT_DIR "/htmlcov" | fromSlash }}'
+  COVERAGE_REPORT: '{{ print  .COVERAGE_DIR "/index.html" | fromSlash }}'
+  NOX_FILE: '{{ print  .ROOT_DIR "/noxfile.py" | fromSlash }}'
+  SOURCE_DIR: '{{ print  .ROOT_DIR "/narrow_down" | fromSlash }}'
+  TEST_DIR: '{{ print  .ROOT_DIR "/tests" | fromSlash }}'
+  PYTHON_TARGETS_SPACE_SEPARATED: '{{list .SOURCE_DIR .TEST_DIR .NOX_FILE | join " " }}'
+
+tasks:
+  #################
+  ## Build tasks
+  #################
+  develop:
+    desc: Rebuild the Rust library and install all missing dependencies.
+    cmds:
+      - maturin develop --release --extras dev,docs,experiments
+
+  protobuild:
+    desc: Build the protobuf objects.
+    cmds:
+      - protoc -I . --python_out=narrow_down/ --mypy_out=narrow_down/ proto/stored_document.proto
+      - isort narrow_down/proto
+      - black narrow_down/proto
+
+  #################
+  ## Cleanup tasks
+  #################
+  clean-rust:
+    desc: Clean up files from Rust build.
+    cmds:
+      - cargo clean
+      - cargo clean --release
+
+  clean-build:
+    desc: Clean up files from package building.
+    cmds:
+      - rm -fr build/
+      - rm -fr dist/
+      - rm -fr .eggs/
+      - find . -name '*.egg-info' -exec rm -fr {} + || exit 0
+      - find . -name '*.egg' -exec rm -f {} + || exit 0
+
+  clean-python:
+    desc: Clean up python file artifacts.
+    cmds:
+      - find . -name '*.pyc' -exec rm -f {} + || exit 0
+      - find . -name '*.pyo' -exec rm -f {} + || exit 0
+      - find . -name '*~' -exec rm -f {} + || exit 0
+      - find . -name '__pycache__' -exec rm -fr {} + || exit 0
+
+  clean-tests:
+    desc: Clean up files from testing.
+    cmds:
+      - rm -f "{{.COVERAGE_FILE}}"
+      - rm -fr "{{.COVERAGE_DIR}}"
+      - rm -fr .pytest_cache
+
+  clean-docs:
+    desc: Clean up files from documentation builds.
+    cmds:
+      - rm -fr "{{.DOCS_BUILD_DIR}}" "{{.DOCS_DIR}}/apidoc"
+
+  clean:
+    desc: Run all clean sub-tasks.
+    deps:
+      - clean-rust
+      - clean-build
+      - clean-python
+      - clean-tests
+      - clean-docs
+
+  #################
+  ## Build tasks
+  #################
+  docs:
+    desc: Build documentation.
+    sources:
+      - docs/**/*.md
+      - docs/**/*.rst
+    cmds:
+      - jupyter-nbconvert -TagRemovePreprocessor.remove_cell_tags remove_cell --to markdown docs/user_guide/*.ipynb
+      - sphinx-apidoc --module-first -d 1 --no-toc --separate -o {{.DOCS_DIR}}/apidoc {{.SOURCE_DIR}}
+      - sphinx-build -b html {{.DOCS_DIR}} {{.DOCS_BUILD_DIR}}
+
+  open-docs:
+    desc: Open the html documentation in the default browser.
+    cmds:
+      - |
+        python -c '
+        import pathlib
+        import webbrowser      
+        webbrowser.open(pathlib.Path("{{.DOCS_INDEX}}").absolute().as_uri())
+        '
+
+  #################
+  ## Linting
+  #################
+  hooks:
+    desc: "Run pre-commit hooks."
+    cmds:
+      - pre-commit run --all-files
+
+  check-format:
+    desc: "Run formatters in check mode."
+    cmds:
+      - "isort --check-only --diff {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+      - "black --diff --check {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+
+  format:
+    desc: "Run formatters."
+    cmds:
+      - "isort {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+      - "black --quiet {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+
+  flake8:
+    desc: "Run flake8."
+    cmds:
+      - "flakeheaven lint  {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+
+  safety:
+    desc: "Run safety."
+    cmds:
+      - "poetry export --dev --format=requirements.txt --without-hashes | safety check --stdin --full-report"
+
+  mypy:
+    desc: "Run mypy."
+    cmds:
+      - "mypy --config-file pyproject.toml {{.SOURCE_DIR}}"
+
+  pylint:
+    desc: "Run pylint."
+    cmds:
+      - "pylint {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
+
+  lint:
+    desc: Run all linters.
+    deps:
+      - check-format
+      - flake8
+      - safety
+      - mypy
+      - pylint
+
+  #################
+  ## Testing
+  #################
+  doctest:
+    desc: Run documentation tests.
+    cmds:
+      - pytest --xdoctest --nbmake docs/user_guide --benchmark-disable
+
+  pytest:
+    desc: Run regular pytest suite.
+    cmds:
+      - pytest --xdoctest --cov --cov-report= --cov-fail-under=0 --benchmark-disable
+
+  benchmarks:
+    desc: Run benchmark tests.
+    cmds:
+      - pytest --benchmark-only --benchmark-sort=name
+
+  coverage:
+    desc: Print short coverage report.
+    cmds:
+      - coverage combine || exit 0
+      - coverage report -i
+
+  coverage-html:
+    desc: Generate and open html coverage report.
+    cmds:
+      - coverage combine || exit 0
+      - coverage html -i
+      - |
+        python -c '
+        import pathlib
+        import webbrowser      
+        webbrowser.open((pathlib.Path("{{.ROOT_DIR}}") / "htmlcov" / "index.html").absolute().as_uri())
+        '
+
+  #################
+  ## Dev shortcuts
+  #################
+  check:
+    desc: Run all checks together.
+    deps:
+      - hooks
+      - lint
+      - pytest
+      - coverage
+      - doctest
+
+  version:
+    desc: "Bump version. E.g. 'task version -- --dry-run patch'."
+    cmds:
+      - bump2version --verbose {{.CLI_ARGS}}
+    silent: false
