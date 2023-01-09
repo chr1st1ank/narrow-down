@@ -43,7 +43,7 @@ def tests(session: Session) -> None:
     try:
         session.run(
             "task",
-            "tests",
+            "pytest",
             env={
                 "COVERAGE_FILE": f".coverage.{platform.system()}.{platform.python_version()}",
             },
@@ -51,14 +51,6 @@ def tests(session: Session) -> None:
     finally:
         if session.interactive:
             session.notify("coverage")
-
-
-@nox.session
-def coverage(session: Session) -> None:
-    """Produce the coverage report."""
-    args = session.posargs if session.posargs and len(session._runner.manifest) == 1 else []  # noqa
-    install_with_constraints(session, "coverage[toml]")
-    session.run("task", "coverage", *args)
 
 
 @nox.session(python="3.10")

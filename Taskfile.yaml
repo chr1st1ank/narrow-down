@@ -174,10 +174,18 @@ tasks:
       - coverage combine || exit 0
       - coverage report -i
 
+  coverage-xml:
+    desc: Generate xml coverage report.
+    deps:
+      - coverage
+    cmds:
+      - coverage xml -i
+
   coverage-html:
     desc: Generate and open html coverage report.
+    deps:
+      - coverage
     cmds:
-      - coverage combine || exit 0
       - coverage html -i
       - |
         python -c '
