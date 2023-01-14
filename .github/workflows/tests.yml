@@ -56,25 +56,30 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install project
         shell: bash
         run: |
           python3 -m venv ./venv
           source ./venv/bin/activate
-          python3 -m pip install --upgrade pip maturin invoke
-          inv develop
+          python3 -m pip install --upgrade pip maturin
+          task develop
 
       - name: Pylint
         shell: bash
         run: |
           source ./venv/bin/activate
-          inv pylint
+          task pylint
 
       - name: Run mypy
         shell: bash
         run: |
           source ./venv/bin/activate
-          inv mypy
+          task mypy
 
   doctests:
     name: Doctest
@@ -103,9 +108,14 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-doctest-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Intall pip maturin invoke
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Intall pip maturin
         run: |
-          python3 -m pip install --upgrade pip maturin invoke
+          python3 -m pip install --upgrade pip maturin
 
       - name: Install project
         run: |
@@ -113,7 +123,7 @@ jobs:
 
       - name: Run Jupyter notebook tests
         shell: bash
-        run: inv doctest
+        run: task doctest
 
   tests:
     # Tests are run on all platform/python combinations for which numpy wheels exist.
@@ -162,6 +172,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install system deps
         shell: bash
         run: pip install nox maturin
@@ -193,10 +208,15 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install system deps
         shell: bash
         run: |
-          pip install nox maturin
+          pip install coverage[toml]
 
       - name: Download coverage data
         uses: actions/download-artifact@v3
@@ -206,7 +226,7 @@ jobs:
       - name: Create coverage report
         shell: bash
         run: |
-          nox --force-color --session=coverage -- --fmt xml
+          task coverage-xml
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v3.1.1
@@ -243,6 +263,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install system deps
         shell: bash

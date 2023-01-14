@@ -25,15 +25,20 @@ jobs:
             Cargo.toml
             Cargo.lock
 
-      - name: Intall pip maturin invoke
+      - name: Install Task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Intall pip maturin
         run: |
-          python3 -m pip install --upgrade pip maturin invoke
+          python3 -m pip install --upgrade pip maturin
 
       - name: Install project
         run: |
           pip install -e .[scylladb,docs]
 
-      - run: inv docs
+      - run: task docs
 
       - name: Deploy
         if: "github.event_name != 'pull_request'"

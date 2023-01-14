@@ -53,7 +53,6 @@ docs = [
 ]
 dev = [
     "pre-commit",
-    "invoke",
     "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
     "flakeheaven==3.2.0",
     "flake8-builtins",
@@ -123,7 +122,7 @@ format = "grouped"
 max_line_length = 100
 show_source = true
 docstring-convention = "google"
-extended_default_ignore = []
+exclude = ["*/proto/*.py"]
 
 [tool.flakeheaven.plugins]
 pyflakes = ["+*"]
@@ -178,7 +177,7 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 100
-known_third_party = ["invoke", "nox", ".nox", ".venv", "local"]
+known_third_party = ["nox", ".nox", ".venv", "local"]
 
 [tool.black]
 line-length = 100
@@ -258,7 +257,6 @@ check_untyped_defs = true
 [[tool.mypy.overrides]]
 module = [
     "pytest",
-    "invoke.*",
     "murmurhash.*",
     "nox.*",
     "scipy.*",

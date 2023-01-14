@@ -33,7 +33,6 @@ def tests(session: Session) -> None:
     """Run the test suite."""
     install_with_constraints(
         session,
-        "invoke",
         "pytest",
         "xdoctest",
         "coverage[toml]",
@@ -43,8 +42,8 @@ def tests(session: Session) -> None:
     )
     try:
         session.run(
-            "inv",
-            "tests",
+            "task",
+            "pytest",
             env={
                 "COVERAGE_FILE": f".coverage.{platform.system()}.{platform.python_version()}",
             },
@@ -54,19 +53,11 @@ def tests(session: Session) -> None:
             session.notify("coverage")
 
 
-@nox.session
-def coverage(session: Session) -> None:
-    """Produce the coverage report."""
-    args = session.posargs if session.posargs and len(session._runner.manifest) == 1 else []  # noqa
-    install_with_constraints(session, "invoke", "coverage[toml]")
-    session.run("inv", "coverage", *args)
-
-
 @nox.session(python="3.10")
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    install_with_constraints(session, "invoke", "safety")
-    session.run("inv", "safety")
+    install_with_constraints(session, "safety")
+    session.run("task", "safety")
 
 
 @nox.session(python=python_versions)
@@ -74,7 +65,6 @@ def benchmarks(session: Session) -> None:
     """Produce the coverage report."""
     install_with_constraints(
         session,
-        "invoke",
         "pytest",
         "xdoctest",
         "coverage[toml]",
@@ -82,4 +72,4 @@ def benchmarks(session: Session) -> None:
         "pytest-benchmark",
         "pytest-cov",
     )
-    session.run("inv", "benchmarks")
+    session.run("task", "benchmarks")

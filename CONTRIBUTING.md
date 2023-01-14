@@ -23,15 +23,13 @@ python -m pip install --upgrade pip maturin
 maturin develop --release --extras dev,docs,scylladb
 ```
 
-We'll also need [nox](https://nox.thea.codes/en/stable/) for automated testing in multiple Python environments so and
- [invoke](http://www.pyinvoke.org/) to wrap up some useful tasks like formatting, linting, testing and more.
+In the project [Task](https://taskfile.dev/) is used to organize tasks like formatting, linting, testing and more. Please install it separately in order to leverage the automation.
+Execute `task -l` to see the list of available commands.
 
 To install the pre-commit hooks:
 ```shell
-inv install-hooks
+pre-commit install
 ```
-
-Execute `inv[oke] --list` to see the list of available commands.
 
 ## Contributing
 
@@ -76,6 +74,6 @@ A reminder for the maintainers on how to deploy.
 On branch "main":
 
 - Adjust CHANGELOG.md as described on [https://keepachangelog.com](https://keepachangelog.com).
-- Then run `invoke version [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
+- Then run `task version -- [major | minor | patch]`. This updates the version numbers and creates a tagged commit.
 - Push the commit to github: `git push origin main && git push --tags`
 - A github action will automatically create a github release and publish to pypi
