@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from narrow_down import _minhash, storage
+from narrow_down import _minhash, _rust, storage
 from narrow_down.storage import StorageLevel, StoredDocument, TooLowStorageLevel
 
 
@@ -197,3 +197,45 @@ def test_find_optimal_config(j, fn, fp, expected) -> None:  # pylint: disable=mi
         _minhash._false_positive_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
     )
     assert cfg == expected
+
+
+@pytest.mark.parametrize(
+    "threshold, b, r",
+    [
+        (0.5, 22, 5),
+        (0.0, 2, 2),
+        (1.0, 2, 2),
+        (0.2, 1, 1),
+        (0.2, 1, 10),
+        (0.2, 10, 1),
+    ],
+)
+def test_false_positive_probability(
+    threshold: float, b: int, r: int
+) -> None:  # pylint: disable=missing-type-doc
+    """Test the parameter optimization."""
+    python_result = _minhash._false_positive_probability(threshold, b=b, r=r)
+    rust_result = _rust.false_positive_probability(threshold, b=b, r=r)
+    print("False positive proba:", python_result)
+    assert rust_result == pytest.approx(python_result)
+
+
+@pytest.mark.parametrize(
+    "threshold, b, r",
+    [
+        (0.5, 22, 5),
+        (0.0, 2, 2),
+        (1.0, 2, 2),
+        (0.2, 1, 1),
+        (0.2, 1, 10),
+        (0.2, 10, 1),
+    ],
+)
+def test_false_negative_probability(
+    threshold: float, b: int, r: int
+) -> None:  # pylint: disable=missing-type-doc
+    """Test the parameter optimization."""
+    python_result = _minhash._false_negative_probability(threshold, b=b, r=r)
+    rust_result = _rust.false_negative_probability(threshold, b=b, r=r)
+    print("False negative proba:", python_result)
+    assert rust_result == pytest.approx(python_result)
