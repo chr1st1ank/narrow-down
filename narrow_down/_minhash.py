@@ -14,7 +14,6 @@ from typing import Collection, Optional
 
 import numpy as np
 import numpy.typing as npt
-from scipy.integrate import quad as integrate
 
 from . import _rust
 from . import hash as hash_
@@ -219,7 +218,7 @@ def find_optimal_config(
     """Find the optimal configuration given the provided target parameters."""
     num_perm = 16
     b, r = _params_given_false_negative_proba(jaccard_threshold, num_perm, max_false_negative_proba)
-    while _false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
+    while _rust.false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
         if num_perm >= 16384:
             warnings.warn("Unable to reach error thresholds. Taking the best value.")
             break
@@ -236,7 +235,7 @@ def _params_given_false_negative_proba(
 ):
     for b in range(1, num_perm + 1):
         r = num_perm // b
-        fn = _false_negative_probability(threshold, b, r)
+        fn = _rust.false_negative_probability(threshold, b, r)
         if fn <= max_false_negative_proba:
             return b, r
     warnings.warn(
@@ -259,13 +258,3 @@ def _params_given_false_negative_proba(
 #         "false positives"
 #     )
 #     return 1, num_perm
-
-
-def _false_positive_probability(threshold: float, b: int, r: int) -> float:
-    a, _ = integrate(lambda s: 1 - (1 - s ** float(r)) ** float(b), 0.0, threshold)
-    return a
-
-
-def _false_negative_probability(threshold: float, b: int, r: int) -> float:
-    a, _ = integrate(lambda s: 1 - (1 - (1 - s ** float(r)) ** float(b)), threshold, 1.0)
-    return a
