@@ -13,6 +13,7 @@ The tests against external services are only run when setting::
 
 import asyncio
 import os
+import platform
 
 import cassandra.cluster  # type: ignore
 import pytest
@@ -154,6 +155,8 @@ def create_storage_for_backend(storage_backend, test_name, tmp_path):
             pytest.skip("Skipping")
         storage = create_scylla_storage(test_name)
     elif storage_backend == SQLiteStore:
+        if platform.python_implementation() == "PyPy":
+            pytest.skip("SQLite backend does not work under PyPy")
         storage = storage_backend(str(tmp_path / f"{test_name}.db"))
     else:
         storage = storage_backend()

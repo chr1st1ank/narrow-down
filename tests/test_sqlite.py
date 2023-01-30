@@ -1,6 +1,10 @@
 """Tests for the `narrow_down.sqlite` and  `narrow_down.async_sqlite` modules."""
+import platform
 
 import pytest
+
+if platform.python_implementation() == "PyPy":
+    pytest.skip(allow_module_level=True)
 
 import narrow_down.sqlite
 
