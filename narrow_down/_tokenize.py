@@ -1,5 +1,6 @@
 """Set operations for string analysis."""
 import collections
+import platform
 from typing import Dict, Set
 
 from narrow_down import _rust
@@ -38,6 +39,11 @@ def char_ngrams(s: str, n: int, pad_char: str = "$") -> Set[str]:
     Returns:
         All different n-grams as a set of strings.
     """
+    # if platform.python_implementation() == "PyPy":
+    if not s:
+        return set()
+    padded = pad_char * (n - 1) + s + pad_char * (n - 1)
+    return set(padded[i : i + n] for i in range(len(padded) - n + 1))
     if isinstance(s, bytes):
         return _rust.char_ngrams_bytes(s, n, pad_char or None)
     return _rust.char_ngrams_str(s, n, pad_char or None)

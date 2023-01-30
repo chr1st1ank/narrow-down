@@ -17,7 +17,7 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(minhash::false_negative_probability, m)?)?;
     m.add_function(wrap_pyfunction!(minhash::false_positive_probability, m)?)?;
     m.add_function(wrap_pyfunction!(tokenize::char_ngrams_bytes, m)?)?;
-    m.add_function(wrap_pyfunction!(tokenize::char_ngrams_str, m)?)?;
+    // m.add_function(wrap_pyfunction!(tokenize::char_ngrams_str, m)?)?;
     m.add_class::<in_memory_store::RustMemoryStore>()?;
     Ok(())
 }
