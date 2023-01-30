@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from narrow_down import _minhash, storage
+from narrow_down import _minhash, _rust, storage
 from narrow_down.storage import StorageLevel, StoredDocument, TooLowStorageLevel
 
 
@@ -190,10 +190,10 @@ def test_find_optimal_config(j, fn, fp, expected) -> None:  # pylint: disable=mi
     )
     print(
         "False negative proba:",
-        _minhash._false_negative_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
+        _rust.false_negative_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
     )
     print(
         "False positive proba:",
-        _minhash._false_positive_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
+        _rust.false_positive_probability(j, b=cfg.n_bands, r=cfg.rows_per_band),
     )
     assert cfg == expected

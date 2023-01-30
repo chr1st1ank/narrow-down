@@ -21,10 +21,10 @@ jobs:
           key: ${{ runner.os }}-pip-linting-${{ hashFiles('**/pyproject.toml', '**/.pre-commit-config.yaml') }}
 
 
-      - name: Set up Python 3.7
+      - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.8
 
       - name: Linting
         run: |

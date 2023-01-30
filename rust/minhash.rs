@@ -2,6 +2,7 @@
 use crate::hash;
 
 use numpy::PyReadonlyArray1;
+use peroxide::numerical::integral;
 use pyo3::prelude::*;
 
 const MERSENNE_PRIME: u64 = u32::MAX as u64; // mersenne prime (1 << 32) - 1
@@ -37,14 +38,51 @@ pub fn minhash<'py>(
     Ok(minhashes)
 }
 
+/// Calculate the false-positive probability of a given minhash-LSH configuration
+#[pyfunction]
+pub fn false_positive_probability(threshold: f64, b: i64, r: i64) -> f64 {
+    let _f = |s: f64| -> f64 { 1.0 - f64::powf(1.0 - f64::powf(s, r as f64), b as f64) };
+
+    integral::integrate(_f, (0.0, threshold), integral::Integral::G7K15(1e-8))
+}
+
+/// Calculate the false-negative probability of a given minhash-LSH configuration
+#[pyfunction]
+pub fn false_negative_probability(threshold: f64, b: i64, r: i64) -> f64 {
+    let _f = |s: f64| -> f64 { 1.0 - (1.0 - f64::powf(1.0 - f64::powf(s, r as f64), b as f64)) };
+
+    integral::integrate(_f, (threshold, 1.0), integral::Integral::G7K15(1e-8))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use assert_approx_eq::assert_approx_eq;
 
     // More an educational test, but not harmful. We rely on u32::MAX being a prime number.
     #[test]
     fn test_mersenne_prime() {
         assert_eq!(MERSENNE_PRIME, (1 << 32) - 1);
+    }
+
+    #[test]
+    fn test_false_positive_probability() {
+        assert_approx_eq!(false_positive_probability(0.5, 22, 5), 0.048354357923112774);
+        assert_approx_eq!(false_positive_probability(0.0, 2, 2), 0.0);
+        assert_approx_eq!(false_positive_probability(1.0, 2, 2), 0.46666666666666673);
+        assert_approx_eq!(false_positive_probability(0.2, 1, 1), 0.020000000000000004);
+        assert_approx_eq!(false_positive_probability(0.2, 1, 10), 0.0);
+        assert_approx_eq!(false_positive_probability(0.2, 10, 1), 0.11689994053818183);
+    }
+
+    #[test]
+    fn test_false_negative_probability() {
+        assert_approx_eq!(false_negative_probability(0.5, 22, 5), 0.040500421714996834);
+        assert_approx_eq!(false_negative_probability(0.0, 2, 2), 0.5333333333333333);
+        assert_approx_eq!(false_negative_probability(1.0, 2, 2), 0.0);
+        assert_approx_eq!(false_negative_probability(0.2, 1, 1), 0.32000000000000006);
+        assert_approx_eq!(false_negative_probability(0.2, 1, 10), 0.7090909109527272);
+        assert_approx_eq!(false_negative_probability(0.2, 10, 1), 0.007809031447272733);
     }
 
     // // This needs linking to libpython and doesn't work with cargo test:
