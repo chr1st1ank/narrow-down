@@ -43,7 +43,6 @@ class SQLiteStore(StorageBackend):
                 )
             conn.execute("PRAGMA synchronous = OFF")
             conn.execute("PRAGMA journal_mode = MEMORY")
-            conn.commit()
 
         await self.insert_setting("__sqlite_partitions", str(self.partitions))
 

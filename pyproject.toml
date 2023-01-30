@@ -258,7 +258,6 @@ module = [
     "pytest",
     "murmurhash.*",
     "nox.*",
-    "scipy.*",
 ]
 allow_redefinition = false
 check_untyped_defs = true

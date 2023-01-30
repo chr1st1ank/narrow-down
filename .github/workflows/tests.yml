@@ -142,6 +142,9 @@ jobs:
             os: ubuntu-latest
             pip-cache-path: ~/.cache/pip
             publish-results: true
+          - python-version: "pypy3.9"
+            os: ubuntu-latest
+            pip-cache-path: ~/.cache/pip
           - os: ubuntu-latest
             pip-cache-path: ~/.cache/pip
           - os: macos-latest

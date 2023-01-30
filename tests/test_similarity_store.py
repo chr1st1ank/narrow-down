@@ -1,5 +1,7 @@
 """Tests for `narrow_down.similarity_store`."""
 # pylint: disable=unused-argument
+import platform
+
 import pytest
 
 import narrow_down.storage
@@ -193,6 +195,9 @@ def test_similarity_store_warns_on_init():
         SimilarityStore()
 
 
+@pytest.mark.skipif(
+    platform.python_implementation() == "PyPy", reason="PyPy doesn't work with sqlite"
+)
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "tokenize",
