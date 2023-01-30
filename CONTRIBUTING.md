@@ -19,7 +19,7 @@ With Python's standard venv you can set up the project as follows:
 ```shell
 python -m venv .venv
 source ./.venv/bin/activate
-python -m pip install --upgrade pip maturin
+python -m pip install --upgrade maturin
 maturin develop --release --extras dev,docs,scylladb
 ```
 
