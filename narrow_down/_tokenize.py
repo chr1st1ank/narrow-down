@@ -1,6 +1,5 @@
 """Set operations for string analysis."""
 import collections
-import platform
 from typing import Dict, Set
 
 from narrow_down import _rust
