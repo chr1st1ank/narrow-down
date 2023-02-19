@@ -1,0 +1,19 @@
+name: Maschinenbau
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  sync-blueprints:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maschinenbau
+        uses: chr1st1ank/maschinenbau@main
+        with:
+          blueprints: >-
+            github-paperwork
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          blueprint-vars: >-
+            license=apache2
