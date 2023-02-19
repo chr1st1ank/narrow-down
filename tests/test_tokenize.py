@@ -1,4 +1,5 @@
 """Tests for `narrow_down._tokenize`."""
+# pylint: disable=use-dict-literal
 
 import pytest
 
