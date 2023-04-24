@@ -32,7 +32,8 @@ class SimilarityStore:
         warnings.warn(
             "The __init__ function is not meant to be called in isolation. "
             "To create a SimilarityStore object use the coroutine functions "
-            "SimilarityStore.create() or SimilarityStore.load_from_storage()."
+            "SimilarityStore.create() or SimilarityStore.load_from_storage().",
+            stacklevel=2,
         )
         self._minhasher: _minhash.MinHasher
         self._similarity_threshold: float
