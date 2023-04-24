@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="API Documentation" href="../api.html" /><link rel="prev" title="Configuration of Indexing and Search" href="configuration_of_indexing_and_search.html" />
 
-    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <!-- Generated with Sphinx 6.2.0 and Furo 2023.03.27 -->
         <title>Storage Backends - narrow-down 1.0.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -219,9 +219,9 @@
 <p>Narrow-down is based on a flexible storage abstraction. The common interface is the abstract class <a class="reference internal" href="../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend" title="narrow_down.storage.StorageBackend"><span class="xref myst py py-class">StorageBackend</span></a>. Per default, a new <a class="reference internal" href="../apidoc/narrow_down.similarity_store.html#narrow_down.similarity_store.SimilarityStore" title="narrow_down.similarity_store.SimilarityStore"><span class="xref myst py py-class">SimilarityStore</span></a> object starts with an empty index and uses in-memory storage. The lifetime of the index is bound to the lifetime of the SimilarityStore object in this case. This can be changed by explicitly specifying a storage backend.</p>
 <p>The following backends are built in:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#inmemorystore"><span class="std std-doc">InMemoryStore</span></a></p></li>
-<li><p><a class="reference internal" href="#scylladb-or-cassandra"><span class="std std-doc">ScyllaDBStore</span></a> (for ScyllaDB or Cassandra)</p></li>
-<li><p><a class="reference internal" href="#sqlite"><span class="std std-doc">SQLiteStore</span></a></p></li>
+<li><p><a class="reference internal" href="#inmemorystore">InMemoryStore</a></p></li>
+<li><p><a class="reference internal" href="#scylladb-or-cassandra">ScyllaDBStore</a> (for ScyllaDB or Cassandra)</p></li>
+<li><p><a class="reference internal" href="#sqlite">SQLiteStore</a></p></li>
 </ul>
 <section id="using-storage-backends">
 <h2>Using storage backends<a class="headerlink" href="#using-storage-backends" title="Permalink to this heading">#</a></h2>
@@ -560,9 +560,6 @@ After first initialization of the database one should not use the <code class="d
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
