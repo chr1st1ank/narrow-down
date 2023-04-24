@@ -220,7 +220,7 @@ def find_optimal_config(
     b, r = _params_given_false_negative_proba(jaccard_threshold, num_perm, max_false_negative_proba)
     while _rust.false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
         if num_perm >= 16384:
-            warnings.warn("Unable to reach error thresholds. Taking the best value.")
+            warnings.warn("Unable to reach error thresholds. Taking the best value.", stacklevel=2)
             break
         num_perm *= 2
         b, r = _params_given_false_negative_proba(
@@ -240,7 +240,8 @@ def _params_given_false_negative_proba(
             return b, r
     warnings.warn(
         "Unable to reach max_false_negative_proba. Taking maximum number of bands to maximize "
-        "the number of candidates returned"
+        "the number of candidates returned",
+        stacklevel=2,
     )
     return num_perm, 1
 

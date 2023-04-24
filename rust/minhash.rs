@@ -8,8 +8,7 @@ use pyo3::prelude::*;
 const MERSENNE_PRIME: u64 = u32::MAX as u64; // mersenne prime (1 << 32) - 1
 
 #[pyfunction]
-pub fn minhash<'py>(
-    _py: Python<'py>,
+pub fn minhash(
     shingle_list: Vec<&str>,
     a: PyReadonlyArray1<'_, u32>,
     b: PyReadonlyArray1<'_, u32>,
