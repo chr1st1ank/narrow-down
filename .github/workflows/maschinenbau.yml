@@ -9,11 +9,18 @@ jobs:
   sync-blueprints:
     runs-on: ubuntu-latest
     steps:
+
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: "${{ secrets.MASCHINENBAU_APP_ID }}"
+          private_key: "${{ secrets.MASCHINENBAU_APP_PRIVATE_KEY }}"
+
       - name: Maschinenbau
         uses: chr1st1ank/maschinenbau@main
         with:
           blueprints: >-
             github-paperwork
-          github-token: ${{ secrets.PAT_MASCHINENBAU }}
+          github-token: ${{ steps.generate-token.outputs.token }}
           blueprint-vars: >-
             license=apache2
