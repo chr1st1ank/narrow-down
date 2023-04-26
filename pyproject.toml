@@ -12,7 +12,7 @@ version = "1.0.0"
 description = "Fast fuzzy text search"
 readme = "README.md"
 requires-python = "<3.11,>=3.7"
-license = {file = "LICENSE.rst"}
+license = {file = "LICENSE"}
 keywords = ["narrow-down", "LSH", "minhash"]
 classifiers=[
     "Development Status :: 4 - Beta",

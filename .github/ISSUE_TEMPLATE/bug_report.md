@@ -22,4 +22,3 @@ assignees: ''
 
   - Version:
   - Platform:
-  - Subsystem:
