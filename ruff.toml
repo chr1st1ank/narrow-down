@@ -1,29 +1,29 @@
 line-length = 100
 extend-exclude = ["*.ipynb", "**/*_pb2.py", "**/*_pb2.pyi"]
 select = [
+#    "ANN",  # flake8-annotations
     "A",  # flake8-builtins
-    "C4",  # flake8-comprehensions
-    "DTZ",  # flake8-datetimez
     "B",
     "B9",
+    "BLE",  # flake8-blind-except
     "C",
-    "G",  # flake8-logging-format
-    "PYI",  # flake8-pyi
-    "PT",  # flake8-pytest-style
-    "TCH",  #  flake8-type-checking
+    "C4",  # flake8-comprehensions
     "C90",  # MCCabe
     "D",  # Pydocstyle
+    "DTZ",  # flake8-datetimez
     "E",  # Pycodestyle error
     "F",  # Pyflakes
+    "G",  # flake8-logging-format
     "I",  # Isort
     "N",  # pep8-naming
-    "W",  # Pycodestyle warning
-#    "ANN",  # flake8-annotations
-    "S",  # flake8-bandit
-    "BLE",  # flake8-blind-except
     "PD",  # pandas-vet
     "PL",  # Pylint
+    "PT",  # flake8-pytest-style
+    "PYI",  # flake8-pyi
     "RUF",  # Ruff
+    "S",  # flake8-bandit
+    "TCH",  #  flake8-type-checking
+    "W",  # Pycodestyle warning
 ]
 ignore = ["C408", "PLR0913", "S608", "PYI021"]
 
