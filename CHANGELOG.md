@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [1.0.1] - 2023-04-30
 ### Changed
 - Update pre-commit hooks and dependencies
 - Allow to use also protobuf 4
@@ -135,7 +137,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...v1.0.0
 [0.10.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.2...v0.9.3
