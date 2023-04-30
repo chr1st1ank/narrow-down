@@ -41,6 +41,42 @@ def test_stored_document_serialization(
             assert getattr(deserialized, field.name) is None
 
 
+@pytest.mark.parametrize("data", [None, "", "user data"])
+@pytest.mark.parametrize("fingerprint", [None, Fingerprint(np.array([1], dtype=np.uint32))])
+@pytest.mark.parametrize("exact_part", [None, "", "text_exact_part"])
+@pytest.mark.parametrize("document", [None, "", "text_document"])
+@pytest.mark.parametrize("id_", [None, 0, 1])
+@pytest.mark.parametrize(
+    "storage_level, expected_fields",
+    [
+        (StorageLevel.Minimal, {"data"}),
+        (StorageLevel.Document, {"data", "document", "exact_part"}),
+        (StorageLevel.Fingerprint, {"data", "exact_part", "fingerprint"}),
+        (StorageLevel.Full, {"data", "document", "exact_part", "fingerprint"}),
+    ],
+)
+def test_stored_document_serialization_rust(
+    storage_level, expected_fields, id_, document, exact_part, fingerprint, data
+):
+    document = StoredDocument(
+        id_=id_,
+        document=document,
+        exact_part=exact_part,
+        fingerprint=fingerprint,
+        data=data,
+    )
+    print("before:", document)
+    python_result = document.serialize(storage_level)
+    rust_result = document.serialize_rust(storage_level)
+    assert rust_result == python_result
+    assert (
+        document.deserialize(python_result, 1)
+        == document.deserialize_rust(python_result, 1)
+        == document.deserialize(rust_result, 1)
+        == document.deserialize_rust(rust_result, 1)
+    )
+
+
 def test_stored_document_without():
     document = StoredDocument(id_=5, document="abcd")
     assert document.without("document") == StoredDocument(id_=5)

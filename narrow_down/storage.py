@@ -11,7 +11,7 @@ from numpy import typing as npt
 
 from narrow_down.proto.stored_document_pb2 import StoredDocumentProto
 
-from ._rust import RustMemoryStore
+from ._rust import RustMemoryStore, protobuf_to_stored_document, stored_document_to_protobuf
 
 
 class TooLowStorageLevel(Exception):  # noqa=N818
@@ -63,6 +63,15 @@ class StoredDocument:
             **{f: getattr(self, f) for f in _FIELDS_FOR_STORAGE_LEVEL[storage_level]},
         ).SerializeToString()
 
+    def serialize_rust(self, storage_level: StorageLevel) -> bytes:
+        """Serialize a document to bytes."""
+        return stored_document_to_protobuf(
+            fingerprint=self.fingerprint
+            if self.fingerprint is not None and storage_level & StorageLevel.Fingerprint
+            else None,
+            **{f: getattr(self, f) for f in _FIELDS_FOR_STORAGE_LEVEL[storage_level]},
+        )
+
     @staticmethod
     def deserialize(doc: bytes, id_: int) -> "StoredDocument":
         """Deserialize a document from bytes."""
@@ -79,6 +88,12 @@ class StoredDocument:
         if p.HasField("data"):
             args["data"] = p.data
         return StoredDocument(**args)
+
+    @staticmethod
+    def deserialize_rust(doc: bytes, id_: int) -> "StoredDocument":
+        """Deserialize a document from bytes."""
+        args = protobuf_to_stored_document(doc)
+        return StoredDocument(id_=id_, **args)
 
     def without(self, *attributes: str) -> "StoredDocument":
         """Create a copy with the specified attributes left out.
