@@ -21,6 +21,7 @@ jobs:
         with:
           blueprints: >-
             github-paperwork
+            precommit
           github-token: ${{ steps.generate-token.outputs.token }}
           blueprint-vars: >-
             license=apache2
