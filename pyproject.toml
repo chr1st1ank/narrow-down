@@ -52,26 +52,14 @@ docs = [
 ]
 dev = [
     "pre-commit",
-    "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
-    "flakeheaven==3.2.1",
-    "flake8-builtins",
-    "flake8-blind-except",
-    "flake8-logging-format",
-    "flake8-bugbear",
-    "flake8-annotations",
-    "flake8-docstrings",
-    "flake8-bandit",
-    "darglint",
     "isort",
     "black",
-    "safety",
     "jupyter",
     "nbqa",
     "nox",
     "mypy",
     "mypy-protobuf",
     "nbmake",
-    "pylint",
     "bump2version",
     "pytest",
     "pytest-asyncio",
@@ -116,60 +104,6 @@ show_missing = true
 [tool.coverage.html]
 directory = "htmlcov"
 
-[tool.flakeheaven]
-format = "grouped"
-max_line_length = 100
-show_source = true
-docstring-convention = "google"
-exclude = ["*/proto/*.py"]
-
-[tool.flakeheaven.plugins]
-pyflakes = ["+*"]
-mccabe = ["+*"]
-"flake8-*" = [
-    "+*",
-]
-
-flake8-annotations = [
-    "-ANN101",  # Missing type annotation for self in method
-    "-ANN102",   # Missing type annotation for cls in classmethod
-    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
-]
-flake8-bandit = [
-    "-S311"  # Standard pseudo-random generators are not suitable for cryptographic purposes.
-]
-flake8-darglint = [
-    "+*",
-    "-DAR402",    # Excess exception(s) in Raises section; Clashes with unhandled inner exceptions
-]
-pycodestyle = [
-    "+*",
-    "-E203",  # whitespace before ‘:’, conflict with black
-    "-E266",  # Comments with multiple ##
-    "-W503",  # Line breaks before binary operators. Sometimes clashes with black
-    "-W504",  # Line breaks after binary operators. These are preferred according to PEP8
-]
-
-[tool.flakeheaven.exceptions."narrow_down/proto/*.py"]
-"flake8-*" = ["-*"]
-pycodestyle = ["-*"]
-
-[tool.flakeheaven.exceptions."tests/test_*.py"]  # Allow more sloppy styling in tests
-flake8 = [
-    "-W291"     # Trailing whitespace. Often appears in multiline strings in tests
-]
-flake8-annotations = [
-    "-ANN001",  # Missing type annotation for function argument
-    "-ANN201",  # Missing return type annotation for public function
-    "-ANN102"   # Missing type annotation for cls in classmethod
-]
-flake8-bandit = [
-    "-S101",  # Assert used
-]
-flake8-docstrings = [
-    "-D103",    # Missing docstring in public function"
-]
-
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
@@ -196,56 +130,6 @@ exclude = '''
   | dist
 )/mypy
 '''
-
-[tool.pylint.master]
-ignore = ["tests"]
-reports = false
-extension-pkg-allow-list="cassandra,numpy,narrow_down"
-load-plugins = [
-    "pylint.extensions.docparams", # Find parameters missing in docstrings
-    "pylint.extensions.docstyle", # Detect wrong docstring formatting
-]
-disable = [
-    "invalid-name", # Creates warnings for local single-letter variables
-    "fixme", # fixme; Creates warnings for todo items
-    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
-    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
-    "line-too-long", # Checked already by flake8
-    "c-extension-no-member",
-    "invalid-name",
-    "no-else-return",
-    "line-too-long",
-    "abstract-class-instantiated",
-]
-
-[tool.pylint.design]
-max-args = 10  # Maximum number of arguments for functions
-max-attributes = 15  # Maximum number of attributes for a class
-
-
-[tool.pylint.TESTING]
-ignore = ["narrow_down"]
-reports = false
-extension-pkg-allow-list="cassandra,numpy,narrow_down"
-load-plugins = [
-    "pylint.extensions.docparams", # Find parameters missing in docstrings
-    "pylint.extensions.docstyle", # Detect wrong docstring formatting
-]
-disable = [
-    "C",
-    "redefined-outer-name",
-    "protected-access",
-    "invalid-name", # Creates warnings for local single-letter variables
-    "fixme", # fixme; Creates warnings for todo items
-    "no-else-return", # Creates refactor result for indented else block; which however might be more readable
-    "duplicate-code", # Unfortunately this gives alerts also for identical function signatures
-    "line-too-long", # Checked already by flake8
-    "c-extension-no-member",
-    "invalid-name",
-    "no-else-return",
-    "line-too-long",
-    "abstract-class-instantiated",
-]
 
 [tool.mypy]
 follow_imports = "silent"

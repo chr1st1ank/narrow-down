@@ -23,7 +23,7 @@ python -m pip install --upgrade pip maturin
 maturin develop --release --extras dev,docs,scylladb
 ```
 
-In the project [Task](https://taskfile.dev/) is used to organize tasks like formatting, linting, testing and more. Please install it separately in order to leverage the automation.
+In the project [Task](https://taskfile.dev/) is used to organize tasks like building, testing and more. Please install it separately in order to leverage the automation.
 Execute `task -l` to see the list of available commands.
 
 To install the pre-commit hooks:
@@ -63,9 +63,9 @@ work, tests, or other changes before your pull request can be ultimately accepte
 
 ### Python Code Style
 
-All Python code is linted with [Flake8](https://github.com/PyCQA/flake8) and formated with
+All Python code is linted with [Ruff](https://github.com/charliermarsh/ruff) and formatted with
 [Isort](https://github.com/PyCQA/isort) and [Black](https://github.com/psf/black). You can
-execute `inv[oke] lint` and `inv[oke] format`.
+execute `pre-commit run --all-files` to run the tools.
 
 ## Deploying
 
