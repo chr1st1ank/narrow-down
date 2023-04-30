@@ -22,7 +22,7 @@ def word_ngrams(s: str, n: int) -> Set[str]:
     words = s.split()
     if len(words) <= n:
         return {" ".join(words)}
-    return set(" ".join(words[i : i + n]) for i in range(len(words) - n + 1))
+    return {" ".join(words[i : i + n]) for i in range(len(words) - n + 1)}
 
 
 def char_ngrams(s: str, n: int, pad_char: str = "$") -> Set[str]:

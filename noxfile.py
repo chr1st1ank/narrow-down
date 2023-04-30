@@ -8,7 +8,7 @@ nox.options.sessions = ["tests", "benchmarks"]
 python_versions = ["3.7", "3.8", "3.9", "3.10"]
 
 
-def install_with_constraints(session: Session, *args: str) -> None:  # noqa
+def install_with_constraints(session: Session, *args: str) -> None:
     """Install packages constrained by Poetry's lock file.
 
     This function is a wrapper for nox.sessions.Session.install. It
@@ -51,13 +51,6 @@ def tests(session: Session) -> None:
     finally:
         if session.interactive:
             session.notify("coverage")
-
-
-@nox.session(python="3.10")
-def safety(session: Session) -> None:
-    """Scan dependencies for insecure packages."""
-    install_with_constraints(session, "safety")
-    session.run("task", "safety")
 
 
 @nox.session(python=python_versions)

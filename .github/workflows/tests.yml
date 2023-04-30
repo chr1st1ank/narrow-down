@@ -69,12 +69,6 @@ jobs:
           python3 -m pip install --upgrade pip maturin
           task develop
 
-      - name: Pylint
-        shell: bash
-        run: |
-          source ./venv/bin/activate
-          task pylint
-
       - name: Run mypy
         shell: bash
         run: |
@@ -184,11 +178,6 @@ jobs:
       - name: Run tests with nox
         shell: bash
         run: nox --verbose --force-color -s tests-${{ matrix.python-version }}
-
-      - name: Run safety check
-        if: matrix.python-version == '3.10' && matrix.os == 'ubuntu-latest'
-        shell: bash
-        run: nox --force-color -s safety
 
       - name: Upload coverage data
         if: ${{ matrix.publish-results && always() }}

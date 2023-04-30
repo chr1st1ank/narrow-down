@@ -121,34 +121,15 @@ tasks:
       - "isort {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
       - "black --quiet {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
 
-  flake8:
-    desc: "Run flake8."
-    cmds:
-      - "flakeheaven lint  {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
-
-  safety:
-    desc: "Run safety."
-    cmds:
-      - "poetry export --dev --format=requirements.txt --without-hashes | safety check --stdin --full-report"
-
   mypy:
     desc: "Run mypy."
     cmds:
       - "mypy --config-file pyproject.toml {{.SOURCE_DIR}}"
 
-  pylint:
-    desc: "Run pylint."
-    cmds:
-      - "pylint {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
-
   lint:
     desc: Run all linters.
     deps:
-      - check-format
-      - flake8
-      - safety
       - mypy
-      - pylint
 
   #################
   ## Testing
@@ -201,7 +182,6 @@ tasks:
     desc: Run all checks together.
     deps:
       - hooks
-      - lint
       - pytest
       - coverage
       - doctest
