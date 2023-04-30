@@ -281,7 +281,8 @@ class SimilarityStore:
             c
             for jaccard, c in sorted(
                 filter(
-                    lambda t: t[0] >= self._similarity_threshold, zip(true_jaccards, candidates)
+                    lambda t: t[0] >= self._similarity_threshold,
+                    zip(true_jaccards, candidates),  # noqa=B905
                 ),
                 key=lambda t: (t[0], t[1].id_ or 0),
                 reverse=True,

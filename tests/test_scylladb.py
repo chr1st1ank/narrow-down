@@ -157,7 +157,7 @@ def session_mock(request, scylladb_cluster, table_prefix):
     keyspace_name = (
         request.node.name[-20 : request.node.name.find("[")]
         + "_"
-        + hashlib.md5(request.node.name.encode("utf-8")).hexdigest()[-4:]
+        + hashlib.md5(request.node.name.encode("utf-8")).hexdigest()[-4:]  # noqa=S324
     ).lstrip("_")
     if scylladb_cluster:
         print("USING KEYSPACE", keyspace_name)
@@ -429,7 +429,7 @@ async def test_scylladb_store__query_documents(session_mock):
     storage = await narrow_down.scylladb.ScyllaDBStore(
         session_mock, session_mock.test_keyspace, session_mock.table_prefix
     ).initialize()
-    for doc_id, doc_val in zip(doc_ids, doc_vals):
+    for doc_id, doc_val in zip(doc_ids, doc_vals):  # noqa=B905
         session_mock.add_mock_response(
             "INSERT INTO <keyspace>.<table_prefix>documents(id,doc) "
             f"VALUES ({doc_id},{doc_val});",
@@ -440,12 +440,15 @@ async def test_scylladb_store__query_documents(session_mock):
     session_mock.add_mock_response(
         f"select id, doc from <keyspace>.<table_prefix>documents where id IN "
         f"({','.join(map(str,doc_ids[:50]))});",
-        [row(id=i, doc=doc_val) for i, doc_val in zip(doc_ids[:50], doc_vals[:50])],
+        [row(id=i, doc=doc_val) for i, doc_val in zip(doc_ids[:50], doc_vals[:50])],  # noqa=B905
     )
     session_mock.add_mock_response(
         f"select id, doc from <keyspace>.<table_prefix>documents where id IN "
         f"({','.join(map(str,doc_ids[50:100]))});",
-        [row(id=i, doc=doc_val) for i, doc_val in zip(doc_ids[50:100], doc_vals[50:100])],
+        [
+            row(id=i, doc=doc_val)
+            for i, doc_val in zip(doc_ids[50:100], doc_vals[50:100])  # noqa=B905
+        ],
     )
 
     assert await storage.query_documents(doc_ids) == doc_vals

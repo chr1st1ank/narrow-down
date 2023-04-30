@@ -27,7 +27,7 @@ def _wrap_future(f: cassandra.cluster.ResponseFuture):
 
     Returns:
         And asyncio.Future object which can be awaited.
-    """  # noqa: E501
+    """
     loop = asyncio.get_event_loop()
     aio_future = loop.create_future()
 
@@ -186,7 +186,7 @@ class ScyllaDBStore(StorageBackend):
 
         Raises:
             cassandra.DriverException: In case the database query fails for any reason.
-        """  # noqa: DAR401 # pylint: disable=missing-raises-doc
+        """  # pylint: disable=missing-raises-doc
         with self._session() as session:
             try:
                 result_list = await self._execute(
@@ -210,7 +210,7 @@ class ScyllaDBStore(StorageBackend):
                 return document_id
             else:
                 for _ in range(10):
-                    doc_id = random.randint(a=0, b=2**32)
+                    doc_id = random.randint(a=0, b=2**32)  # noqa=S311
                     result = await self._execute(
                         session,
                         self._prepared_statements["set_doc_checked"],

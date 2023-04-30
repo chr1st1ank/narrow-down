@@ -154,7 +154,7 @@ class SQLiteStore(StorageBackend):
         partition = int(document_hash % self.partitions)
         with self._connection as conn:
             conn.execute(
-                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",  # noqa: S608
+                f"INSERT INTO buckets_{partition}(bucket,hash,doc_id) VALUES (?,?,?)",
                 (bucket_id, document_hash, document_id),
             )
 
@@ -162,7 +162,7 @@ class SQLiteStore(StorageBackend):
         """Get all document IDs stored in a bucket for a certain hash value."""
         partition = int(document_hash % self.partitions)
         cursor = self._connection.execute(
-            f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",  # noqa: S608
+            f"SELECT doc_id FROM buckets_{partition} WHERE bucket=? AND hash=?",
             (bucket_id, document_hash),
         )
         return [r[0] for r in cursor.fetchall()]
@@ -172,7 +172,6 @@ class SQLiteStore(StorageBackend):
         with self._connection as conn:
             partition = int(document_hash % self.partitions)
             conn.execute(
-                f"DELETE FROM buckets_{partition} "  # noqa: S608
-                "WHERE bucket=? AND hash=? AND doc_id=?",
+                f"DELETE FROM buckets_{partition} " "WHERE bucket=? AND hash=? AND doc_id=?",
                 (bucket_id, document_hash, document_id),
             )

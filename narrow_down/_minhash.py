@@ -209,7 +209,10 @@ class LSH:
     async def _query_documents(self, doc_ids: typing.List[int]):
         """Fetch a document from the storage and deserialize it."""
         docs = await self._storage.query_documents(doc_ids)
-        return [StoredDocument.deserialize(doc, doc_id) for doc, doc_id in zip(docs, doc_ids)]
+        return [
+            StoredDocument.deserialize(doc, doc_id)
+            for doc, doc_id in zip(docs, doc_ids)  # noqa=B905
+        ]
 
 
 def find_optimal_config(
@@ -217,9 +220,10 @@ def find_optimal_config(
 ) -> MinhashLshConfig:
     """Find the optimal configuration given the provided target parameters."""
     num_perm = 16
+    max_num_permutations = 16384
     b, r = _params_given_false_negative_proba(jaccard_threshold, num_perm, max_false_negative_proba)
     while _rust.false_positive_probability(jaccard_threshold, b, r) > max_false_positive_proba:
-        if num_perm >= 16384:
+        if num_perm >= max_num_permutations:
             warnings.warn("Unable to reach error thresholds. Taking the best value.", stacklevel=2)
             break
         num_perm *= 2

@@ -14,7 +14,7 @@ from narrow_down.proto.stored_document_pb2 import StoredDocumentProto
 from ._rust import RustMemoryStore
 
 
-class TooLowStorageLevel(Exception):
+class TooLowStorageLevel(Exception):  # noqa=N818
     """Raised if a feature is used for which a higher storage level is needed."""
 
 
@@ -132,7 +132,7 @@ class StorageBackend(ABC):
         Returns:
             A string with the value. If the key does not exist or the storage is uninitialized
             None is returned.
-        """  # noqa: DAR202,DAR401
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -152,7 +152,7 @@ class StorageBackend(ABC):
 
         Raises:
             KeyError: If no document with the given ID is stored.
-        """  # noqa: DAR202,DAR401
+        """
         raise NotImplementedError
 
     async def query_documents(self, document_ids: List[int]) -> List[bytes]:
@@ -166,7 +166,7 @@ class StorageBackend(ABC):
 
         Raises:
             KeyError: If no document was found for at least one of the ids.
-        """  # noqa: DAR401
+        """
         # Standard implementation of the base class. May be overloaded for specialization.
         return await asyncio.gather(*[self.query_document(doc_id) for doc_id in document_ids])
 

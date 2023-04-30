@@ -1,58 +1,36 @@
+ci:
+  autofix_prs: false
+  autoupdate_schedule: monthly
+  skip: []
+  submodules: false
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.4.0
   hooks:
-    - id: check-toml
-    - id: check-yaml
-    - id: debug-statements
-    - id: check-merge-conflict
-    - id: check-json
-    - id: end-of-file-fixer
-- repo: https://github.com/timothycrosley/isort
-  rev: 5.12.0
+  - id: check-merge-conflict
+  - id: check-json
+  - id: check-toml
+  - id: check-yaml
+    args: [--unsafe]
+  - id: debug-statements
+  - id: detect-private-key
+  - id: end-of-file-fixer
+- repo: https://github.com/charliermarsh/ruff-pre-commit
+  rev: 'v0.0.263'
   hooks:
-    - id: isort
-- repo: https://github.com/psf/black
-  rev: 22.12.0
+    - id: ruff
+      args: [ --fix, --exit-non-zero-on-fix ]
+- repo: https://github.com/pre-commit/mirrors-isort
+  rev: v5.10.1
   hooks:
-    - id: black
-- repo: https://github.com/asottile/blacken-docs
-  rev: v1.12.1
+  - id: isort
+- repo: https://github.com/ambv/black
+  rev: 23.3.0
   hooks:
-    - id: blacken-docs
-      additional_dependencies: ["black==22.3.0"]
-- repo: local
-  hooks:
-    - id: flakeheaven
-      name: flakeheaven
-      entry: flakeheaven
-      args: [lint]
-      language: python
-      types: [python]
-      require_serial: true
-      additional_dependencies: [
-          "flake8~=4.0",  # Don't upgrade, because flake8 5.0 is incompatible with flakeheaven
-          "flakeheaven==3.0.0",
-          "flake8-builtins",
-          "flake8-blind-except",
-          "flake8-logging-format",
-          "flake8-bugbear",
-          "flake8-annotations",
-          "flake8-docstrings",
-          "flake8-bandit",
-      ]
-- repo: https://github.com/doublify/pre-commit-rust
-  rev: v1.0
-  hooks:
-   - id: fmt
-   - id: clippy
-     args:
-       - --release
-       - --
-       - -D
-       - warnings
-- repo: https://github.com/nbQA-dev/nbQA
-  rev: 1.5.3
-  hooks:
-    - id: nbqa-isort
-    - id: nbqa-black
+  - id: black
+    language_version: python3.9
+-   repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+    -   id: fmt
+    -   id: cargo-check

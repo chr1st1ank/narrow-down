@@ -31,7 +31,6 @@ StoredDocumentProto = _reflection.GeneratedProtocolMessageType(
 _sym_db.RegisterMessage(StoredDocumentProto)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     _STOREDDOCUMENTPROTO._serialized_start = 49
     _STOREDDOCUMENTPROTO._serialized_end = 221
