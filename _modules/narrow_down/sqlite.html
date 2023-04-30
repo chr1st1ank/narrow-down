@@ -368,7 +368,7 @@
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;INSERT INTO buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2">(bucket,hash,doc_id) VALUES (?,?,?)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
+                <span class="sa">f</span><span class="s2">&quot;INSERT INTO buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2">(bucket,hash,doc_id) VALUES (?,?,?)&quot;</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div>
 
@@ -376,7 +376,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all document IDs stored in a bucket for a certain hash value.&quot;&quot;&quot;</span>
         <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
         <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;SELECT doc_id FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> WHERE bucket=? AND hash=?&quot;</span><span class="p">,</span>  <span class="c1"># noqa: S608</span>
+            <span class="sa">f</span><span class="s2">&quot;SELECT doc_id FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> WHERE bucket=? AND hash=?&quot;</span><span class="p">,</span>
             <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span></div>
@@ -386,8 +386,7 @@
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
             <span class="n">partition</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">document_hash</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
             <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;DELETE FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> &quot;</span>  <span class="c1"># noqa: S608</span>
-                <span class="s2">&quot;WHERE bucket=? AND hash=? AND doc_id=?&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;DELETE FROM buckets_</span><span class="si">{</span><span class="n">partition</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="s2">&quot;WHERE bucket=? AND hash=? AND doc_id=?&quot;</span><span class="p">,</span>
                 <span class="p">(</span><span class="n">bucket_id</span><span class="p">,</span> <span class="n">document_hash</span><span class="p">,</span> <span class="n">document_id</span><span class="p">),</span>
             <span class="p">)</span></div></div>
 </pre></div>

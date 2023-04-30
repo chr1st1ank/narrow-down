@@ -228,7 +228,7 @@
 <span class="kn">from</span> <span class="nn">._rust</span> <span class="kn">import</span> <span class="n">RustMemoryStore</span>
 
 
-<div class="viewcode-block" id="TooLowStorageLevel"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.TooLowStorageLevel">[docs]</a><span class="k">class</span> <span class="nc">TooLowStorageLevel</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="TooLowStorageLevel"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.TooLowStorageLevel">[docs]</a><span class="k">class</span> <span class="nc">TooLowStorageLevel</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>  <span class="c1"># noqa=N818</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised if a feature is used for which a higher storage level is needed.&quot;&quot;&quot;</span></div>
 
 
@@ -346,7 +346,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A string with the value. If the key does not exist or the storage is uninitialized</span>
 <span class="sd">            None is returned.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR202,DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.insert_document"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.insert_document">[docs]</a>    <span class="nd">@abstractmethod</span>
@@ -366,7 +366,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document with the given ID is stored.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR202,DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 <div class="viewcode-block" id="StorageBackend.query_documents"><a class="viewcode-back" href="../../apidoc/narrow_down.storage.html#narrow_down.storage.StorageBackend.query_documents">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">query_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
@@ -380,7 +380,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            KeyError: If no document was found for at least one of the ids.</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: DAR401</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Standard implementation of the base class. May be overloaded for specialization.</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">query_document</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">document_ids</span><span class="p">])</span></div>
 
