@@ -20,11 +20,13 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-linting-${{ hashFiles('**/pyproject.toml', '**/.pre-commit-config.yaml') }}
 
-
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Linting
         run: |
@@ -55,6 +57,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Install Task
         uses: arduino/setup-task@v1
@@ -101,6 +106,9 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-doctest-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Install Task
         uses: arduino/setup-task@v1
@@ -166,6 +174,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
+
       - name: Install Task
         uses: arduino/setup-task@v1
         with:
@@ -196,6 +207,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Install Task
         uses: arduino/setup-task@v1
@@ -247,6 +261,9 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ubuntu-latest-3.9-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v4

@@ -25,6 +25,9 @@ jobs:
             Cargo.toml
             Cargo.lock
 
+      - name: Install Protoc
+      uses: arduino/setup-protoc@v1
+
       - name: Install Task
         uses: arduino/setup-task@v1
         with:
