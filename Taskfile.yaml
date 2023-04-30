@@ -121,6 +121,16 @@ tasks:
       - "isort {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
       - "black --quiet {{.PYTHON_TARGETS_SPACE_SEPARATED}}"
 
+  mypy:
+    desc: "Run mypy."
+    cmds:
+      - "mypy --config-file pyproject.toml {{.SOURCE_DIR}}"
+
+  lint:
+    desc: Run all linters.
+    deps:
+      - mypy
+
   #################
   ## Testing
   #################
