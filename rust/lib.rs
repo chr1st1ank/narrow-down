@@ -2,6 +2,7 @@
 mod hash;
 mod in_memory_store;
 mod minhash;
+mod storage;
 mod tokenize;
 
 use pyo3::prelude::*;
@@ -16,6 +17,8 @@ fn _rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(minhash::minhash, m)?)?;
     m.add_function(wrap_pyfunction!(minhash::false_negative_probability, m)?)?;
     m.add_function(wrap_pyfunction!(minhash::false_positive_probability, m)?)?;
+    m.add_function(wrap_pyfunction!(storage::stored_document_to_protobuf, m)?)?;
+    m.add_function(wrap_pyfunction!(storage::protobuf_to_stored_document, m)?)?;
     m.add_function(wrap_pyfunction!(tokenize::char_ngrams_bytes, m)?)?;
     m.add_function(wrap_pyfunction!(tokenize::char_ngrams_str, m)?)?;
     m.add_class::<in_memory_store::RustMemoryStore>()?;

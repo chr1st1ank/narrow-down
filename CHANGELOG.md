@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- Remove dependency on the protobuf package by using a Rust implementation for serialization
+
+### Fixed
+- Tests were failing because of a breaking change in Nox
 
 ## [1.0.1] - 2023-04-30
 ### Changed

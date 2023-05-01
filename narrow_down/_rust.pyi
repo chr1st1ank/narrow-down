@@ -2,7 +2,7 @@
 
 The actual code is in the folder /rust.
 """
-from typing import Iterable, List, Optional, Set, Union
+from typing import Dict, Iterable, List, Optional, Set, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -32,5 +32,14 @@ def minhash(
 ) -> npt.NDArray[np.uint32]: ...
 def false_positive_probability(threshold: float, b: int, r: int) -> float: ...
 def false_negative_probability(threshold: float, b: int, r: int) -> float: ...
+def stored_document_to_protobuf(
+    document: Optional[str],
+    exact_part: Optional[str],
+    fingerprint: Optional[npt.NDArray[np.uint32]],
+    data: Optional[str],
+) -> bytes: ...
+def protobuf_to_stored_document(
+    document: bytes,
+) -> Dict: ...
 def char_ngrams_bytes(s: bytes, n: int, pad_char: Optional[bytes]) -> Set[str]: ...
 def char_ngrams_str(s: str, n: int, pad_char: Optional[str]) -> Set[str]: ...

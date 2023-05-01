@@ -24,13 +24,6 @@ tasks:
     cmds:
       - maturin develop --release --extras dev,docs,experiments
 
-  protobuild:
-    desc: Build the protobuf objects.
-    cmds:
-      - protoc -I . --python_out=narrow_down/ --mypy_out=narrow_down/ proto/stored_document.proto
-      - isort narrow_down/proto
-      - black narrow_down/proto
-
   #################
   ## Cleanup tasks
   #################
