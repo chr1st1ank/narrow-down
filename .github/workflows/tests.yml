@@ -177,7 +177,7 @@ jobs:
 
       - name: Run tests with nox
         shell: bash
-        run: nox --verbose --force-color -s tests-${{ matrix.python-version }}
+        run: nox --force-color -s tests-${{ matrix.python-version }}
 
       - name: Upload coverage data
         if: ${{ matrix.publish-results && always() }}
@@ -266,10 +266,10 @@ jobs:
         shell: bash
         env:
           TEST_WITH_DB: true
-        run: nox --verbose --force-color -s tests-3.9
+        run: nox --force-color -s tests-3.9
 
       - name: Run benchmarks with nox
         shell: bash
         env:
           TEST_WITH_DB: true
-        run: nox --verbose --force-color -s benchmarks-3.9
+        run: nox --force-color -s benchmarks-3.9
