@@ -31,8 +31,6 @@ jobs:
       with:
         python-version: 3.9
         architecture: x64
-    - name: Install Protoc
-      uses: arduino/setup-protoc@v1
     - uses: messense/maturin-action@v1
       with:
         manylinux: 2014
@@ -62,8 +60,6 @@ jobs:
       with:
         python-version: 3.9
         architecture: x64
-    - name: Install Protoc
-      uses: arduino/setup-protoc@v1
     - name: Install Rust toolchain
       uses: actions-rs/toolchain@v1
       with:
@@ -98,8 +94,6 @@ jobs:
       with:
         python-version: 3.9
         architecture: x64
-    - name: Install Protoc
-      uses: arduino/setup-protoc@v1
     - name: Install Rust toolchain
       uses: actions-rs/toolchain@v1
       with:
