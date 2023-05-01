@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [1.1.0] - 2023-05-01
 ### Changed
 - Remove dependency on the protobuf package by using a Rust implementation for serialization
 
@@ -142,7 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First release on PyPI.
 
-[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/chr1st1ank/narrow-down/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/chr1st1ank/narrow-down/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.10.0...v1.0.0
 [0.10.0]: https://github.com/chr1st1ank/narrow-down/compare/v0.9.3...v0.10.0
