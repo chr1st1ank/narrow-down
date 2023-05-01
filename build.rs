@@ -1,6 +1,7 @@
 use std::io::Result;
 
 fn main() -> Result<()> {
-    prost_build::compile_protos(&["proto/stored_document.proto"], &["proto/"])?;
+    let file_descriptors = protox::compile(["proto/stored_document.proto"], ["proto/"]).unwrap();
+    prost_build::compile_fds(file_descriptors).unwrap();
     Ok(())
 }
