@@ -4,12 +4,10 @@ import dataclasses
 import enum
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, List, NewType, Optional
+from typing import Iterable, List, NewType, Optional
 
 import numpy as np
 from numpy import typing as npt
-
-from narrow_down.proto.stored_document_pb2 import StoredDocumentProto
 
 from ._rust import RustMemoryStore, protobuf_to_stored_document, stored_document_to_protobuf
 
@@ -56,17 +54,8 @@ class StoredDocument:
 
     def serialize(self, storage_level: StorageLevel) -> bytes:
         """Serialize a document to bytes."""
-        return StoredDocumentProto(
-            fingerprint=list(self.fingerprint)
-            if self.fingerprint is not None and storage_level & StorageLevel.Fingerprint
-            else [],
-            **{f: getattr(self, f) for f in _FIELDS_FOR_STORAGE_LEVEL[storage_level]},
-        ).SerializeToString()
-
-    def serialize_rust(self, storage_level: StorageLevel) -> bytes:
-        """Serialize a document to bytes."""
         return stored_document_to_protobuf(
-            fingerprint=self.fingerprint
+            fingerprint=self.fingerprint.astype(np.uint32)
             if self.fingerprint is not None and storage_level & StorageLevel.Fingerprint
             else None,
             **{f: getattr(self, f) for f in _FIELDS_FOR_STORAGE_LEVEL[storage_level]},
@@ -74,23 +63,6 @@ class StoredDocument:
 
     @staticmethod
     def deserialize(doc: bytes, id_: int) -> "StoredDocument":
-        """Deserialize a document from bytes."""
-        p = StoredDocumentProto.FromString(doc)  # type: ignore
-        args: Dict[str, Any] = dict(
-            id_=id_,
-        )
-        if p.HasField("document"):
-            args["document"] = p.document
-        if p.HasField("exact_part"):
-            args["exact_part"] = p.exact_part
-        if p.fingerprint:
-            args["fingerprint"] = Fingerprint(np.array(p.fingerprint, dtype=np.uint32))
-        if p.HasField("data"):
-            args["data"] = p.data
-        return StoredDocument(**args)
-
-    @staticmethod
-    def deserialize_rust(doc: bytes, id_: int) -> "StoredDocument":
         """Deserialize a document from bytes."""
         args = protobuf_to_stored_document(doc)
         return StoredDocument(id_=id_, **args)
